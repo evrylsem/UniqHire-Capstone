@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css_grid_layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pwd/list_program.css') }}">
     <link rel="icon" href="{{ asset('images/tab-icon.png') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -29,10 +31,41 @@
             </header>
             <div class="sidebar-menu">
                 <ul class="">
-                    <li><a href="#">
+                    <li>
+                        <a href="#">
                             <i class='bx bx-user-circle side-icon'></i>
                             <span class="side-title">Profile</span>
-                        </a></li>
+                        </a>
+                    </li>
+
+                    <!-- PWD ROLE ACCESS -->
+                    @if (Auth::user()->hasRole('PWD'))
+                    <li class="dropdown">
+                        
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class='bx bxs-school side-icon'></i>
+                                <span class="side-title">Trainings</span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">On-going</a></li>
+                                <li><a class="dropdown-item" href="#">Completed</a></li>                                
+                            </ul>            
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class='bx bx-briefcase-alt-2 side-icon'></i>
+                            <span class="side-title">Job Application</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class='bx bx-cog side-icon'></i>
+                            <span class="side-title">Settings</span>
+                        </a>
+                    </li>
+                    @endif
+
                     <!-- ADMIN ROLE ACCESS -->
                     @if (Auth::user()->hasRole('Admin'))
                     <li><a href="{{route('pwd-list')}}">
@@ -70,7 +103,7 @@
                             <li class="logo-container"><a href="#"><img class="logo-small" src="{{ asset('images/logo.png') }}" alt=""></a></li>
                             <li class="nav-item"><a href="{{route('home')}}">Home</a></li>
                             @if (Auth::user()->hasRole('PWD'))
-                            <li class="nav-item"><a href="">Browse Training Programs</a></li>
+                            <li class="nav-item"><a href="{{route('pwd-list-program')}}">Browse Training Programs</a></li>
                             <li class="nav-item"><a href="">Find Work</a></li>
                             @endif
 

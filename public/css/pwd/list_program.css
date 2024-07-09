@@ -1,0 +1,89 @@
+#filter {
+    text-align: center;
+    font-weight: 700;
+}
+
+#filterContainer {
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    background-color: white;
+}
+
+#filterLabel {
+    font-weight: 600;
+    margin-top: 1em;
+}
+
+.searchField {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 40%;
+    border: none;
+    
+}
+
+.searchField:focus {
+    box-shadow: none;
+    outline: none;
+    /* border: 1px solid #ccc; */
+}
+
+.searchButton {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #04B000;
+    color: white;
+    border: none;
+}
+
+.dropdown-menu {
+    padding: 0.5em;
+}
+
+#main-container {
+    display: flex;
+    flex-direction: row;
+    padding: 1em;
+    background-color: white;
+    /* justify-content: space-between; */
+    /* width: 90%; */
+    height: 30%;
+
+}
+
+#training_image {
+    height: 10em;
+    width: 10em;
+    margin-right: 1em;
+}
+
+#main-button {
+    margin-top: 2em;
+}
+
+#main-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+#main-content {
+    margin-right: 17em;
+    width: 30em;
+    background-color: green;
+}
+
+#main-date {
+    margin-right: 1em;
+}
+
+#main-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.training-description{
+    background-color: red;
+    
+}
