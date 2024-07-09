@@ -12,7 +12,7 @@ class AgencyController extends Controller
 {
     public function showPrograms() {
         $userId = auth()->id();
-        $programs = TrainingProgram::where('agency_id', $userId)->get();
+        $programs = TrainingProgram::where('agency_id', $userId)->orderBy('created_at', 'desc')->get();
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
             $today = new DateTime();
@@ -20,6 +20,13 @@ class AgencyController extends Controller
             $program->remainingDays = $interval->days;
         }
         return view('agency.manageProg', compact('programs'));
+    }
+
+    public function showProgramDetails($id)
+    {
+        $program = TrainingProgram::findOrFail($id);
+
+        return view('agency.showProg', compact('program'));
     }
 
     public function showAddForm() {
