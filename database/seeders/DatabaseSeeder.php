@@ -84,5 +84,35 @@ class DatabaseSeeder extends Seeder
 
 
         $pwduser->role()->attach($pwd);
+
+        $traineruser = User::create([        
+            'email' => 'trainer@example.com',
+            'password' => Hash::make('sheesh'),
+            
+        ]);
+
+        UserInfo::create([
+            'firstname' => 'Bilat',
+            'lastname' => 'Way Hugas',
+            'contactnumber' => '09123456789',
+            'city' => 'cebu',
+            'state' => 'bulacao',
+            'disability_id' => $none->id, // Assign a disability ID here
+            'user_id' => $traineruser->id,
+        ]);
+
+        TrainingProgram::create([
+            'id' => '001',
+            'agency_id' => $traineruser->id,
+            'title' => 'Luto gamit tiil program',
+            'description' => 'Wa kay kamot? Wa nay problema kay sa programa namo makat on mog luto gamit tiil',
+            'city' => 'Cebu City',
+            'participants' => 30,
+            'start' => date("Y-m-d"),
+            'end' => date("Y-m-d"),
+            'disability_id' => 
+        ])
+
+        $traineruser->role()->attach($trainer);
     }
 }

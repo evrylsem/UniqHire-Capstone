@@ -104,12 +104,12 @@
 
                 <div id="main-content">
                     <h3>Text Ni</h3>
-                    <h6>gamay na text</h6>
-                    <p class="training-description">description ni</p>
+                    <h6 class="main-author">gamay na text</h6>
+                    <p class="training-description">This is a very long description that will wrap to the next line if it overflows the container's width.</p>
 
-                    <div id="main-button">
-                        <button type="button" class="btn btn-primary">Primary</button>
-                        <button type="button" class="btn btn-primary">Primary</button>
+                    <div id="main-requirement">
+                        <h6>Leg Amputee</h6>
+                        <h6>High School Level</h6>
                     </div>
 
                 </div>
@@ -117,13 +117,13 @@
                 <p id="main-date">date</p>
 
                 <div id="main-icon">
-                    <i class='bx bx-user-circle side-icon'></i>
-                    <i class='bx bx-user-circle side-icon'></i>
+                    <i class='bx bx-bookmark bx-md side-icon' style="color: #04B000"></i>
+                    <a href="#"><i class='bx bx-chevron-right bx-md side-icon' style="color: #758694"></i></a>
                 </div>
 
             </div>
 
-            <hr>
+            <hr class="main-hr">
 
         </div>
     </main>
