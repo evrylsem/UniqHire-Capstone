@@ -43,4 +43,26 @@ class AdminController extends Controller
 
         return view('admin.trainingAgencies', compact('users'));
     }
+
+    public function showEmployers()
+    {
+        $employeeID = Role::where('role_name', 'Employer')->value('id');
+
+        $users = User::whereHas('role', function ($query) use ($employeeID) {
+            $query->where('role_id', $employeeID);
+        })->get();
+
+        return view('admin.employeeUsers', compact('users'));
+    }
+
+    public function showSponsors()
+    {
+        $sponsorID = Role::where('role_name', 'Sponsor')->value('id');
+
+        $users = User::whereHas('role', function ($query) use ($sponsorID) {
+            $query->where('role_id', $sponsorID);
+        })->get();
+
+        return view('admin.sponsorUsers', compact('users'));
+    }
 }
