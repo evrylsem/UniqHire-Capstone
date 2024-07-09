@@ -48,13 +48,13 @@
         <div class="col">
             <div class="mb-3">
                 <label for="">Start Date: </label>
-                <input type="date" name="start_date">
+                <input type="date" name="start_date" class="date-input">
             </div>
         </div>
         <div class="col">
             <div class="mb-3">
                 <label for="">End Date: </label>
-                <input type="date" name="end_date">
+                <input type="date" name="end_date" class="date-input">
             </div>
         </div>
     </div>

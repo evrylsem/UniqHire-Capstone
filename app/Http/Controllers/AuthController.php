@@ -24,6 +24,10 @@ class AuthController extends Controller
         return view('homepage', compact('images'));
     }
 
+    public function showForgotPass() {
+        return view('auth.forgotPass');
+    }
+
     //LOGIN PROCESS
     public function showLogin() {
         return view('auth.login');

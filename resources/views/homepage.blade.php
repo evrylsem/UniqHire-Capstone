@@ -37,8 +37,8 @@
     </div>
 </div>
 <!-- <hr> -->
-<div class="row mt-5 dev-info">
-    <div class="row mb-5">
+<div class=" mt-5 dev-info">
+    <div class="row mb-5 border-bottom about-social">
         <div class="col " id="about">
             <h2>About Us</h2>
             <p class="mb-4">UniqHire is dedicated to creating opportunities for individuals with disabilities. We believe in a world where everyone, regardless of their abilities, can thrive and contribute to the workforce. Our platform connects talented individuals with disabilities to training programs and job opportunities tailored to their unique skills and aspirations.</p>
@@ -83,11 +83,53 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="" id="contact">
-            <h2>Contact Us</h2>
-            <p>Introduce your platform and its mission. Explain what makes it unique and how it helps people with disabilities enhance their skills and find employment opportunities.</p>
-        </div>
+    <div class="container d-flex justify-content-center">
+        <form action="">
+            <div class="text-center" id="contact">
+                <h2>Send us a message</h2>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" name="firsname" value="{{ Auth::user()->userInfo->firstname }}" disabled required placeholder="First Name">
+                            <label for="floatingInput">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" name="title" value="{{ Auth::user()->userInfo->lastname }}" disabled required placeholder="Last Name">
+                            <label for="floatingInput">Last Name</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" name="subject" required placeholder="Subject">
+                            <label for="floatingInput">Subject</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="Description" id="floatingTextarea2" name="description" style="height: 200px"></textarea>
+                            <label for="floatingTextarea2">Description</label>
+                            @error('description')
+                            <span class="error-msg">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <!-- <div class=""> -->
+                    <button type="submit" class="border-0">Send</button>
+                    <!-- </div> -->
+
+                </div>
+            </div>
+
+        </form>
+
 
     </div>
 

@@ -198,6 +198,7 @@ ul, li {
     font-weight: bold;
     width: 10rem;
     padding: 1rem;
+    color: var(--text-error);
 }
 
 .submit-btn {
@@ -402,13 +403,10 @@ h4, p {
     color: var(--primary-color);
 }
 
-.popup-title {
-    background-color: var(--primary-color);
-}
-
-.popup-title h1 {
-    font-weight: bold;
-    color: var(--body-color);
+.date-input {
+    border: 1px solid lightgray;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
 }
 
 
@@ -489,4 +487,26 @@ h4, p {
 
 #socials div span {
     font-size: 23px;
+}
+
+.about-social {
+    padding-bottom: 5rem;
+}
+
+#contact {
+    width: 40rem;
+}
+
+#contact button {
+    width: 20rem;
+    padding: 0.8rem;
+    background-color: var(--primary-color);
+    border-radius: 1rem;
+    color: var(--body-color);
+    font-weight: bold;
+}
+
+#contact button:hover {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
 }

@@ -74,8 +74,8 @@
                             <li class="nav-item"><a href="">Find Work</a></li>
                             @endif
 
-                            <li class="nav-item"><a href="#about">About</a></li>
-                            <li class="nav-item"><a href="#about">Contact Us</a></li>
+                            <li class="nav-item"><a href="/home/#about">About</a></li>
+                            <li class="nav-item"><a href="/home/#contact">Contact Us</a></li>
 
                         </ul>
                         <ul class="d-flex align-items-center">
