@@ -51,13 +51,13 @@
         <div class="col">
             <div class="mb-3">
                 <label for="start_date">Start Date: </label>
-                <input type="date" name="start_date" value="{{ $program->start }}" required>
+                <input type="date" name="start_date" class="date-input" value="{{ $program->start }}" required>
             </div>
         </div>
         <div class="col">
             <div class="mb-3">
                 <label for="end_date">End Date: </label>
-                <input type="date" name="end_date" value="{{ $program->end }}" required>
+                <input type="date" name="end_date" class="date-input" value="{{ $program->end }}" required>
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
                 <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
                     @foreach ($disabilities as $disability)
                     @if ($disability->id != 1)
-                        <option value="{{ $disability->id }}" {{ $program->disability_id == $disability->id ? 'selected' : '' }}>{{ $disability->disability_name }}</option>
+                    <option value="{{ $disability->id }}" {{ $program->disability_id == $disability->id ? 'selected' : '' }}>{{ $disability->disability_name }}</option>
                     @endif
                     @endforeach
                 </select>

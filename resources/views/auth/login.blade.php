@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="col text-end forget-pass">
-                        <a href="" class="link-underline link-underline-opacity-0 accent-text">Forget Password?</a>
+                        <a href="{{ route('forgot-password') }}" class="link-underline link-underline-opacity-0 accent-text">Forget Password?</a>
                     </div>
                 </div>
                 <div class=""> 

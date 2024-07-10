@@ -9,23 +9,25 @@
         </div>
         @foreach ($programs as $program)
         <div class="prog-card">
-            <h4>{{ $program->title }}</h4>
-            <p class="sub-text prog-loc">
-                <i class='bx bx-map sub-text'></i>{{ $program->city }} City
-            </p>
-            <div class="prog-desc-container">
-                <p class="prog-desc mt-3">
-                    {{ $program->description }}
+            <a href="{{ route('programs-show', $program->id) }}" class="prog-card-link">
+                <h4>{{ $program->title }}</h4>
+                <p class="sub-text prog-loc">
+                    <i class='bx bx-map sub-text'></i>{{ $program->city }} City
                 </p>
-            </div>
+                <div class="prog-desc-container">
+                    <p class="prog-desc mt-3">
+                        {{ $program->description }}
+                    </p>
+                </div>
 
-            <div class="d-flex mt-3">
-                <p class="sub-text prog-details ">
-                    <i class='bx bx-group sub-text'></i> Number Participants
-                </p>
-                <p class="sub-text period">•</p>
-                <p class="sub-text prog-details "><i class='bx bx-calendar sub-text'></i> {{ $program->remainingDays }} days to go</p>
-            </div>
+                <div class="d-flex mt-3">
+                    <p class="sub-text prog-details ">
+                        <i class='bx bx-group sub-text'></i> Number Participants
+                    </p>
+                    <p class="sub-text period">•</p>
+                    <p class="sub-text prog-details "><i class='bx bx-calendar sub-text'></i> {{ $program->remainingDays }} days to go</p>
+                </div>
+            </a>
             <div class="d-flex justify-content-center mt-3 prog-btn">
                 <form action="{{ route('programs-delete', $program->id) }}" method="POST">
                     @csrf

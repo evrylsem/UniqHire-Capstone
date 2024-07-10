@@ -20,8 +20,27 @@ class AuthController extends Controller
             'images/20.png',
             'images/21.png',
         ];
+        $pwdCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'PWD');
+        })->count();
 
-        return view('homepage', compact('images'));
+        $trainerCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Trainer');
+        })->count();
+
+        $employerCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Employer');
+        })->count();
+
+        $sponsorCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Sponsor');
+        })->count();
+
+        return view('homepage', compact('images', 'pwdCount', 'trainerCount', 'employerCount', 'sponsorCount'));
+    }
+
+    public function showForgotPass() {
+        return view('auth.forgotPass');
     }
 
     //LOGIN PROCESS
