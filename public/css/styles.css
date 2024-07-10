@@ -360,6 +360,13 @@ h4, p {
     border: none;
 }
 
+.prog-btnn {
+    /* width: 4.5rem; */
+    padding: 6px;
+    font-weight: bold;
+    border: none;
+}
+
 .delete-btn {
     color: var(--text-error);
     background-color: transparent;
@@ -384,6 +391,10 @@ h4, p {
     border-radius: 2rem;
     color: var(--primary-color);
     font-weight: bold;
+}
+
+.btn-outlinee {
+    border: 1px solid var(--primary-color);
 }
 
 .btn-outline:hover {
@@ -505,8 +516,6 @@ h4, p {
     
 }
 
-
-
 #contact button {
     width: 20rem;
     padding: 0.8rem;
@@ -520,3 +529,4 @@ h4, p {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
 }
+

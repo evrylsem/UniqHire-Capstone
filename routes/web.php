@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function(){
     //Admin Middleware
     Route::get('/pwd/all', [AdminController::class, 'showPwds'])->middleware('role:Admin')->name('pwd-list');
     Route::get('/training-agency/all', [AdminController::class, 'showTrainers'])->middleware('role:Admin')->name('trainer-list');
+    Route::get('/employee/all', [AdminController::class, 'showEmployers'])->middleware('role:Admin')->name('employee-list');
+    Route::get('/sponsor/all', [AdminController::class, 'showSponsors'])->middleware('role:Admin')->name('sponsor-list');
 
 
     //Trainer Middleware
@@ -45,6 +47,8 @@ Route::middleware('auth')->group(function(){
     Route::delete('/training-programs/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
     Route::get('/training-programs/{id}/edit', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
     Route::put('/training-programs/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer')->name('programs-update');
+    Route::get('/training-programs/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
+
 
 
 
