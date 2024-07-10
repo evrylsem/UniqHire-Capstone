@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PwdController;
 use App\Http\Controllers\UserInfoController;
 use App\Models\UserInfo;
+use App\Models\TrainingProgram;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,7 +20,8 @@ Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/register/pwd', [AuthController::class, 'pwdSection'])->name('pwd-section');
 // Route::get('/displayusers/{$id}', [UserInfoController::class, 'showAll']);
 
-Route::get('/pwd/list', [PwdController::class, 'listOfPrograms'])->name('pwd-list-program');
+Route::get('/pwd/list', [PwdController::class, 'showPrograms'])->name('pwd-list-program');
+
 
 Route::get('/all', [AuthController::class, 'showAccs']);
 

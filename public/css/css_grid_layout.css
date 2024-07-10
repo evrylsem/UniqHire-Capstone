@@ -23,7 +23,9 @@
     /* background-color: #758694; */
     grid-area: main;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    padding: 1em;
+    /* justify-content: center; */
     /* text-align: center; */
     /* align-items: center; */
 }

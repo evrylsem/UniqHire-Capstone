@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\UserInfo;
+use App\Models\TrainingProgram;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -110,8 +111,11 @@ class DatabaseSeeder extends Seeder
             'participants' => 30,
             'start' => date("Y-m-d"),
             'end' => date("Y-m-d"),
-            'disability_id' => 
-        ])
+            'disability_id' => $leg->id,
+            'education_id' => $hsgrad->id,
+            'created_at' => date("Y-m-d"),
+            'updated_at' => date("Y-m-d"),
+        ]); 
 
         $traineruser->role()->attach($trainer);
     }
