@@ -21,6 +21,7 @@
     --text-color: #373737;
     --text-error: #ff0000;
     --icon-gray: rgba(55, 55, 55, 0.43);
+    --icon: rgb(81, 81, 81);
 
     /* TRANSITION */
     --trans-02: all 0.2 ease;
@@ -116,6 +117,16 @@ ul, li {
     width: 15rem;
     transition: all 0.5s ease;
 }
+
+.dropdown-toggle, .dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-toggle:hover, .dropdown-item:hover{
+    background-color: var(--primary-color);
+    color: var(--body-color);
+}
+
 .sidebar header {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -136,6 +147,7 @@ ul, li {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--icon);
 }
 
 .sidebar li .side-title {
@@ -145,7 +157,7 @@ ul, li {
     overflow: hidden;
 }
 
-.sidebar li .side-icon, .sidebar li .side-title {
+.sidebar li .side-title {
     color: var(--text-color);
     transition: var(--trans-02);
 }
