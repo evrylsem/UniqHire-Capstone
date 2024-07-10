@@ -20,7 +20,7 @@
                 <img src="../images/logo.png" alt="UniqHire Logo" style="height: 3.7rem;">
             </div>
         </div> -->
-            <div class="col">
+            <div class="col ">
                 <div class="row">
                     <div class="col d-flex align-items-center justify-content-end">
                         <label for="registerAs">Register As:</label>
@@ -42,16 +42,16 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" name="firstname" value="{{ old('firstname') }}" required placeholder="First Name">
-                            <label for="floatingInput">First Name</label>
+                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ old('firstname') }}" required placeholder="First Name">
+                            <label for="firsname" id="firstname-label">First Name</label>
                             @error('firstname')
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col" id="lastname-section">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" name="lastname" value="{{ old('lastname') }}" required placeholder="Last Name">
+                            <input type="text" class="form-control" id="floatingInput" name="lastname" value="{{ old('lastname') }}" placeholder="Last Name">
                             <label for="floatingInput">Last Name</label>
                             @error('lastname')
                             <span class="error-msg">{{ $message }}</span>
@@ -167,12 +167,18 @@
     function togglePWDSection() {
         var roleSelect = document.getElementById('role');
         var pwdSection = document.getElementById('pwd-section');
+        var lastnameSection = document.getElementById('lastname-section');
+        var firstnameInput = document.getElementById('firstname');
+        var firstnameLabel = document.getElementById('firstname-label');
         var disabilitySection = document.getElementById('disability-section');
         var disabilitySelect = document.getElementById('floatingSelect');
 
-        if (roleSelect.value === 'PWD') {
+        if (roleSelect.value === '2') {
             pwdSection.style.display = 'block';
             disabilitySection.style.display = 'block';
+            lastnameSection.style.display = 'block';
+            firstnameInput.placeholder = 'First Name';
+            firstnameLabel.textContent = 'First Name';
             for (var i = 0; i < disabilitySelect.options.length; i++) {
                 if (disabilitySelect.options[i].value === '1') {
                     disabilitySelect.remove(i);
@@ -184,6 +190,9 @@
         } else {
             pwdSection.style.display = 'none';
             disabilitySection.style.display = 'none';
+            lastnameSection.style.display = 'none';
+            firstnameInput.placeholder = 'Name';
+            firstnameLabel.textContent = 'Name';
             for (var i = 0; i < disabilitySelect.options.length; i++) {
                 if (disabilitySelect.options[i].value === '1') {
                     optionExists = true;
