@@ -417,11 +417,16 @@ h4, p {
 }
 .home-top {
     margin-top: 1rem;
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
 }
 
 .home-captions {
     padding: 2rem;
+}
+
+.home-row {
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .header-caption h1 {
@@ -471,31 +476,36 @@ h4, p {
     width: 5%;
 }
 
-
-.dev-info {
-    padding: 2.5rem;
-}
-
-
-#about, #socials {
-    padding-right: 6rem;
-}
-
-#socials div {
+.home-icons {
+    font-size: 80px;
     margin-bottom: 1rem;
 }
 
-#socials div span {
-    font-size: 23px;
+.home-icons, .user-count p, .user-count span {
+    color: var(--body-color);
 }
 
-.about-social {
-    padding-bottom: 5rem;
+.user-count p, .user-count span {
+    font-size: 30px;
 }
 
-#contact {
-    width: 40rem;
+.user-count p {
+    font-weight: 900;
 }
+
+.user-count {
+    background-image: url('../images/23.png');
+    background-repeat: no-repeat; 
+    background-size: cover; 
+    background-position: bottom;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 20rem;
+    
+}
+
+
 
 #contact button {
     width: 20rem;
