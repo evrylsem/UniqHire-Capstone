@@ -52,7 +52,7 @@
     </nav>
 
     <main id="main">
-    @if ($filteredPrograms != null && count($filteredPrograms) > 0) 
+    <!-- @if ($filteredPrograms != null) 
         @foreach ($filteredPrograms as $filtered)
             <div id="main-container" >
                 <img src="https://i.pinimg.com/736x/ea/95/85/ea95858650d7cc828048c499969d5a74.jpg" alt="Image" id="training_image">
@@ -77,36 +77,39 @@
                 </div>
 
             </div>
-        @endforeach
+            <h1>TEESTING</h1>
+        @endforeach 
     
-    @else
+   @else -->
+        @empty($rankedPrograms)
+        <p>No programs found.</p>
+        @else
+        @foreach ($rankedPrograms as $ranked)                 
+        <div id="main-container">
+            <img src="https://i.pinimg.com/736x/ea/95/85/ea95858650d7cc828048c499969d5a74.jpg" alt="Image" id="training_image">
 
-        @foreach ($programs as $program)
-            <div id="main-container" >
-                <img src="https://i.pinimg.com/736x/ea/95/85/ea95858650d7cc828048c499969d5a74.jpg" alt="Image" id="training_image">
+            <div id="main-content">
+                <h3>{{ $ranked['program']['title'] }}</h3>
+                <h6 class="main-author">{{ $ranked['program']['agency_id'] }}</h6>
+                <p class="training-description">{{ $ranked['program']['description'] }}</p>
 
-                <div id="main-content">
-                    <h3>{{ $program->title }}</h3>
-                    <h6 class="main-author">{{$program->agency->userInfo->firstname . " " . $program->agency->userInfo->lastname}}</h6>
-                    <p class="training-description">{{$program->description}}</p>
-
-                    <div id="main-requirement">
-                        <h6>{{ $program->disability->disability_name }}</h6>
-                        <h6>{{ $program->education->education_name }}</h6>
-                    </div>
-
-                </div>
-
-                <p id="main-date">{{$program->created_at}}</p>
-
-                <div id="main-icon">
-                    <i class='bx bx-bookmark bx-md side-icon' style="color: #04B000"></i>
-                    <a href="#"><i class='bx bx-chevron-right bx-md side-icon' style="color: #758694"></i></a>
+                <div id="main-requirement">
+                    <h6>{{ $ranked['program']['disability_id'] }}</h6>
+                    <h6>{{ $ranked['program']['education_id'] }}</h6>
                 </div>
 
             </div>
+
+            <p id="main-date">{{ $ranked['program']['created_at'] }}</p>
+
+            <div id="main-icon">
+                <i class='bx bx-bookmark bx-md side-icon' style="color: #04B000"></i>
+                <a href="#"><i class='bx bx-chevron-right bx-md side-icon' style="color: #758694"></i></a>
+            </div>
+        </div>
         @endforeach
-    @endif
+        @endempty
+    <!-- @endif -->
 
     </main>
 
