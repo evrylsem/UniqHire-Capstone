@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Disability;
 use App\Models\EducationLevel;
 use App\Models\TrainingProgram;
+use App\Models\User;
+use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use DateTime;
 
 class AgencyController extends Controller
 {
-    public function showPrograms() {
+    public function showPrograms()
+    {
         $userId = auth()->id();
         $programs = TrainingProgram::where('agency_id', $userId)->orderBy('created_at', 'desc')->get();
         foreach ($programs as $program) {
@@ -29,7 +32,8 @@ class AgencyController extends Controller
         return view('agency.showProg', compact('program'));
     }
 
-    public function showAddForm() {
+    public function showAddForm()
+    {
         $disabilities = Disability::all();
         $levels = EducationLevel::all();
         return view('agency.addProg', compact('disabilities', 'levels'));
@@ -67,21 +71,18 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::find($id);
 
-        if ($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
             $program->delete();
         }
 
         return redirect()->route('programs-manage');
-
     }
 
     public function editProgram($id)
     {
         $program = TrainingProgram::find($id);
 
-        if ($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
             $disabilities = Disability::all();
             $levels = EducationLevel::all();
 
@@ -89,15 +90,13 @@ class AgencyController extends Controller
         }
 
         return redirect()->route('programs-manage');
-
     }
 
     public function updateProgram(Request $request, $id)
     {
         $program = TrainingProgram::find($id);
 
-        if($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
             $request->validate([
                 'title' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
@@ -118,6 +117,5 @@ class AgencyController extends Controller
         }
 
         return redirect()->route('programs-manage');
-
     }
 }

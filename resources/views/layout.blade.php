@@ -51,7 +51,7 @@
                             <i class='bx bx-dollar-circle side-icon'></i>
                             <span class="side-title">Sponsors</span>
                         </a></li>
-                    <li><a href="{{route('settings-list')}}">
+                    <li><a href="">
                             <i class='bx bx-cog side-icon'></i>
                             <span class="side-title">Settings</span>
                         </a></li>

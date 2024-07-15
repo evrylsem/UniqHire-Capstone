@@ -359,13 +359,6 @@ h4, p {
     border: none;
 }
 
-.prog-btnn {
-    /* width: 4.5rem; */
-    padding: 6px;
-    font-weight: bold;
-    border: none;
-}
-
 .delete-btn {
     color: var(--text-error);
     background-color: transparent;
@@ -505,3 +498,5 @@ h4, p {
 .card-default {
     background-color: var(--body-color);
 }
+
+/* SHOW TRAINING PROGRAM */

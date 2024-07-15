@@ -42,28 +42,28 @@
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <p><strong>Company</strong></p>
+                    <p class="bold-texts">Company</p>
                     <p>Inclusive Vulcanizing</p>
-                    <p class="mt-3"><strong>Shift Schedule</strong></p>
+                    <p class="mt-3 bold-texts">Shift Schedule</p>
                     <p>24 hours/day</p>
                 </div>
                 <div class="col">
-                    <p><strong>Salary</strong></p>
+                    <p class="bold-texts">Salary</p>
                     <p>10k/Month</p>
                 </div>
             </div>
-            <div class="row mt-3 border-top">
+            <div class="row mt-3 mb-5 p-3 border-top">
                 <div class="col text-center">
                     <p class="bold-texts">We Accept</p>
-                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btnn">Leg Amputee</span>
+                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btn">Leg Amputee</span>
                 </div>
                 <div class="col text-center">
                     <p class="bold-texts">Education Level</p>
-                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btnn">Highschool Level</span>
+                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btn">Highschool Level</span>
                 </div>
                 <div class="col text-center">
                     <p class="bold-texts">Certifications</p>
-                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btnn">ICT Training</sp>
+                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btn">ICT Training</sp>
                 </div>
             </div>
         </div>
