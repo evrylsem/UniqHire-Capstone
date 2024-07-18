@@ -79,8 +79,8 @@ class AuthController extends Controller
         }
 
         $request->validate([
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            // 'lastname' => 'nullable|string|max:255',
             // 'email' => 'required|string|email|unique:users,email|max:255',
             'contactnumber' => 'required|string|max:255',
             'password' => 'required|string|min:4|max:255|confirmed',
@@ -103,8 +103,8 @@ class AuthController extends Controller
 
         UserInfo::create([
             'user_id' => $user->id,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
+            'name' => $request->name,
+            // 'lastname' => $request->lastname,
             'contactnumber' => $request->contactnumber,
             'city' => $request->city,
             'state' => $request->state,

@@ -3,7 +3,7 @@
 @section('page-title', 'Login')
 
 @section('auth-content')
-<div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
+<div class=" container-fluid vh-100 d-flex justify-content-center align-items-center">
     <div class="row bg-white login-container">
         <div class="col left login-form">
             <div class="row mb-5">
@@ -13,13 +13,13 @@
                 </div>
                 <div class="col-3"></div>
             </div>
-            <div class="mb-2 header-texts">
-                Sign In.
+            <div class="mb-2">
+                <h2>Sign In.</h2>
             </div>
             <div class="mb-4">
-                <span class="fs-5 ">Don't have an account? <a href="{{ route('register-form') }}" class="fs-5 link-underline link-underline-opacity-0 accent-text">Create an account.</a></span>
+                <span class="">Don't have an account? <a href="{{ route('register-form') }}" class="highlight-link link-underline link-underline-opacity-0 accent-text">Create an account.</a></span>
             </div>
-            <form action="{{ route('login-page') }}" method="POST">
+            <form action="{{ url('/login') }}" method="POST">
                 @csrf
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class=""> 
-                    <button class="bg-text fs-5 border-0 bold-texts login-btn">Sign In</button>
+                    <button type="submit" class="bg-text fs-5 border-0 bold-texts submit-btn">Sign In</button>
                 </div>
             </form>
         </div>

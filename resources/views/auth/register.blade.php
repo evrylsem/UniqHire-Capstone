@@ -3,15 +3,13 @@
 @section('page-title', 'Create Account')
 
 @section('auth-content')
-<div class="container vh-100">
+<div class="container register-container vh-100">
     <form method="POST" action="{{ route('register-form') }}" enctype="multipart/form-data">
         <div class="row" style="padding-top:3rem;">
 
             <div class="col">
-                <div class="text-start header-texts">
-                    <a href="{{ route('login-page') }}" class="m-1"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(4, 176, 0, 1);">
-                            <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z"></path>
-                        </svg></a>
+                <div class="text-start header-texts back-link-container">
+                    <a href="{{ route('login-page') }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
                     Create an Account.
                 </div>
             </div>
@@ -26,7 +24,7 @@
                         <label for="registerAs">Register As:</label>
                     </div>
                     <div class="col">
-                        <select class="form-select form-select" name="role[]" id="role" aria-label="Small select example" onchange="togglePWDSection()">
+                        <select class="form-select" name="role[]" id="role" aria-label="Small select example" onchange="togglePWDSection()">
                             @foreach ($roles as $role)
                             @if ($role->role_name !== 'Admin')
                             <option value="{{ $role->id }}">{{ $role->role_name }}</option>
@@ -42,14 +40,14 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ old('firstname') }}" required placeholder="First Name">
-                            <label for="firsname" id="firstname-label">First Name</label>
-                            @error('firstname')
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required placeholder="Name">
+                            <label for="name">Name</label>
+                            @error('name')
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
-                    <div class="col" id="lastname-section">
+                    <!-- <div class="col" id="lastname-section">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" name="lastname" value="{{ old('lastname') }}" placeholder="Last Name">
                             <label for="floatingInput">Last Name</label>
@@ -57,7 +55,7 @@
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <div class="col">
@@ -142,17 +140,17 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mb-3">
-                    <button type="reset" class="m-2 border-0 bg-transparent clear-btn">
+                    <button type="reset" class="m-2 border-0 bg-transparent deny-btn">
                         Clear
                     </button>
-                    <button type="submit" class="m-2 border-0 bg-text" style="font-weight:bold; height:3.5rem; width: 10rem;">
+                    <button type="submit" class="m-2 border-0 bg-text submit-btn">
                         Register
                     </button>
                 </div>
                 <div class="text-center">
                     <hr class="mb-4" style="width: 30rem; margin:0 auto;">
                     <span>
-                        Already have an account? <a href="{{ route('login-page') }}" class="fs-5 link-underline link-underline-opacity-0 accent-text bold-texts">Login.</a>
+                        Already have an account? <a href="{{ route('login-page') }}" class="link-underline link-underline-opacity-0 highlight-link">Login.</a>
                     </span>
                 </div>
             </div>
@@ -167,18 +165,12 @@
     function togglePWDSection() {
         var roleSelect = document.getElementById('role');
         var pwdSection = document.getElementById('pwd-section');
-        var lastnameSection = document.getElementById('lastname-section');
-        var firstnameInput = document.getElementById('firstname');
-        var firstnameLabel = document.getElementById('firstname-label');
         var disabilitySection = document.getElementById('disability-section');
         var disabilitySelect = document.getElementById('floatingSelect');
 
         if (roleSelect.value === '2') {
             pwdSection.style.display = 'block';
             disabilitySection.style.display = 'block';
-            lastnameSection.style.display = 'block';
-            firstnameInput.placeholder = 'First Name';
-            firstnameLabel.textContent = 'First Name';
             for (var i = 0; i < disabilitySelect.options.length; i++) {
                 if (disabilitySelect.options[i].value === '1') {
                     disabilitySelect.remove(i);
@@ -190,9 +182,6 @@
         } else {
             pwdSection.style.display = 'none';
             disabilitySection.style.display = 'none';
-            lastnameSection.style.display = 'none';
-            firstnameInput.placeholder = 'Name';
-            firstnameLabel.textContent = 'Name';
             for (var i = 0; i < disabilitySelect.options.length; i++) {
                 if (disabilitySelect.options[i].value === '1') {
                     optionExists = true;

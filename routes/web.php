@@ -36,6 +36,12 @@ Route::get('/admin/pwdusers', [AuthController::class, 'showAccs'])->name('admin-
 
 Route::middleware('auth')->group(function(){
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
+    // Route::get('/home/#about', function(){
+
+    // })->name('about');
+    // Route::get('/home/#contact', function () {
+
+    // })->name('contact');
 
 
     //Admin Middleware
@@ -55,7 +61,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/training-programs/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
 
 
-
+    
 
 });
 

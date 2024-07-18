@@ -22,7 +22,7 @@ class TrainingProgram extends Model
     ];
 
     public function agency() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'agency_id');
     }
 
     public function disability()
@@ -33,5 +33,10 @@ class TrainingProgram extends Model
     public function education()
     {
         return $this->belongsTo(EducationLevel::class, 'education_id');
+    }
+
+    public function crowdfund()
+    {
+        return $this->hasOne(CrowdfundEvent::class, 'program_id');
     }
 }

@@ -85,9 +85,44 @@
             </div>
         </div>
     </div>
+    <hr>
+    <div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
+            <label class="form-check-label" for="flexCheckDefault">
+                Host a crowdfunding for this?
+            </label>
+        </div>
+    </div>
+    <div class="row" id="crowdfund-section" style="display: none;">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed">
+                <label for="floatingInput">Amount Needed</label>
+                @error('goal')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    </div>
     <div class="d-flex justify-content-center mt-3 prog-btn">
         <button type="reset" class="delete-btn">Clear</button>
         <button type="submit" class="edit-btn btn-default">Update</button>
     </div>
 </form>
 @endsection
+
+<script>
+    function toggleCrowdfund() {
+        var hostCrowdfund = document.getElementById('host-crowdfund');
+        var crowdfundSection = document.getElementById('crowdfund-section');
+
+        if (hostCrowdfund.checked) {
+            crowdfundSection.style.display = 'block';
+            document.getElementById('amount-needed').required = true;
+        } else {
+            crowdfundSection.style.display = 'none';
+            document.getElementById('amount-needed').required = false;
+        }
+    }
+</script>
