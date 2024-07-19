@@ -29,7 +29,7 @@ class PwdController extends Controller
         foreach ($programs as $program) {
             $similarity = $this->calculateSimilarity($user, $program);
             $rankedPrograms[] = [
-                'program' => $program->toArray(),
+                'program' => $program,
                 'similarity' => $similarity
             ];
         }
