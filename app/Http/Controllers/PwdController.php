@@ -15,8 +15,9 @@ class PwdController extends Controller
 {
 
     public function showPrograms() {
-        $disability = auth()->user()->userInfo->disability_id;
-        $programs = TrainingProgram::where('disability_id', $disability)->get();
+        // $disability = auth()->user()->userInfo->disability_id;
+        // $programs = TrainingProgram::where('disability_id', $disability)->get();
+        $programs = TrainingProgram::all();
         $disabilities = Disability::all();
         $educations = EducationLevel::all();
     

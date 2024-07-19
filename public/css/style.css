@@ -42,6 +42,18 @@
     --trans-05: all 0.5 ease;
 }
 
+/* SCROLL BAR */
+::-webkit-scrollbar {
+    width: 12px;
+    background: var(--bg-color-01);
+    border-radius: var(--border-radius-20);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--hover-color);
+    border-radius: var(--border-radius-20);
+}
+
 body {
     background-color: var(--bg-color-01);
     margin: 0;
@@ -449,6 +461,10 @@ table tbody .bx {
 }
 
 /* PWD BROWSE */
+.pwd-browse-prog {
+    margin-bottom: 3rem;
+}
+
 .pwd-browse-prog .filter-container {
     position: sticky;
     width: 17rem;
@@ -468,7 +484,7 @@ table tbody .bx {
 }
 
 .pwd-browse-prog .empty-space {
-    width: 14rem;
+    width: 7rem;
 }
 
 .pwd-browse-prog .searchbar {
@@ -486,7 +502,85 @@ table tbody .bx {
     border-bottom-right-radius: 0;
 }
 
+.pwd-browse-prog .prog-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.2rem;
+}
+
 .pwd-browse-prog .prog-card {
+    width: 50rem;
+    height: 13rem;
+    background-color: var(--bg-color-02);
+    box-shadow: var(--side-shadow-03);
+    border-radius: var(--border-radius);
+}
+
+.pwd-browse-prog .prog-card .prog-img {
+    width: 5rem;
+    height: 5rem;
+    /* background-image: url('../images/23.png');
+    background-repeat: no-repeat; 
+    background-size: cover; */
+    background-color: var(--primary-color-light);
+    margin-right: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.pwd-browse-prog .prog-card .prog-desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 2.5rem;
+    height: 2.5rem;
+}
+
+.pwd-browse-prog .prog-card h4 {
+    font-weight: var(--header-extrabold);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+}
+
+.pwd-browse-prog .prog-card .prog-texts {
+    padding: 1rem;
+}
+
+.pwd-browse-prog .prog-card .match-info {
+    background-color: var(--primary-color-light);
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.pwd-browse-prog .prog-card:hover, .agency-prog-container .prog-card:hover {
+    background-color: var(--white-bg);
+}
+
+.pwd-browse-prog .prog-card .prog-desc p {
+    font-size: 15px;
+    height: 100%;
+}
+
+.pwd-browse-prog .prog-card .prog-texts-container {
+    width: 100%;
+}
+
+.pwd-browse-prog .prog-card .prog-texts-container .header {
+    width: 30rem;
+}
+
+.pwd-browse-prog .prog-card .prog-texts-container .header p {
+    margin: 0;
+}
+
+/* .pwd-browse-prog .prog-card {
     width: 70rem;
     background-color: var(--bg-color-02);
     box-shadow: var(--side-shadow-03);
@@ -512,14 +606,21 @@ table tbody .bx {
 .pwd-browse-prog .prog-card .prog-desc {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; /* Number of lines to show before truncating */
+    -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: 2.5rem;
+    height: 2.7rem;
+    max-width: 100%;
+}
 
+.pwd-browse-prog .prog-card .prog-texts-container {
+    width: 100%;
 }
 
 .pwd-browse-prog .prog-card .prog-desc p {
     font-size: 15px;
+    height: 100%;
 }
 
 .pwd-browse-prog .prog-card .match-info {
@@ -531,7 +632,7 @@ table tbody .bx {
     color: var(--primary-color);
     font-weight: bold;
     font-size: 15px;
-}
+} */
 
 /* TRAINING AGENCY MANAGE PROGS */
 .agency-prog-container .prog-grid {
@@ -568,6 +669,9 @@ table tbody .bx {
 
 .agency-prog-container .prog-card h3 {
     font-weight: var(--header-extrabold);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
 }
 
 .agency-prog-container .prog-card {
@@ -676,3 +780,6 @@ table tbody .bx {
 .prog-details-container .prog-details .more-info {
     height: 10rem;
 }
+
+
+

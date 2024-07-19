@@ -5,7 +5,7 @@
 @section('page-content')
 
 <div class="row mt-2 pwd-browse-prog">
-    <div class="col-2 filter-container">
+    <div class="filter-container">
         <form action="">
             <div class="mb-3">
                 <h3>Filter</h3>
@@ -53,62 +53,52 @@
                 </form>
             </div>
         </div>
-        <!-- @foreach ($programs as $program)
-        <div class="row prog border">
-            <div class="col-2 border prog-img">
-                <div>
-
-                </div>
-            </div>
-            <div class="col prog-texts">
-                <div>
-                    <h3>{{$program->title}}</h3>
-                    <p class="prog-agency">{{$program->agency->userInfo->firstname . " " . $program->agency->userInfo->lastname}}</p>
-                </div>
-                <div class="prog-desc mb-3">
-                    <p>{{$program->description}}</p>
-                </div>
-                <div class="match-info">
-                    Disability
-                </div>
-            </div>
-        </div>
-        @endforeach -->
-        <div class="row prog-card mb-2">
-            <div class="col-2 border prog-img">
-                <div>
-
-                </div>
-            </div>
-            <div class="col ">
-                <a href="" class="d-flex prog-texts">
+        <div class="prog-grid">
+            @foreach ($programs as $program)
+            <div class="row prog-card mb-2">
+                <!-- <div class="col-2 border prog-img">
                     <div>
 
-                        <div class="row">
-                            <h3>Program Title</h3>
-                            <p class="sub-text">Author</p>
-                        </div>
-                        <div class="row prog-desc mb-3">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div class="row match-info">
-                            Disability
-                        </div>
-
-
                     </div>
+                </div> -->
+                <div class="col ">
+                    <a href="" class="d-flex prog-texts">
+                        <div class="prog-texts-container">
 
-                    <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
-                        <!-- <i class='bx bx-bookmark'></i> -->
-                        >
-                    </div>
+                            <div class=" d-flex mb-2">
+                                <div class="prog-img"></div>
+                                <div class="header">
+                                    <h4>{{$program->title}}</h4>
+                                    <p class="sub-text">{{$program->agency->userInfo->name}}</p>
+                                    <p class="sub-text">{{$program->city}}</p>
+                                </div>
+                            </div>
+                            <div class="row prog-desc mb-1">
+                                <p>{{$program->description}}</p>
+                            </div>
+                            <div class="row match-info">
+                                {{$program->disability->disability_name}}
+                            </div>
 
-                </a>
+
+                        </div>
+
+                        <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
+                            >
+                        </div>
+
+                    </a>
+
+                </div>
 
             </div>
-
+            @endforeach
         </div>
-        
+
+
+
+
+
     </div>
     <div class="col empty-space"></div>
 </div>
