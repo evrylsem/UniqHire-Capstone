@@ -36,12 +36,18 @@ class PwdController extends Controller
 
         Log::info('Ranked Programs:', $rankedPrograms);
 
+        // Sorting the programs based on similarity score [ascending]
         usort($rankedPrograms, function ($a, $b) {
             return $b['similarity'] <=> $a['similarity'];
         });
         
-        
+        // Filtering the programs through searching program title
+        if($request->filled('search'))
+        {
+            $query->where("title", "LIKE", "%" . $request->search . "%");
+        }
 
+        // Filtering the programs based on disability [multiple selection]
         if(isset($request->disability) && ($request->disability != null))
         {
             $query->whereHas('disability', function($q) use($request){
@@ -58,7 +64,7 @@ class PwdController extends Controller
 
         $filteredPrograms = $query->get();
         Log::info('Ranked Filtered Programs:', $rankedPrograms);
-        // dd($rankedPrograms);
+
         return view('pwd.listPrograms', compact('rankedPrograms','disabilities', 'educations', 'filteredPrograms'));
     }
 
@@ -66,7 +72,8 @@ class PwdController extends Controller
     {
         $similarityScore = 0;
        
-        // Check disability type
+        // Criteria: disability, location
+
         if ($user->disability_id === $program->disability_id) {
             $similarityScore += 1;
         }
