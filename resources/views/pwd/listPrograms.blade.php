@@ -95,44 +95,44 @@
             </div>
             @endforeach
             @else
-            @foreach ($rankedPrograms as $ranked)
-            <div class="row prog-card mb-2">
-                <div class="col ">
-                    <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup({event})">
-                        <div class="prog-texts-container">
-                            <div class=" d-flex mb-2">
-                                <div class="prog-img"></div>
-                                <div class="d-flex justify-content-between">
-                                    <div class="header">
-                                        <h4>{{$ranked['program']->title}}</h4>
-                                        <p class="sub-text">{{$ranked['program']->agency->userInfo->name}}</p>
-                                        <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$ranked['program']->city}}</p>
+                @foreach ($rankedPrograms as $ranked)
+                <div class="row prog-card mb-2">
+                    <div class="col ">
+                        <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup({event})">
+                            <div class="prog-texts-container">
+                                <div class=" d-flex mb-2">
+                                    <div class="prog-img"></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="header">
+                                            <h4>{{$ranked['program']->title}}</h4>
+                                            <p class="sub-text">{{$ranked['program']->agency->userInfo->name}}</p>
+                                            <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$ranked['program']->city}}</p>
+                                        </div>
+                                        <div class="text-end">
+                                            <p>{{ $ranked['program']->created_at->format('M d, Y h:i A') }}</p>
+                                        </div>
                                     </div>
-                                    <div class="text-end">
-                                        <p>{{ $ranked['program']->created_at->format('M d, Y h:i A') }}</p>
-                                    </div>
-                                </div>
 
-                            </div>
-                            <div class="row prog-desc mb-1">
-                                <p>{{$ranked['program']->description}}</p>
-                            </div>
-                            <div class="row d-flex">
-                                <div class="match-info">
-                                    {{$ranked['program']->disability->disability_name}}
                                 </div>
-                                <div class="match-info">
-                                    {{$ranked['program']->education->education_name}}
+                                <div class="row prog-desc mb-1">
+                                    <p>{{$ranked['program']->description}}</p>
+                                </div>
+                                <div class="row d-flex">
+                                    <div class="match-info">
+                                        {{$ranked['program']->disability->disability_name}}
+                                    </div>
+                                    <div class="match-info">
+                                        {{$ranked['program']->education->education_name}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
-                            >
-                        </div>
-                    </a>
+                            <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
+                                >
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            @endforeach
+                @endforeach
             @endif
 
         </div>
