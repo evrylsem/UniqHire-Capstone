@@ -19,7 +19,7 @@
             <div class="row mb-3">
                 <div class="col">
                     <h3>{{ $program->title }}</h3>
-                    <p class="sub-text">by {{ $program->agency->userInfo->firstname }}</p>
+                    <p class="sub-text">by {{ $program->agency->userInfo->name }}</p>
                     <p class="sub-text prog-loc"><i class='bx bx-map sub-text'></i>{{ $program->city }}</p>
                 </div>
                 <div class="col text-end prog-btn">
@@ -60,18 +60,18 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <div class="crowdfund-progress mb-3">
+                    <!-- <div class="crowdfund-progress mb-3">
                         @if ($program->crowdfund)
-                        <!-- <div class="crowdfund-progress mt-3"> -->
+                        
                         <p class="sub-text">
                             Crowdfunding Progress: {{ $program->crowdfund->progress }}%
                         </p>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $program->crowdfund->progress }}%</div>
                         </div>
-                        <!-- </div> -->
+                        
                         @endif
-                    </div>
+                    </div> -->
                     <h5>Sponsors</h5>
                     <span class=""></span>
                 </div>

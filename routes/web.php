@@ -52,13 +52,16 @@ Route::middleware('auth')->group(function(){
 
 
     //Trainer Middleware
-    Route::get('/training-programs/manage', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
-    Route::get('/training-programs/add', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
-    Route::post('/training-programs/add', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
-    Route::delete('/training-programs/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
-    Route::get('/training-programs/{id}/edit', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
-    Route::put('/training-programs/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer')->name('programs-update');
-    Route::get('/training-programs/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
+    Route::get('/manage-program', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
+    Route::get('/add-program', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
+    Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
+
+    Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
+    
+    Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
+    Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');
+    
+    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
 
 
     

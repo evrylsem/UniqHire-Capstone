@@ -14,7 +14,8 @@ class AgencyController extends Controller
     public function showPrograms() {
         $userId = auth()->id();
         $programs = TrainingProgram::where('agency_id', $userId)
-        ->with('crowdfund') // Load the related crowdfund event
+        ->latest()
+        ->with('crowdfund')
         ->get();
 
         foreach ($programs as $program) {
@@ -62,7 +63,7 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
-            'goal' => 'nullable|numeric' 
+            // 'goal' => 'nullable|numeric' 
         ]);
 
         // Create a new training program
@@ -77,12 +78,12 @@ class AgencyController extends Controller
             'education_id' => $request->education,
         ]);
 
-        if ($request->has('goal') && $request->goal !== null) {
-            CrowdfundEvent::create([
-                'program_id' => $trainingProgram->id,
-                'goal' => $request->goal,
-            ]);
-        }
+        // if ($request->has('goal') && $request->goal !== null) {
+        //     CrowdfundEvent::create([
+        //         'program_id' => $trainingProgram->id,
+        //         'goal' => $request->goal,
+        //     ]);
+        // }
 
         return redirect()->route('programs-manage');
     }
@@ -120,14 +121,14 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::find($id);
 
-        if($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
             $request->validate([
                 'title' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date',
+                'goal' => 'nullable|numeric' 
             ]);
 
             $program->update([
@@ -139,9 +140,15 @@ class AgencyController extends Controller
                 'disability_id' => $request->disability,
                 'education_id' => $request->education,
             ]);
+
+            // if ($request->has('goal') && $request->goal !== null) {
+            //     CrowdfundEvent::create([
+            //         'program_id' => $program->id,
+            //         'goal' => $request->goal,
+            //     ]);
+            // }
+
+        return redirect()->route('programs-show', $id);
         }
-
-        return redirect()->route('programs-manage');
-
     }
 }

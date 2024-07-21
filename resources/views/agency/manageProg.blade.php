@@ -19,18 +19,16 @@
                         {{ $program->description }}
                     </p>
                 </div>
-                <div class="crowdfund-progress mb-3">
+                <!-- <div class="crowdfund-progress mb-3">
                     @if ($program->crowdfund)
-                    <!-- <div class="crowdfund-progress mt-3"> -->
                     <p class="sub-text">
                         Crowdfunding Progress: {{ $program->crowdfund->progress }}%
                     </p>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $program->crowdfund->progress }}%</div>
                     </div>
-                    <!-- </div> -->
                     @endif
-                </div>
+                </div> -->
                 <div class="d-flex prog-details">
                     <p class="sub-text">
                         <i class='bx bx-group sub-text'></i> Number Participants
