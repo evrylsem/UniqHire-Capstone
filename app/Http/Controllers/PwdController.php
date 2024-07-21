@@ -22,7 +22,7 @@ class PwdController extends Controller
         $programs = TrainingProgram::all();
         $disabilities = Disability::all();
         $educations = EducationLevel::all();
-        $query = TrainingProgram::query();
+        $query = TrainingProgram::query()->latest();
 
         $rankedPrograms = [];
 
@@ -83,5 +83,9 @@ class PwdController extends Controller
         }
 
         return $similarityScore;
+    }
+
+    public function showDetails($id) {
+        
     }
 }

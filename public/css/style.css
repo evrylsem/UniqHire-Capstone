@@ -561,6 +561,7 @@ table tbody .bx {
     color: var(--primary-color);
     font-weight: bold;
     font-size: 15px;
+    margin-right: 0.5rem;
 }
 
 .pwd-browse-prog .prog-card:hover, .agency-prog-container .prog-card:hover {
@@ -582,6 +583,57 @@ table tbody .bx {
 
 .pwd-browse-prog .prog-card .prog-texts-container .header p {
     margin: 0;
+}
+
+/* TRAINING DETAILS POPUP */
+.details-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--bg-color-02);
+    width: 45rem;
+    height: 100vh;
+    padding: 0;
+    box-shadow: var(--side-shadow-01);
+    display: none;
+}
+
+.details-container .header {
+    padding: 0.6rem;
+    background-color: var(--bg-color-01);
+}
+
+.details-container .header i {
+    width: 7rem;
+    font-size: 35px;
+    /* font-weight: bold; */
+    color: var(--primary-color);
+}
+
+.details-container .header h4 {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    font-weight: 600;
+}
+
+.details-container .body {
+    padding: 2rem;
+}
+
+.details-container .body h3 {
+    font-weight: var(--header-extrabold);
+}
+
+.details-container .body p {
+    margin: 0;
+}
+
+.details-container .body .submit-btn {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
+    padding: 0.8rem;
+    width: 6rem;
 }
 
 /* .pwd-browse-prog .prog-card {
@@ -767,12 +819,12 @@ table tbody .bx {
     padding: 0.6rem;
 }
 
-.prog-details-container .prog-details h5 {
+.prog-details-container .prog-details h5, .details-container .body h5 {
     font-weight: 700;
     margin-bottom: 1.5rem;
 }
 
-.prog-details-container .prog-details .requirement {
+.prog-details-container .prog-details .requirement, .details-container .body .requirement {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
     font-weight: bold;
@@ -781,7 +833,7 @@ table tbody .bx {
     border-radius: var(--border-radius);
 }
 
-.prog-details-container .prog-details .more-info {
+.prog-details-container .prog-details .more-info, .details-container .body .more-info {
     height: 10rem;
 }
 

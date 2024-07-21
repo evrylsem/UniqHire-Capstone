@@ -129,7 +129,6 @@
                             @endif
 
                             <li class="nav-item"><a href="{{ route('home') }}/#about" class="">About</a></li>
-                            <li class="nav-item"><a href="{{ route('home') }}/#contact" class="">Contact Us</a></li>
 
                         </ul>
                         <ul class="d-flex align-items-center">
