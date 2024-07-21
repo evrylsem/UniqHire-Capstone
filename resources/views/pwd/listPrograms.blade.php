@@ -103,4 +103,23 @@
     </div>
     <div class="col empty-space"></div>
 </div>
+
 @endsection
+
+<script>
+
+    function submitForm() {
+        document.getElementById('filterForm').submit();
+    }
+
+    // Function to check if the input is empty and submit the form
+    function checkAndSubmit() {
+        var searchInput = document.getElementById('searchInput');
+        if (searchInput.value.trim() === ' ') {
+            document.getElementById('searchForm').submit();
+        }
+    }
+
+    
+
+</script>
