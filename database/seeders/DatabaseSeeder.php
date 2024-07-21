@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\UserInfo;
+use App\Models\TrainingProgram;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -84,5 +85,38 @@ class DatabaseSeeder extends Seeder
 
 
         $pwduser->role()->attach($pwd);
+
+        $traineruser = User::create([        
+            'email' => 'trainer@example.com',
+            'password' => Hash::make('sheesh'),
+            
+        ]);
+
+        UserInfo::create([
+            'firstname' => 'Bilat',
+            'lastname' => 'Way Hugas',
+            'contactnumber' => '09123456789',
+            'city' => 'cebu',
+            'state' => 'bulacao',
+            'disability_id' => $none->id, // Assign a disability ID here
+            'user_id' => $traineruser->id,
+        ]);
+
+        TrainingProgram::create([
+            'id' => '001',
+            'agency_id' => $traineruser->id,
+            'title' => 'Luto gamit tiil program',
+            'description' => 'Wa kay kamot? Wa nay problema kay sa programa namo makat on mog luto gamit tiil',
+            'city' => 'Cebu City',
+            'participants' => 30,
+            'start' => date("Y-m-d"),
+            'end' => date("Y-m-d"),
+            'disability_id' => $leg->id,
+            'education_id' => $hsgrad->id,
+            'created_at' => date("Y-m-d"),
+            'updated_at' => date("Y-m-d"),
+        ]); 
+
+        $traineruser->role()->attach($trainer);
     }
 }
