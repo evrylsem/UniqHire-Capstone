@@ -7,8 +7,9 @@
 <div class="row mt-2 pwd-browse-prog">
     <div class="filter-container">
         <form action="">
-            <div class="mb-3">
+            <div class="d-flex justify-content-between mb-3">
                 <h3>Filter</h3>
+                <i class='bx bx-filter-alt fs-3 sub-text'></i>
             </div>
             <div class="mb-3">
                 <span>

@@ -478,6 +478,10 @@ table tbody .bx {
     background-color: var(--bg-color-02);
 }
 
+.pwd-browse-prog .filter-container i {
+    width: 3rem;
+}
+
 .pwd-browse-prog .filter-container span p {
     font-size: 22px;
     font-weight: bold;

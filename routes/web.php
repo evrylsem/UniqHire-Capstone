@@ -23,7 +23,7 @@ Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/register/pwd', [AuthController::class, 'pwdSection'])->name('pwd-section');
 // Route::get('/displayusers/{$id}', [UserInfoController::class, 'showAll']);
 
-Route::get('/pwd/list', [PwdController::class, 'showPrograms'])->name('pwd-list-program');
+
 
 
 Route::get('/all', [AuthController::class, 'showAccs']);
@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
 
 
-    
+    Route::get('/browse/training-programs', [PwdController::class, 'showPrograms'])->middleware('role:PWD')->name('pwd-list-program');
 
 });
 
