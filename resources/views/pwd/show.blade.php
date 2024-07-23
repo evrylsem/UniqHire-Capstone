@@ -7,9 +7,9 @@
     <div class="body">
         <div class="row mb-4">
             <div class="col">
-                <h3>Title</h3>
-                <p class="sub-text">by name</p>
-                <p class="sub-text"><i class='bx bx-map sub-text'></i> Coty</p>
+                <h3 id="title">Title</h3>
+                <p class="sub-text" id="agency">by agency name</p>
+                <p class="sub-text" id="city"><i class='bx bx-map sub-text'></i> City</p>
             </div>
             <div class="col text-end prog-btn">
                 <form action="" method="POST">
@@ -19,16 +19,16 @@
         </div>
 
         <div class="mb-5">
-            <p>Description</p>
+            <p id="desc">Description</p>
         </div>
         <div class="row more-info">
             <div class="col">
                 <h5>We Accept</h5>
-                <span class="requirement">Disability</span>
+                <span class="requirement" id="disability">Disability</span>
             </div>
             <div class="col">
                 <h5>Education Level</h5>
-                <span class="requirement">Education</span>
+                <span class="requirement" id="education">Education</span>
             </div>
         </div>
     </div>
@@ -52,7 +52,6 @@
             container.style.display = 'none';
         });
 
-        // Example function to open the popup (you should call this function where needed)
         function openPopup() {
             container.style.display = 'block';
         }
