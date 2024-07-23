@@ -23,6 +23,16 @@
         </div>
         <div class="row more-info">
             <div class="col">
+                <h5>Start Date</h5>
+                <p id="start">Start</p>
+            </div>
+            <div class="col">
+                <h5>End Date</h5>
+                <p id="end">End</p>
+            </div>
+        </div>
+        <div class="row more-info">
+            <div class="col">
                 <h5>We Accept</h5>
                 <span class="requirement" id="disability">Disability</span>
             </div>
