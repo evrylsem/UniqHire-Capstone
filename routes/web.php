@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserInfoController;
+use App\Http\Controllers\NotificationController;
 use App\Models\UserInfo;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/admin/pwdusers', [AuthController::class, 'showAccs'])->name('admin-pwdusers');
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
 
 
@@ -46,9 +47,9 @@ Route::middleware('auth')->group(function(){
     Route::put('/training-programs/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer')->name('programs-update');
     Route::get('/training-programs/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
 
-
-
-
+    //NOTIFICATIONS!!!
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
 
 

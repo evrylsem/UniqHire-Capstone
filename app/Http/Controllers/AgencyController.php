@@ -7,8 +7,12 @@ use App\Models\EducationLevel;
 use App\Models\TrainingProgram;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
 use DateTime;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AgencyController extends Controller
 {
@@ -64,6 +68,16 @@ class AgencyController extends Controller
             'education_id' => $request->education,
         ]);
 
+        //NOTIFY PWD USERS!!!
+        $pwdUsers = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'PWD');
+        })->get();
+
+        foreach ($pwdUsers as $user) {
+            Log::info('Sending notifications to user: ' . $user->id);
+            $user->notify(new NewTrainingProgramNotification($trainingProgram));
+        }
+
         return redirect()->route('programs-manage');
     }
 
@@ -72,6 +86,11 @@ class AgencyController extends Controller
         $program = TrainingProgram::find($id);
 
         if ($program && $program->agency_id == auth()->id()) {
+            // Find and delete related notifications
+            DB::table('notifications')
+                ->where('data', 'like', '%"training_program_id":' . $id . '%')
+                ->delete();
+
             $program->delete();
         }
 

@@ -71,8 +71,6 @@
                     <li class=""><a href="{{ url('/logout')}}"><i class='bx bx-log-out-circle side-icon'></i><span class="side-title">Logout</span></a></li>
                 </div>
             </div>
-
-
         </nav>
         <div class="container-fluid">
             <div class=" content-container">
@@ -85,14 +83,28 @@
                             <li class="nav-item"><a href="">Browse Training Programs</a></li>
                             <li class="nav-item"><a href="">Find Work</a></li>
                             @endif
-
                             <li class="nav-item"><a href="#about">About</a></li>
                             <li class="nav-item"><a href="#about">Contact Us</a></li>
-
                         </ul>
                         <ul class="d-flex align-items-center">
-                            <li class="nav-item user-notif"><a href="#"><i class='bx bxs-inbox'></i></a></li>
-                            <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->firstname  . " " .  Auth::user()->userInfo->lastname }}</span></li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class='bx bxs-inbox'></i>
+                                    <span class="badge bg-danger">{{ Auth::user()->unreadNotifications->count() }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" id="notificationsMenu">
+                                    @forelse (Auth::user()->unreadNotifications as $notification)
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url('/training-programs/' . $notification->data['training_program_id']) }}">
+                                            {{ $notification->data['title'] }}
+                                        </a>
+                                    </li>
+                                    @empty
+                                    <li><a class="dropdown-item" href="#">No new notifications</a></li>
+                                    @endforelse
+                                </ul>
+                            </li>
+                            <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->firstname . " " . Auth::user()->userInfo->lastname }}</span></li>
                         </ul>
                     </div>
                 </nav>
@@ -100,17 +112,86 @@
             <div class="content-container">
                 @yield('page-content')
             </div>
-
         </div>
         @else
         <div class="container-fluid">
             @yield('auth-content')
         </div>
-
         @endif
-
-
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notifDropdown = document.getElementById('notifDropdown');
+            const notificationsMenu = document.getElementById('notificationsMenu');
+            const badge = document.querySelector('.badge');
+
+            function fetchNotifications() {
+                fetch("{{ route('notifications') }}")
+                    .then(response => response.json())
+                    .then(data => {
+                        notificationsMenu.innerHTML = '';
+                        let unreadCount = 0;
+
+                        if (data.length > 0) {
+                            data.forEach(notif => {
+                                if (!notif.read_at) {
+                                    unreadCount++;
+                                }
+                                notificationsMenu.innerHTML += `
+                                <li class="${notif.read_at ? 'read' : 'unread'}">
+                                    <a href="{{ url('/training-programs') }}/${notif.data.training_program_id}" data-id="${notif.id}" class="notif-item">
+                                        ${notif.data.title || 'No title'}
+                                    </a>
+                                </li>
+                            `;
+                            });
+                        } else {
+                            notificationsMenu.innerHTML = '<li>No new notifications</li>';
+                        }
+
+                        badge.textContent = unreadCount > 0 ? unreadCount : '';
+                    });
+            }
+
+            function markNotificationAsRead(id) {
+                fetch("{{ route('notifications.markAsRead') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        notification_id: id
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        fetchNotifications(); // Refresh notifications
+                    }
+                });
+            }
+
+            notifDropdown.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetchNotifications();
+            });
+
+            notificationsMenu.addEventListener('click', function(e) {
+                if (e.target.classList.contains('notif-item')) {
+                    const notifId = e.target.getAttribute('data-id');
+                    markNotificationAsRead(notifId);
+                }
+            });
+
+            // Fetch notifications on page load
+            fetchNotifications();
+        });
+    </script>
+
+
+
+
+
 </body>
 
 </html>
