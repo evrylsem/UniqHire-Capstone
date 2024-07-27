@@ -23,7 +23,7 @@ Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/register/pwd', [AuthController::class, 'pwdSection'])->name('pwd-section');
 // Route::get('/displayusers/{$id}', [UserInfoController::class, 'showAll']);
 
-Route::get('/pwd/list', [PwdController::class, 'showPrograms'])->name('pwd-list-program');
+
 
 
 Route::get('/all', [AuthController::class, 'showAccs']);
@@ -36,6 +36,12 @@ Route::get('/admin/pwdusers', [AuthController::class, 'showAccs'])->name('admin-
 
 Route::middleware('auth')->group(function(){
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
+    // Route::get('/home/#about', function(){
+
+    // })->name('about');
+    // Route::get('/home/#contact', function () {
+
+    // })->name('contact');
 
 
     //Admin Middleware
@@ -46,16 +52,19 @@ Route::middleware('auth')->group(function(){
 
 
     //Trainer Middleware
-    Route::get('/training-programs/manage', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
-    Route::get('/training-programs/add', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
-    Route::post('/training-programs/add', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
-    Route::delete('/training-programs/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
-    Route::get('/training-programs/{id}/edit', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
-    Route::put('/training-programs/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer')->name('programs-update');
-    Route::get('/training-programs/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
+    Route::get('/manage-program', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
+    Route::get('/add-program', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
+    Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
+
+    Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
+    
+    Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
+    Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');
+    
+    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
 
 
-
+    Route::get('/browse/training-programs', [PwdController::class, 'showPrograms'])->middleware('role:PWD')->name('pwd-list-program');
 
 });
 

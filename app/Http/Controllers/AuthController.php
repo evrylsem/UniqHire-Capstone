@@ -79,16 +79,16 @@ class AuthController extends Controller
         }
 
         $request->validate([
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            // 'lastname' => 'nullable|string|max:255',
             // 'email' => 'required|string|email|unique:users,email|max:255',
             'contactnumber' => 'required|string|max:255',
             'password' => 'required|string|min:4|max:255|confirmed',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
-            // 'disability' => 'required|string|exists:disabilities,id',
+            // 'disability' => 'required|string|exists:disabilities,disability_name',
             'pwd_card' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            // 'role' => 'required|string|exists:roles,id',
+            // 'role' => 'required|string|exists:roles,role_name',
         ]);
 
         
@@ -103,8 +103,8 @@ class AuthController extends Controller
 
         UserInfo::create([
             'user_id' => $user->id,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
+            'name' => $request->name,
+            // 'lastname' => $request->lastname,
             'contactnumber' => $request->contactnumber,
             'city' => $request->city,
             'state' => $request->state,

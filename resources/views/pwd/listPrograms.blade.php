@@ -1,32 +1,36 @@
 @extends('layout')
 
-@section('page-title', 'Home page')
+@section('page-title', 'Browse Training Programs')
 
 @section('page-content')
-<div id="container">  
-
-    <div id="sidebar">
-        <form id="filterForm" action="{{ route('pwd-list-program') }}" method="GET">
-            <div id="filterContainer">
-
-                <h5 id="filter">FILTER</h5>
-
-                <h6 id="filterLabel">DISABILITY</h6>
-                
+<div class="row mt-2 pwd-browse-prog">
+    @include('pwd.show')
+    <div class="filter-container">
+        <form action="{{ route('pwd-list-program') }}" method="GET" id="filterForm">
+            <div class="d-flex justify-content-between mb-3">
+                <h3>Filter</h3>
+                <i class='bx bx-filter-alt fs-3 sub-text'></i>
+            </div>
+            <div class="mb-3">
+                <span>
+                    <p>Disabilities</p>
+                </span>
                 @foreach($disabilities as $disability)
-                    @if($disability->disability_name !== "Not Applicable")
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="{{$disability->disability_name}}" id="flexCheckDefault{{$loop->index}}" name="disability[]" onchange="submitForm()" {{ in_array($disability->disability_name, request()->input('disability', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="flexCheckDefault{{$loop->index}}">                    
-                                {{$disability->disability_name}}
-                                
-                            </label>
-                        </div>
-                    @endif
-                @endforeach            
+                @if($disability->disability_name !== "Not Applicable")
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="{{$disability->disability_name}}" id="flexCheckDefault{{$loop->index}}" name="disability[]" onchange="submitForm()" {{ in_array($disability->disability_name, request()->input('disability', [])) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="flexCheckDefault{{$loop->index}}">
+                        {{$disability->disability_name}}
 
-                <h6 id="filterLabel">EDUCATIONAL LEVEL</h6>
-
+                    </label>
+                </div>
+                @endif
+                @endforeach
+            </div>
+            <div class="mb-3">
+                <span>
+                    <p>Education Level</p>
+                </span>
                 @foreach($educations as $education)
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="{{$education->education_name}}" id="flexCheckChecked{{$loop->index}}" name="education[]" onchange="submitForm()" {{ in_array($education->education_name, request()->input('education', [])) ? 'checked' : '' }}>
@@ -34,95 +38,116 @@
                         {{$education->education_name}}
                     </label>
                 </div>
-                @endforeach              
-
+                @endforeach
             </div>
- 
         </form>
     </div>
-
-    <nav id="nav">
-
-        <div class="container mt-3">
-            <form id="searchForm" class="d-flex justify-content-center" role="search" action="{{ route('pwd-list-program') }}" method="GET">
-                <input id="searchInput" class="form-control searchField" type="search" placeholder="Search Training Agency" aria-label="Search" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
-                <button class="btn btn-outline-success searchButton" type="submit">Search</button>
-            </form>
-        </div>     
-
-    </nav>
-
-    <main id="main">
-
-        @if($filteredPrograms != null)
-
-            @foreach ($filteredPrograms as $filtered)
-                <div id="main-container" >
-
-                    <img src="https://i.pinimg.com/736x/ea/95/85/ea95858650d7cc828048c499969d5a74.jpg" alt="Image" id="training_image">
-
-                    <div id="main-content">
-
-                        <h3>{{ $filtered->title }}</h3>
-                        <h6 class="main-author">{{$filtered->agency->userInfo->firstname . " " . $filtered->agency->userInfo->lastname}}</h6>
-                        <p class="training-description">{{$filtered->description}}</p>
-
-                        <div id="main-requirement">
-                            <h6>{{ $filtered->disability->disability_name }}</h6>
-                            <h6>{{ $filtered->education->education_name }}</h6>
-                        </div>
-
+    <div class="col empty-space"></div>
+    <div class="col d-flex flex-column align-items-center">
+        <div class="row mb-4">
+            <div class="col d-flex justify-content-center">
+                <form role="search" action="{{ route('pwd-list-program') }}" method="GET" id="searchForm">
+                    <div class="d-flex searchbar">
+                        <input class="form-control" type="search" placeholder="Search Training Agency" aria-label="Search" id="searchInput" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
+                        <button class="btn btn-outline-success searchButton" type="submit">Search</button>
                     </div>
+                </form>
+            </div>
+        </div>
+        <div class="prog-grid">
+            @if($filteredPrograms != null)
+                @foreach ($filteredPrograms as $filtered)
+                <div class="row prog-card mb-2">
+                    <div class="col ">
+                        <a href="" class="d-flex prog-texts" data-id="{{ $filtered->id }}" onclick="openPopup(event)">
+                            <div class="prog-texts-container">
+                                <div class=" d-flex mb-2">
+                                    <div class="prog-img"></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="header">
+                                            <h4>{{$filtered->title}}</h4>
+                                            <p class="sub-text">{{$filtered->agency->userInfo->name}}</p>
+                                            <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$filtered->city}}</p>
+                                        </div>
+                                        <div class="text-end">
+                                            <p>{{ $filtered->created_at->format('M d, Y h:i A') }}</p>
+                                        </div>
+                                    </div>
 
-                    <p id="main-date">{{$filtered->created_at}}</p>
-
-                    <div id="main-icon">
-                        <i class='bx bx-bookmark bx-md side-icon' style="color: #04B000"></i>
-                        <a href="#"><i class='bx bx-chevron-right bx-md side-icon' style="color: #758694"></i></a>
+                                </div>
+                                <div class="row prog-desc mb-1">
+                                    <p>{{$filtered->description}}</p>
+                                </div>
+                                <div class="row d-flex">
+                                    <div class="match-info">
+                                        {{$filtered->disability->disability_name}}
+                                    </div>
+                                    <div class="match-info">
+                                        {{$filtered->education->education_name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
+                                >
+                            </div>
+                        </a>
                     </div>
-
-                </div>                
-            @endforeach 
-
-        @else     
-
-            @foreach ($rankedPrograms as $ranked)                                                
-                <div id="main-container">
-
-                    <img src="https://i.pinimg.com/736x/ea/95/85/ea95858650d7cc828048c499969d5a74.jpg" alt="Image" id="training_image">
-
-                    <div id="main-content">
-
-                        <h3>{{ $ranked['program']->title }}</h3>
-                        <h6 class="main-author">{{ $ranked['program']->agency->userInfo->firstname . " " . $ranked['program']->agency->userInfo->lastname }}</h6>
-                        <p class="training-description">{{ $ranked['program']->description }}</p>
-
-                        <div id="main-requirement">
-                            <h6>{{ $ranked['program']->disability->disability_name }}</h6>
-                            <h6>{{ $ranked['program']->education->education_name }}</h6>
-                        </div>
-
-                    </div>
-
-                    <p id="main-date">{{ $ranked['program']->created_at }}</p>
-
-                    <div id="main-icon">
-                        <i class='bx bx-bookmark bx-md side-icon' style="color: #04B000"></i>
-                        <a href="#"><i class='bx bx-chevron-right bx-md side-icon' style="color: #758694"></i></a>
-                    </div>
-
                 </div>
-            @endforeach        
-        @endif
+                @endforeach
+            @else
+                @foreach ($rankedPrograms as $ranked)
+                <div class="row prog-card mb-2">
+                    <div class="col ">
+                        <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup({event})">
+                            <div class="prog-texts-container">
+                                <div class=" d-flex mb-2">
+                                    <div class="prog-img"></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="header">
+                                            <h4>{{$ranked['program']->title}}</h4>
+                                            <p class="sub-text">{{$ranked['program']->agency->userInfo->name}}</p>
+                                            <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$ranked['program']->city}}</p>
+                                        </div>
+                                        <div class="text-end">
+                                            <p>{{ $ranked['program']->created_at->format('M d, Y h:i A') }}</p>
+                                        </div>
+                                    </div>
 
-    </main>
+                                </div>
+                                <div class="row prog-desc mb-1">
+                                    <p>{{$ranked['program']->description}}</p>
+                                </div>
+                                <div class="row d-flex">
+                                    <div class="match-info">
+                                        {{$ranked['program']->disability->disability_name}}
+                                    </div>
+                                    <div class="match-info">
+                                        {{$ranked['program']->education->education_name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
+                                >
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            @endif
 
+        </div>
+
+
+
+
+
+    </div>
+    <div class="col empty-space"></div>
 </div>
 
 @endsection
 
 <script>
-
     function submitForm() {
         document.getElementById('filterForm').submit();
     }
@@ -135,6 +160,16 @@
         }
     }
 
-    
+    function openPopup(event) {
+        event.preventDefault(); // Prevent the default anchor behavior
+        var container = document.getElementById('details-container');
+        var programId = event.currentTarget.getAttribute('data-id');
 
+        container.style.display = 'block';
+    }
+    // Close the popup when clicking on the close button
+    // document.getElementById('close-popup').addEventListener('click', function(e) {
+    //     e.preventDefault();
+    //     document.getElementById('details-container').style.display = 'none';
+    // });
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CrowdfundEvent;
 use App\Models\Disability;
 use App\Models\EducationLevel;
 use App\Models\TrainingProgram;
@@ -12,12 +13,23 @@ class AgencyController extends Controller
 {
     public function showPrograms() {
         $userId = auth()->id();
-        $programs = TrainingProgram::where('agency_id', $userId)->orderBy('created_at', 'desc')->get();
+        $programs = TrainingProgram::where('agency_id', $userId)
+        ->latest()
+        ->with('crowdfund')
+        ->get();
+
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
             $today = new DateTime();
             $interval = $today->diff($endDate);
             $program->remainingDays = $interval->days;
+
+            if ($program->crowdfund) {
+                $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
+                $goal = $program->crowdfund->goal ?? 1; // Default to 1 to avoid division by zero
+                $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
+                $program->crowdfund->progress = $progress;
+            }
         }
         return view('agency.manageProg', compact('programs'));
     }
@@ -25,7 +37,12 @@ class AgencyController extends Controller
     public function showProgramDetails($id)
     {
         $program = TrainingProgram::findOrFail($id);
-
+        if ($program->crowdfund) {
+            $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
+            $goal = $program->crowdfund->goal ?? 1; // Default to 1 to avoid division by zero
+            $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
+            $program->crowdfund->progress = $progress;
+        }
         return view('agency.showProg', compact('program'));
     }
 
@@ -46,6 +63,7 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
+            // 'goal' => 'nullable|numeric' 
         ]);
 
         // Create a new training program
@@ -59,6 +77,13 @@ class AgencyController extends Controller
             'disability_id' => $request->disability,
             'education_id' => $request->education,
         ]);
+
+        // if ($request->has('goal') && $request->goal !== null) {
+        //     CrowdfundEvent::create([
+        //         'program_id' => $trainingProgram->id,
+        //         'goal' => $request->goal,
+        //     ]);
+        // }
 
         return redirect()->route('programs-manage');
     }
@@ -96,14 +121,14 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::find($id);
 
-        if($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
             $request->validate([
                 'title' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date',
+                'goal' => 'nullable|numeric' 
             ]);
 
             $program->update([
@@ -115,9 +140,15 @@ class AgencyController extends Controller
                 'disability_id' => $request->disability,
                 'education_id' => $request->education,
             ]);
+
+            // if ($request->has('goal') && $request->goal !== null) {
+            //     CrowdfundEvent::create([
+            //         'program_id' => $program->id,
+            //         'goal' => $request->goal,
+            //     ]);
+            // }
+
+        return redirect()->route('programs-show', $id);
         }
-
-        return redirect()->route('programs-manage');
-
     }
 }

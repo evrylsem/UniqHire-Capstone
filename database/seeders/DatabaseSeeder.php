@@ -54,8 +54,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'firstname' => 'Evryl',
-            'lastname' => 'Claire',
+            'name' => 'Evryl Claire',
+            // 'lastname' => 'Claire',
             'contactnumber' => '09123456789',
             'city' => 'cebu',
             'state' => 'bulacao',
@@ -74,8 +74,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'firstname' => 'Juan',
-            'lastname' => 'Dela Cruz',
+            'name' => 'Juan Dela Cruz',
+            // 'lastname' => 'Dela Cruz',
             'contactnumber' => '09123456789',
             'city' => 'cebu',
             'state' => 'bulacao',
@@ -93,8 +93,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'firstname' => 'Bilat',
-            'lastname' => 'Way Hugas',
+            'name' => 'Bilat Way Hugas',
+            // 'lastname' => 'Way Hugas',
             'contactnumber' => '09123456789',
             'city' => 'cebu',
             'state' => 'bulacao',
