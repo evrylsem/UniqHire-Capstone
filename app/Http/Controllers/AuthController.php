@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public function showProfile() {
+        return view('auth.profile');
+    }
+
     public function showHomePage()
     {
         $images = [

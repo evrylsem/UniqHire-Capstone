@@ -136,7 +136,7 @@ ul, li {
     margin-right: 1rem;
 }
 
-.navbar .nav-item a.active {
+.navbar .nav-item .active {
     color: var(--primary-color);
     font-weight: var(--header-extrabold);
 }
@@ -222,12 +222,12 @@ ul, li {
 }
 
 .layout-container .sidebar li a:hover {
-    background: var(--primary-color);
+    background: var(--primary-color-light);
 }
 
 .layout-container .sidebar li a:hover .side-icon, .layout-container .sidebar li a:hover .side-title, .layout-container .sidebar li a:hover .bxs-right-arrow,
 .layout-container .sidebar li a:hover .bx {
-    color: var(--bg-color-01);
+    color: var(--primary-color);
 }
 
 .layout-container .sidebar .sidebar-menu {
@@ -236,6 +236,13 @@ ul, li {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.layout-container .sidebar .sidebar-menu .active {
+    background-color: var(--primary-color-light);
+}
+.layout-container .sidebar .sidebar-menu .active .side-icon, .layout-container .sidebar .sidebar-menu .active .side-title {
+    color: var(--primary-color);
 }
 
 .layout-container .sidebar .sidebar-bottom {
@@ -263,7 +270,7 @@ ul, li {
     display: none;
 }
 
-.layout-container .sidebar-menu .submenu.active {
+.layout-container .sidebar-menu .submenu.active-drop {
     display: block;
 }
 
@@ -319,6 +326,17 @@ ul, li {
 }
 
 /* PAGE CONTAINER */
+.home-container {
+    position: absolute;
+    top: 8rem;
+    margin-bottom: 3rem;
+    padding-right: 3rem;
+    padding-left: 7rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .layout-container .content-container {
     /* padding-left: 4.5rem; */
     display: flex;
@@ -935,3 +953,26 @@ table tbody .bx {
 
 
 
+
+/* PROFILE */
+.profile-container {
+    position: absolute;
+    top: 8rem;
+    margin-bottom: 3rem;
+    padding-left: 7rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.profile-container .profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-container .profile-pic {
+    background-color: var(--primary-color-light);
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+    margin-right: 4rem;
+}

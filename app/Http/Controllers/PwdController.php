@@ -60,7 +60,7 @@ class PwdController extends Controller
             });
         }
 
-        $filteredPrograms = $query->paginate(3);
+        $filteredPrograms = $query->paginate(5);
         Log::info('Ranked Filtered Programs:', $rankedPrograms);
 
         return view('pwd.listPrograms', compact('rankedPrograms', 'disabilities', 'educations', 'filteredPrograms'));

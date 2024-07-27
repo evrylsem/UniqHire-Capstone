@@ -32,8 +32,8 @@
             </header>
             <div class="sidebar-menu">
                 <ul class="">
-                    <li>
-                        <a href="#">
+                    <li class="side-item">
+                        <a href="{{ route('profile') }}" class="{{ request()->routeIs('profile') ? 'active' : '' }}">
                             <i class='bx bx-user-circle side-icon'></i>
                             <span class="side-title">Profile</span>
                         </a>
@@ -41,14 +41,14 @@
 
                     <!-- PWD ROLE ACCESS -->
                     @if (Auth::user()->hasRole('PWD'))
-                    <li class="">
+                    <li class="side-item">
                         <a href="#" class="trainings-drop" onclick="toggleSubmenu();">
                             <i class='bx bxs-school side-icon'></i>
                             <span class="side-title">Trainings &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i id="arrow-drop" class='bx bxs-right-arrow'></i></span>
                         </a>
                     </li>
                     <div class="submenu" id="trainings-submenu">
-                        <li>
+                        <li >
                             <a href="">
                                 <i class='bx bx-timer'></i>
                                 <span class="side-title">On-going</span>
@@ -61,13 +61,13 @@
                             </a>
                         </li>
                     </div>
-                    <li>
+                    <li class="side-item">
                         <a href="#">
                             <i class='bx bx-briefcase-alt-2 side-icon'></i>
                             <span class="side-title">Job Application</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="side-item">
                         <a href="#">
                             <i class='bx bx-cog side-icon'></i>
                             <span class="side-title">Settings</span>
@@ -77,23 +77,23 @@
 
                     <!-- ADMIN ROLE ACCESS -->
                     @if (Auth::user()->hasRole('Admin'))
-                    <li><a href="{{route('pwd-list')}}">
+                    <li class="side-item"><a href="{{route('pwd-list')}}">
                             <i class='bx bx-handicap side-icon'></i>
                             <span class="side-title">PWDs</span>
                         </a></li>
-                    <li><a href="{{route('trainer-list')}}">
+                    <li class="side-item"><a href="{{route('trainer-list')}}">
                             <i class='bx bxs-school side-icon'></i>
                             <span class="side-title">Training Agencies</span>
                         </a></li>
-                    <li><a href="{{route('employee-list')}}">
+                    <li class="side-item"><a href="{{route('employee-list')}}">
                             <i class='bx bx-briefcase-alt-2 side-icon'></i>
                             <span class="side-title">Employers</span>
                         </a></li>
-                    <li><a href="{{route('sponsor-list')}}">
+                    <li class="side-item"><a href="{{route('sponsor-list')}}">
                             <i class='bx bx-dollar-circle side-icon'></i>
                             <span class="side-title">Sponsors</span>
                         </a></li>
-                    <li><a href="">
+                    <li class="side-item"><a href="">
                             <i class='bx bx-cog side-icon'></i>
                             <span class="side-title">Settings</span>
                         </a></li>
@@ -101,10 +101,12 @@
                     @endif
                     <!-- TRAINER ROLE ACCESS -->
                     @if (Auth::user()->hasRole('Trainer'))
-                    <li><a href="{{route('programs-manage')}}">
+                    <li class="side-item">
+                        <a href="{{route('programs-manage')}}">
                             <i class='bx bxs-school side-icon'></i>
                             <span class="side-title">Training Programs</span>
-                        </a></li>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- <li><a href="#"><i class='bx bx-cog side-icon'></i><span class="side-title">Sponsor</span></a></li> -->
@@ -123,13 +125,13 @@
                         <div>
                             <ul class="d-flex align-items-center">
                                 <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
-                                <li class="nav-item"><a href="{{route('home')}}" class="">Home</a></li>
+                                <li class="nav-item"><a href="{{route('home')}}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                                 @if (Auth::user()->hasRole('PWD'))
-                                <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="">Browse Training Programs</a></li>
+                                <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program') ? 'active' : '' }}">Browse Training Programs</a></li>
                                 <li class="nav-item"><a href="">Find Work</a></li>
                                 @endif
 
-                                <li class="nav-item"><a href="{{ route('home') }}/#about" class="">About</a></li>
+                                <!-- <li class="nav-item"><a href="{{ route('home') }}/#about" class="">About</a></li> -->
 
                             </ul>
                         </div>
@@ -163,7 +165,7 @@
         var submenu = document.getElementById('trainings-submenu');
         var icon = document.getElementById('arrow-drop');
 
-        submenu.classList.toggle('active');
+        submenu.classList.toggle('active-drop');
         icon.classList.toggle('arrow-down');
     }
 </script>

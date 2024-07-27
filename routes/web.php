@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function(){
     // Route::get('/home/#contact', function () {
 
     // })->name('contact');
-
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
 
     //Admin Middleware
     Route::get('/pwd/all', [AdminController::class, 'showPwds'])->middleware('role:Admin')->name('pwd-list');
