@@ -22,7 +22,7 @@ class PwdController extends Controller
         $programs = TrainingProgram::all();
         $disabilities = Disability::all();
         $educations = EducationLevel::all();
-        $query = TrainingProgram::query()->latest();
+        $query = TrainingProgram::query();
 
         $rankedPrograms = [];
 
@@ -62,7 +62,7 @@ class PwdController extends Controller
             });
         }
 
-        $filteredPrograms = $query->get();
+        $filteredPrograms = $query->paginate(5);
         Log::info('Ranked Filtered Programs:', $rankedPrograms);
 
         return view('pwd.listPrograms', compact('rankedPrograms','disabilities', 'educations', 'filteredPrograms'));

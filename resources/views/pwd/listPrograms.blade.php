@@ -95,6 +95,9 @@
                 </div>
             </div>
             @endforeach
+            <div class="pagination">
+                {{ $filteredPrograms->links() }}
+            </div>
             @else
             @foreach ($rankedPrograms as $ranked)
             <div class="row prog-card mb-2">
@@ -134,6 +137,9 @@
                 </div>
             </div>
             @endforeach
+            <div class="pagination">
+                {{ $ranked['program']->links() }}
+            </div>
             @endif
 
         </div>
