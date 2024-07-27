@@ -31,15 +31,27 @@ class AuthController extends Controller
             'about' => 'nullable|string'
         ]);
 
-        $user->userInfo->update([
-            'name' => $request->name,
-            'contactnumber' => $request->contactnumber,
-            'age' => $request->age,
-            'city' => $request->city,
-            'state' => $request->state,
-            'about' => $request->about,
-            'disability_id' => $request->disability,
-        ]);        
+        if($user->userInfo->disability_id == 1){
+            $user->userInfo->update([
+                'name' => $request->name,
+                'contactnumber' => $request->contactnumber,
+                'city' => $request->city,
+                'state' => $request->state,
+                'about' => $request->about,
+            ]);  
+        } else {
+            $user->userInfo->update([
+                'name' => $request->name,
+                'contactnumber' => $request->contactnumber,
+                'age' => $request->age,
+                'city' => $request->city,
+                'state' => $request->state,
+                'about' => $request->about,
+                'disability_id' => $request->disability,
+            ]);  
+        }
+
+              
 
         return redirect()->route('profile');
     }
