@@ -177,16 +177,17 @@
         });
     });
 
+
+
     function fetchProvinces() {
         fetch('https://psgc.cloud/api/provinces')
             .then(response => response.json())
             .then(data => {
-                console.log('Provinces data:', data);
                 var provinceSelect = document.getElementById('provinceSelect');
                 data.sort((a, b) => a.name.localeCompare(b.name));
                 data.forEach(province => {
                     var option = document.createElement('option');
-                    option.value = province.code;
+                    option.value = province.name;
                     option.text = province.name;
                     provinceSelect.appendChild(option);
                 });
@@ -203,7 +204,7 @@
                 data.sort((a, b) => a.name.localeCompare(b.name));
                 data.forEach(city => {
                     var option = document.createElement('option');
-                    option.value = city.code;
+                    option.value = city.name;
                     option.text = city.name;
                     citySelect.appendChild(option);
                 });
