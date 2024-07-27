@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -25,17 +26,19 @@ class AuthController extends Controller
     }
 
     //LOGIN PROCESS
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required|string|',
             'password' => 'required|string',
         ]);
 
-        if(Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
         }
@@ -46,17 +49,19 @@ class AuthController extends Controller
     }
 
     // REGISTRATION PROCESS
-    public function showRegistration() {
+    public function showRegistration()
+    {
         $roles = Role::all();
         $disabilities = Disability::all();
         return view('auth.register', compact('roles', 'disabilities'));
     }
 
-    public function register(Request $request) {
-        if($request->generate_email || ($request->email && $request->generate_email)){
+    public function register(Request $request)
+    {
+        if ($request->generate_email || ($request->email && $request->generate_email)) {
             $email = fake()->unique()->safeEmail();
         } else {
-           $email = $request->email;
+            $email = $request->email;
         }
 
         $request->validate([
@@ -65,14 +70,14 @@ class AuthController extends Controller
             // 'email' => 'required|string|email|unique:users,email|max:255',
             'contactnumber' => 'required|string|max:255',
             'password' => 'required|string|min:4|max:255|confirmed',
+            'province' => 'required|string|max:255',
             'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
             // 'disability' => 'required|string|exists:disabilities,id',
             'pwd_card' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // 'role' => 'required|string|exists:roles,id',
         ]);
 
-        
+
 
         $user = User::create([
             'email' => $email,
@@ -87,8 +92,8 @@ class AuthController extends Controller
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'contactnumber' => $request->contactnumber,
+            'province' => $request->province,
             'city' => $request->city,
-            'state' => $request->state,
             'disability_id' => $request->disability,
             'pwd_card' => null,
         ]);

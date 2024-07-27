@@ -14,17 +14,19 @@ class UserInfo extends Model
         'firstname',
         'lastname',
         'contactnumber',
+        'province',
         'city',
-        'state',
         'disability_id',
         'pwd_card',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function disability() {
+    public function disability()
+    {
         return $this->belongsTo(Disability::class);
     }
 }

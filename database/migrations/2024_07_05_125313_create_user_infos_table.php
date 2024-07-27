@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('contactnumber');
+            $table->string('province');
             $table->string('city');
-            $table->string('state');
             $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
             $table->string('pwd_card')->nullable();
             $table->timestamps();

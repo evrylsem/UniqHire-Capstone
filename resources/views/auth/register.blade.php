@@ -103,18 +103,22 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" name="city" value="{{ old('city') }}" required placeholder="City">
-                            <label for="floatingInput">City</label>
-                            @error('city')
+                            <select type="text" class="form-select" id="provinceSelect" name="province" required placeholder="Province">
+                                <option value="">Select Province</option>
+                            </select>
+                            <label for="provinceSelect">Province</label>
+                            @error('province')
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" name="state" value="{{ old('state') }}" required placeholder="State">
-                            <label for="floatingInput">State</label>
-                            @error('state')
+                            <select type="text" class="form-select" id="citySelect" name="city" required placeholder="City">
+                                <option value="">Select City</option>
+                            </select>
+                            <label for="citySelect">City</label>
+                            @error('city')
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
                         </div>
@@ -164,6 +168,49 @@
 @endsection
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProvinces();
+
+        document.getElementById('provinceSelect').addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
+    });
+
+    function fetchProvinces() {
+        fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Provinces data:', data);
+                var provinceSelect = document.getElementById('provinceSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.code;
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
+
+    function fetchCities(provinceCode) {
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.code;
+                    option.text = city.name;
+                    citySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching cities:', error));
+    }
+
     function togglePWDSection() {
         var roleSelect = document.getElementById('role');
         var pwdSection = document.getElementById('pwd-section');
