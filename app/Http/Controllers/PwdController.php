@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Log;
 class PwdController extends Controller
 {
 
-    public function showPrograms(Request $request) {
-        $user = auth()->user()->userInfo;        
+    public function showPrograms(Request $request)
+    {
+        $user = auth()->user()->userInfo;
         // $programs = TrainingProgram::where('disability_id', $disability)->get();
         $programs = TrainingProgram::all();
         $disabilities = Disability::all();
@@ -40,38 +41,35 @@ class PwdController extends Controller
         usort($rankedPrograms, function ($a, $b) {
             return $b['similarity'] <=> $a['similarity'];
         });
-        
+
         // Filtering the programs through searching program title
-        if($request->filled('search'))
-        {
+        if ($request->filled('search')) {
             $query->where("title", "LIKE", "%" . $request->search . "%");
         }
 
         // Filtering the programs based on disability [multiple selection]
-        if(isset($request->disability) && ($request->disability != null))
-        {
-            $query->whereHas('disability', function($q) use($request){
+        if (isset($request->disability) && ($request->disability != null)) {
+            $query->whereHas('disability', function ($q) use ($request) {
                 $q->whereIn('disability_name', $request->disability);
             });
         }
 
-        if(isset($request->education) && ($request->education != null))
-        {
-            $query->whereHas('education', function($q) use($request){
+        if (isset($request->education) && ($request->education != null)) {
+            $query->whereHas('education', function ($q) use ($request) {
                 $q->whereIn('education_name', $request->education);
             });
         }
 
-        $filteredPrograms = $query->paginate(5);
+        $filteredPrograms = $query->paginate(3);
         Log::info('Ranked Filtered Programs:', $rankedPrograms);
 
-        return view('pwd.listPrograms', compact('rankedPrograms','disabilities', 'educations', 'filteredPrograms'));
+        return view('pwd.listPrograms', compact('rankedPrograms', 'disabilities', 'educations', 'filteredPrograms'));
     }
 
     private function calculateSimilarity($user, $program)
     {
         $similarityScore = 0;
-       
+
         // Criteria: disability, location
 
         if ($user->disability_id === $program->disability_id) {
@@ -83,9 +81,5 @@ class PwdController extends Controller
         }
 
         return $similarityScore;
-    }
-
-    public function showDetails($id) {
-        
     }
 }
