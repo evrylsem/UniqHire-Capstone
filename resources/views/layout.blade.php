@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div class="container-fluid layout-container">
+    <div class="layout-container">
         @if (Auth::check())
         <nav class="sidebar">
             <header class="">
@@ -116,25 +116,30 @@
 
 
         </nav>
-        <div class="container-fluid">
+        <div class="">
             <div class=" content-container">
-                <nav class="navbar">
-                    <div class="container-fluid border-bottom">
-                        <ul class="d-flex align-items-center">
-                            <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
-                            <li class="nav-item"><a href="{{route('home')}}" class="">Home</a></li>
-                            @if (Auth::user()->hasRole('PWD'))
-                            <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="">Browse Training Programs</a></li>
-                            <li class="nav-item"><a href="">Find Work</a></li>
-                            @endif
+                <nav class="navbar border-bottom">
+                    <div class="navbar-container">
+                        <div>
+                            <ul class="d-flex align-items-center">
+                                <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
+                                <li class="nav-item"><a href="{{route('home')}}" class="">Home</a></li>
+                                @if (Auth::user()->hasRole('PWD'))
+                                <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="">Browse Training Programs</a></li>
+                                <li class="nav-item"><a href="">Find Work</a></li>
+                                @endif
 
-                            <li class="nav-item"><a href="{{ route('home') }}/#about" class="">About</a></li>
+                                <li class="nav-item"><a href="{{ route('home') }}/#about" class="">About</a></li>
 
-                        </ul>
-                        <ul class="d-flex align-items-center">
-                            <li class="nav-item user-notif"><a href="#"><i class='bx bxs-inbox'></i></a></li>
-                            <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->name }}</span></li>
-                        </ul>
+                            </ul>
+                        </div>
+                        <div>
+                            <ul class="d-flex align-items-center">
+                                <li class="nav-item user-notif"><a href="#"><i class='bx bxs-inbox'></i></a></li>
+                                <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->name }}</span></li>
+                            </ul>
+                        </div>
+
                     </div>
                 </nav>
             </div>

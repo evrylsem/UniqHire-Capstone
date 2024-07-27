@@ -16,6 +16,7 @@
     /* COLORS */
     --bg-color-01: #f2f1ee;
     --bg-color-02: #f9f9f9;
+    --bg-color-03: rgba(0, 0, 0, 0.3);
     --white-bg: #ffff;
     --primary-color: #04b000;
     --primary-color-light: rgba(4, 176, 0, 0.2);
@@ -29,6 +30,8 @@
     --side-shadow-01: 0 20px 35px rgba(0, 0, 0, 0.1);
     --side-shadow-02: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
     --side-shadow-03: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    --side-shadow-04: rgba(0, 0, 0, 0.15) 0px 2px 8px;;
+
     --border-radius: 0.5rem;
 
     /* FONT */
@@ -167,7 +170,7 @@ ul, li {
     padding: 10px 14px;
     overflow: hidden;
     box-shadow: var(--side-shadow-01);
-    z-index: 3;
+    z-index: 100;
 }
 
 .layout-container .sidebar:hover {
@@ -283,6 +286,24 @@ ul, li {
 
 
 /* NAVBAR */
+.layout-container .navbar {
+    position: fixed;
+    background-color: var(--bg-color-01);
+    /* margin-left: 10rem;
+    margin-right: 10rem; */
+    margin: 0;
+    padding-left: 6rem;
+    /* border: 1px solid; */
+    width: 100%;
+    top: 0;
+    z-index: 99;
+}
+
+.layout-container .navbar .navbar-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
 
 .layout-container .user-index {
     font-weight: bold;
@@ -299,7 +320,10 @@ ul, li {
 
 /* PAGE CONTAINER */
 .layout-container .content-container {
-    padding-left: 4.5rem;
+    /* padding-left: 4.5rem; */
+    display: flex;
+    justify-content: center;
+    width: 100vw;
 }
 
 .layout-container .bxs-inbox {
@@ -462,13 +486,18 @@ table tbody .bx {
 
 /* PWD BROWSE */
 .pwd-browse-prog {
+    position: absolute;
+    top: 8rem;
     margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .pwd-browse-prog .filter-container {
-    position: sticky;
+    position: fixed;
     width: 17rem;
-    margin-left: 3rem;
+    /* margin-left: 3rem; */
     /* background-color: #04b000; */
     border: 1px solid lightgray;
     padding-top: 1.3rem;
@@ -476,6 +505,8 @@ table tbody .bx {
     height: 80vh;
     box-shadow: var(--side-shadow-02);
     background-color: var(--bg-color-02);
+    left: 8rem;
+    top: 8rem;
 }
 
 .pwd-browse-prog .filter-container i {
@@ -491,8 +522,22 @@ table tbody .bx {
     width: 7rem;
 }
 
+.pwd-browse-prog .searchbar-container {
+    position: fixed;
+    top: 7.5rem;
+    z-index: 98;
+    width: fit-content;
+    padding: 1rem;
+    height: 4rem;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+}
+
 .pwd-browse-prog .searchbar {
     width: 40rem;
+    box-shadow: var(--side-shadow-04);
+    border-radius: var(--border-radius);
 }
 
 .pwd-browse-prog .searchbar input:focus {
@@ -507,6 +552,8 @@ table tbody .bx {
 }
 
 .pwd-browse-prog .prog-grid {
+    position: relative;
+    top: 4.5rem;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 0.2rem;
@@ -573,29 +620,49 @@ table tbody .bx {
     height: 100%;
 }
 
-.pwd-browse-prog .prog-card .prog-texts-container {
+.pwd-browse-prog .prog-card .prog-texts-container, .pwd-browse-prog .prog-card .prog-texts-container .prog-head {
     width: 100%;
 }
 
 .pwd-browse-prog .prog-card .prog-texts-container .header {
-    width: 30rem;
+    width: 25rem;
 }
 
 .pwd-browse-prog .prog-card .prog-texts-container .header p {
     margin: 0;
 }
 
+.pwd-browse-prog .prog-card .prog-texts-container .date-posted {
+    width: 100%;
+}
+
 /* TRAINING DETAILS POPUP */
-.details-container {
-    position: absolute;
+.popup {
+    position: fixed;
+    background-color:var(--bg-color-03);
+    width: 100%;
+    z-index: 101;
+    display: flex;
+    justify-content: end;
+    padding: 0;
+    height: 100vh;
     top: 0;
     right: 0;
+    display: none;
+}
+
+.details-container {
+    /* position: relative;
+    top: 0;
+    right: 0; */
     background-color: var(--bg-color-02);
     width: 45rem;
     height: 100vh;
     padding: 0;
     box-shadow: var(--side-shadow-01);
-    display: none;
+    /* display: none; */
+    /* z-index: 2; */
+    /* transition: var(--trans-05); */
 }
 
 .details-container .header {
