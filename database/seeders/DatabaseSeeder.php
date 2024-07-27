@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
 
         $pwduser->role()->attach($pwd);
 
-        $traineruser = User::create([        
+        $traineruser1 = User::create([        
             'email' => 'trainer@example.com',
             'password' => Hash::make('sheesh'),
             
@@ -99,12 +99,12 @@ class DatabaseSeeder extends Seeder
             'city' => 'cebu',
             'state' => 'bulacao',
             'disability_id' => $none->id, // Assign a disability ID here
-            'user_id' => $traineruser->id,
+            'user_id' => $traineruser1->id,
         ]);
 
         TrainingProgram::create([
             'id' => '001',
-            'agency_id' => $traineruser->id,
+            'agency_id' => $traineruser1->id,
             'title' => 'Luto gamit tiil program',
             'description' => 'Wa kay kamot? Wa nay problema kay sa programa namo makat on mog luto gamit tiil',
             'city' => 'Cebu City',
@@ -117,6 +117,39 @@ class DatabaseSeeder extends Seeder
             'updated_at' => date("Y-m-d"),
         ]); 
 
-        $traineruser->role()->attach($trainer);
+        $traineruser1->role()->attach($trainer);
+
+        $traineruser2 = User::create([        
+            'email' => 'trainer2@example.com',
+            'password' => Hash::make('sheesh'),
+            
+        ]);
+
+        UserInfo::create([
+            'name' => 'Ungart',
+            // 'lastname' => 'Way Hugas',
+            'contactnumber' => '09123456789',
+            'city' => 'Talisay City',
+            'state' => 'Cebu',
+            'disability_id' => $none->id, // Assign a disability ID here
+            'user_id' => $traineruser2->id,
+        ]);
+
+        TrainingProgram::create([
+            'id' => '002',
+            'agency_id' => $traineruser2->id,
+            'title' => 'Tudloan masabaan ang amang',
+            'description' => 'Di makatabi? No problem kay sa program namo diha raka kitag amang nga saba',
+            'city' => 'Talisay City',
+            'participants' => 30,
+            'start' => date("Y-m-d"),
+            'end' => date("Y-m-d"),
+            'disability_id' => $arm->id,
+            'education_id' => $hsgrad->id,
+            'created_at' => date("Y-m-d"),
+            'updated_at' => date("Y-m-d"),
+        ]); 
+
+        $traineruser2->role()->attach($trainer);
     }
 }

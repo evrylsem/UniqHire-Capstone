@@ -18,28 +18,9 @@ class PwdController extends Controller
 
     public function showPrograms(Request $request) {
         $user = auth()->user()->userInfo;        
-        // $programs = TrainingProgram::where('disability_id', $disability)->get();
-        $programs = TrainingProgram::all();
         $disabilities = Disability::all();
         $educations = EducationLevel::all();
-        $query = TrainingProgram::query()->latest();
-
-        $rankedPrograms = [];
-
-        foreach ($programs as $program) {
-            $similarity = $this->calculateSimilarity($user, $program);
-            $rankedPrograms[] = [
-                'program' => $program,
-                'similarity' => $similarity
-            ];
-        }
-
-        Log::info('Ranked Programs:', $rankedPrograms);
-
-        // Sorting the programs based on similarity score [ascending]
-        usort($rankedPrograms, function ($a, $b) {
-            return $b['similarity'] <=> $a['similarity'];
-        });
+        $query = TrainingProgram::query();        
         
         // Filtering the programs through searching program title
         if($request->filled('search'))
@@ -63,9 +44,30 @@ class PwdController extends Controller
         }
 
         $filteredPrograms = $query->get();
-        Log::info('Ranked Filtered Programs:', $rankedPrograms);
+        
 
-        return view('pwd.listPrograms', compact('rankedPrograms','disabilities', 'educations', 'filteredPrograms'));
+        $rankedPrograms = [];
+
+        foreach ($filteredPrograms as $program) {
+            $similarity = $this->calculateSimilarity($user, $program);
+            $rankedPrograms[] = [
+                'program' => $program,
+                'similarity' => $similarity
+            ];
+        }
+
+
+
+        // Sorting the programs based on similarity score [ascending]
+        usort($rankedPrograms, function ($a, $b) {
+            return $b['similarity'] <=> $a['similarity'];
+        });
+
+        Log::info('Ranked filtered programs:', $rankedPrograms);
+
+        $viewName = $request->input('view', 'pwd.listPrograms');
+
+        return view( $viewName, compact('rankedPrograms','disabilities', 'educations'));
     }
 
     private function calculateSimilarity($user, $program)
@@ -86,6 +88,8 @@ class PwdController extends Controller
     }
 
     public function showDetails($id) {
-        
+        $program = TrainingProgram::findOrFail($id);
+
+        return view('pwd.show', compact('program'));
     }
 }

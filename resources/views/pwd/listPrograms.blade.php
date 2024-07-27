@@ -43,106 +43,63 @@
         </form>
     </div>
     <div class="col empty-space"></div>
+
     <div class="col d-flex flex-column align-items-center">
         <div class="row mb-4">
             <div class="col d-flex justify-content-center">
                 <form role="search" action="{{ route('pwd-list-program') }}" method="GET" id="searchForm">
                     <div class="d-flex searchbar">
-                        <input class="form-control" type="search" placeholder="Search Training Agency" aria-label="Search" id="searchInput" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
+                        <input class="form-control" type="search" placeholder="Search Training Programs" aria-label="Search" id="searchInput" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
                         <button class="btn btn-outline-success searchButton" type="submit">Search</button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="prog-grid">
-            @if($filteredPrograms != null)
-                @foreach ($filteredPrograms as $filtered)
-                <div class="row prog-card mb-2">
-                    <div class="col ">
-                        <a href="" class="d-flex prog-texts" data-id="{{ $filtered->id }}" onclick="openPopup(event)">
-                            <div class="prog-texts-container">
-                                <div class=" d-flex mb-2">
-                                    <div class="prog-img"></div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="header">
-                                            <h4>{{$filtered->title}}</h4>
-                                            <p class="sub-text">{{$filtered->agency->userInfo->name}}</p>
-                                            <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$filtered->city}}</p>
-                                        </div>
-                                        <div class="text-end">
-                                            <p>{{ $filtered->created_at->format('M d, Y h:i A') }}</p>
-                                        </div>
-                                    </div>
 
-                                </div>
-                                <div class="row prog-desc mb-1">
-                                    <p>{{$filtered->description}}</p>
-                                </div>
-                                <div class="row d-flex">
-                                    <div class="match-info">
-                                        {{$filtered->disability->disability_name}}
+        <div class="prog-grid">          
+            @foreach ($rankedPrograms as $ranked)                
+                    <div class="row prog-card mb-2">
+                        <div class="col ">
+                            <a href="{{ route('training-details', $ranked['program']->id) }}" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup(event)">
+                                <div class="prog-texts-container">
+                                    <div class=" d-flex mb-2">
+                                        <div class="prog-img"></div>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="header">
+                                                <h4>{{$ranked['program']->title}}</h4>
+                                                <p class="sub-text">{{$ranked['program']->agency->userInfo->name}}</p>
+                                                <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$ranked['program']->city}}</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <p>{{ $ranked['program']->created_at->format('M d, Y h:i A') }}</p>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class="match-info">
-                                        {{$filtered->education->education_name}}
+                                    <div class="row prog-desc mb-1">
+                                        <p>{{$ranked['program']->description}}</p>
+                                    </div>
+                                    <div class="row d-flex">
+                                        <div class="match-info">
+                                            {{$ranked['program']->disability->disability_name}}
+                                        </div>
+                                        <div class="match-info">
+                                            {{$ranked['program']->education->education_name}}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
-                                >
-                            </div>
-                        </a>
+                                <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
+                                    >
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                @endforeach
-            @else
-                @foreach ($rankedPrograms as $ranked)
-                <div class="row prog-card mb-2">
-                    <div class="col ">
-                        <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup({event})">
-                            <div class="prog-texts-container">
-                                <div class=" d-flex mb-2">
-                                    <div class="prog-img"></div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="header">
-                                            <h4>{{$ranked['program']->title}}</h4>
-                                            <p class="sub-text">{{$ranked['program']->agency->userInfo->name}}</p>
-                                            <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$ranked['program']->city}}</p>
-                                        </div>
-                                        <div class="text-end">
-                                            <p>{{ $ranked['program']->created_at->format('M d, Y h:i A') }}</p>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row prog-desc mb-1">
-                                    <p>{{$ranked['program']->description}}</p>
-                                </div>
-                                <div class="row d-flex">
-                                    <div class="match-info">
-                                        {{$ranked['program']->disability->disability_name}}
-                                    </div>
-                                    <div class="match-info">
-                                        {{$ranked['program']->education->education_name}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
-                                >
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                @endforeach
-            @endif
-
+            @endforeach
         </div>
-
-
-
-
-
     </div>
+
     <div class="col empty-space"></div>
+
 </div>
 
 @endsection
@@ -150,6 +107,8 @@
 <script>
     function submitForm() {
         document.getElementById('filterForm').submit();
+        
+        
     }
 
     // Function to check if the input is empty and submit the form
@@ -164,6 +123,7 @@
         event.preventDefault(); // Prevent the default anchor behavior
         var container = document.getElementById('details-container');
         var programId = event.currentTarget.getAttribute('data-id');
+        document.getElementById('rankedPrograms').submit();
 
         container.style.display = 'block';
     }

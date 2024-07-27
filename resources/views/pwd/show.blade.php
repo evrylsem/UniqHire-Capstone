@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('training-details')
 <div class="details-container" id="details-container">
     <div class="header border-bottom d-flex align-items-center justify-content-between mb-2">
         <a href="#" id="close-popup"><i class='bx bx-x'></i></a>
@@ -7,7 +10,7 @@
     <div class="body">
         <div class="row mb-4">
             <div class="col">
-                <h3 id="title">Title</h3>
+                <h3 id="title">{{$program->title}}</h3>
                 <p class="sub-text" id="agency">by agency name</p>
                 <p class="sub-text" id="city"><i class='bx bx-map sub-text'></i> City</p>
             </div>
@@ -43,6 +46,8 @@
         </div>
     </div>
 </div>
+
+@endsection
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

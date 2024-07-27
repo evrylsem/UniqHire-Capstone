@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function(){
 
 
     Route::get('/browse/training-programs', [PwdController::class, 'showPrograms'])->middleware('role:PWD')->name('pwd-list-program');
+    Route::get('/training-details/{id}', [PwdController::class, 'showDetails'])->middleware('role:PWD')->name('training-details');
 
 });
 
