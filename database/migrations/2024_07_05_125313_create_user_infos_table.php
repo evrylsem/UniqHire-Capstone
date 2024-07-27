@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('state');
             $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
             $table->string('pwd_card')->nullable();
+            $table->text('about')->nullable();
+            $table->integer('age')->nullable();
             $table->timestamps();
         });
     }

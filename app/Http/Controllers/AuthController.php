@@ -13,7 +13,35 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     public function showProfile() {
-        return view('auth.profile');
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $disabilities = Disability::all();
+        return view('auth.profile', compact('disabilities', 'user'));
+    }
+
+    public function editProfile(Request $request) {
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'contactnumber' => 'required|string|max:255',
+            'age' => 'nullable|integer|min:1|max:99',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'about' => 'nullable|string'
+        ]);
+
+        $user->userInfo->update([
+            'name' => $request->name,
+            'contactnumber' => $request->contactnumber,
+            'age' => $request->age,
+            'city' => $request->city,
+            'state' => $request->state,
+            'about' => $request->about,
+            'disability_id' => $request->disability,
+        ]);        
+
+        return redirect()->route('profile');
     }
 
     public function showHomePage()

@@ -66,9 +66,9 @@
                                 <div class="prog-img"></div>
                                 <div class="d-flex justify-content-between prog-head">
                                     <div class="header">
-                                        <h4>{{$filtered->title}}</h4>
-                                        <p class="sub-text">{{$filtered->agency->userInfo->name}}</p>
-                                        <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$filtered->city}}</p>
+                                        <h4 class="text-cap">{{$filtered->title}}</h4>
+                                        <p class="sub-text text-cap">{{$filtered->agency->userInfo->name}}</p>
+                                        <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i> {{(str_contains($filtered->city, 'City') ? $filtered->city : $filtered->city . ' City')}}</p>
                                     </div>
                                     <div class="text-end date-posted">
                                         <p>{{ $filtered->created_at->diffForHumans() }}</p>
@@ -108,9 +108,9 @@
                                 <div class="prog-img"></div>
                                 <div class="d-flex justify-content-between">
                                     <div class="header">
-                                        <h4>{{$ranked['program']->title}}</h4>
-                                        <p class="sub-text">{{$ranked['program']->agency->userInfo->name}}</p>
-                                        <p class="sub-text"><i class='bx bx-map sub-text'></i> {{$ranked['program']->city}}</p>
+                                        <h4 class="text-cap">{{$ranked['program']->title}}</h4>
+                                        <p class="sub-text text-cap">{{$ranked['program']->agency->userInfo->name}}</p>
+                                        <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($ranked['program']->city, 'City') ? $ranked['program']->city : $ranked['program']->city . ' City')}}</p>
                                     </div>
                                     <div class="text-end date-posted">
                                         <p class="text-end">{{ $ranked['program']->created_at->diffForHumans() }}</p>

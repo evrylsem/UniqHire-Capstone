@@ -37,6 +37,7 @@
     /* FONT */
     --header-extrabold-font: "Montserrat", sans-serif;
     --header-extrabold: 900;
+    --text-capitalized: capitalize;
 
     /* TRANSITION */
     --trans-02: all 0.2 ease;
@@ -157,6 +158,10 @@ ul, li {
     padding: 0.5rem;
     border-radius: 0.5rem;
     width: 100%;
+}
+
+.text-cap {
+    text-transform: var(--text-capitalized);
 }
 
 /* SIDEBAR */
@@ -617,7 +622,7 @@ table tbody .bx {
     padding: 1rem;
 }
 
-.pwd-browse-prog .prog-card .match-info {
+.pwd-browse-prog .prog-card .match-info, .profile-container .profile-info .details .disability, .show-prog-container .prog-details .more-info .match-info, .show-prog-container .enrollee-requests .request-container .match-info {
     background-color: var(--primary-color-light);
     width: fit-content;
     padding: 0.5rem;
@@ -894,75 +899,172 @@ table tbody .bx {
 }
 
 /* TRAINING PROGRAM DETAILS */
-.prog-details-container {
+/* .prog-details-container {
     padding-top: 1rem;
+} */
+
+.show-prog-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 80vh;
+    position: fixed;
+    top: 8rem;
+    margin-bottom: 3rem;
+    padding-right: 3rem;
+    padding-left: 7rem;
 }
 
-.prog-details-container .prog-details .prog-texts {
-    padding: 1rem;
+.show-prog-container .prog-details {
+    /* background-color: var(--bg-color-02); */
+    width: 47%;
+    max-height: 100vh;
+    overflow-y: scroll;
+    border: 1px solid lightgray;
+    margin-right: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--side-shadow-02);
 }
 
-.prog-details-container .prog-details h3 {
+/* .show-prog-container .enrollee-requests {
+    background-color: var(--primary-color-light);
+} */
+
+.show-prog-container .enrollee-requests {
+    width: 38%;
+    max-height: 100vh; /* Adjust as needed */
+    overflow-y: scroll;
+    border: 1px solid lightgray;
+    border-radius: var(--border-radius);
+    box-shadow: var(--side-shadow-02);
+}
+
+.show-prog-container .fs-3 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid lightgray;
+}
+
+.show-prog-container .prog-details .prog-texts {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background-color: var(--bg-color-02);
+    height: 100%;
+}
+
+.show-prog-container .prog-details h3 {
     font-weight: var(--header-extrabold);
 }
 
-.prog-details-container .prog-details p {
+.show-prog-container .prog-details p {
     margin: 0;
 }
 
-.prog-details-container .prog-details {
-    border-right: 1px solid lightgray;
-}
-
-.prog-details-container .prog-details, .prog-details-container .enrollee-requests {
+/* .show-prog-container .prog-details, .show-prog-container .enrollee-requests {
     padding-right: 0;
     padding-left: 0;
-}
+} */
 
-.prog-details-container .fs-3 {
+.show-prog-container .fs-3 {
     font-weight: 700;
 }
 
-.prog-details-container .prog-details .prog-btn .submit-btn {
+.show-prog-container .prog-details .prog-btn .submit-btn {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
 }
 
-.prog-details-container .prog-details .prog-btn .submit-btn, .prog-details-container .prog-details .prog-btn .deny-btn  {
+.show-prog-container .prog-details .prog-btn .submit-btn, .show-prog-container .prog-details .prog-btn .deny-btn  {
     width: 7rem;
     padding: 0.6rem;
 }
 
-.prog-details-container .prog-details h5, .details-container .body h5 {
+.show-prog-container .prog-details h5, .details-container .body h5 {
     font-weight: 700;
     margin-bottom: 1.5rem;
 }
 
-.prog-details-container .prog-details .requirement, .details-container .body .requirement {
-    background-color: var(--primary-color-light);
-    color: var(--primary-color);
-    font-weight: bold;
-    padding: 0.5rem;
-    border: 1px solid var(--primary-color);
-    border-radius: var(--border-radius);
+.show-prog-container .prog-details .more-info, .details-container .body .more-info {
+    height: 10rem;
 }
 
-.prog-details-container .prog-details .more-info, .details-container .body .more-info {
-    height: 10rem;
+.show-prog-container .enrollee-requests .request-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--bg-color-02);
+    height: 100%;
+}
+
+.show-prog-container .enrollee-requests .request-container {
+    padding: 1rem;
+    box-shadow: var(--side-shadow-02);
+    border-radius: var(--border-radius);
+    padding-right: 1.5rem;
+    background-color: var(--bg-color-01);
+    border: 1px solid lightgray;
+    display: flex;
+}
+.show-prog-container .enrollee-requests .request-container:hover {
+    background-color: var(--bg-color-02);
+}
+
+.show-prog-container .enrollee-requests .request-container .request-owner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.show-prog-container .enrollee-requests .request-container .request-owner p {
+    padding: 0;
+    margin: 0;
+}
+
+.show-prog-container .enrollee-requests .request-container .request-owner .fs-5 {
+    font-weight: 700;
+}
+
+.show-prog-container .enrollee-requests .request-container .request-owner .location {
+    font-size: 17px;
+}
+
+.show-prog-container .enrollee-requests .request-container .request-pic {
+    width: 5rem;
+    height: 5rem;
+    background-color: var(--primary-color-light);
+    border-radius: 100%;
+    margin-right: 1rem;
+}
+
+.show-prog-container .enrollee-requests .btn-container {
+    margin-right: 0.5rem;
+}
+
+.show-prog-container .enrollee-requests .submit-btn {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
+}
+
+.show-prog-container .enrollee-requests .deny-btn {
+    width: 5rem;
 }
 
 
 
 
 /* PROFILE */
-.profile-container {
+.profile-container, .agency-prog-container, .edit-form, .add-form {
     position: absolute;
     top: 8rem;
     margin-bottom: 3rem;
-    padding-left: 7rem;
-    display: flex;
+    /* padding-left: 7rem; */
+    /* display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 100%; */
 }
 .profile-container .profile-info {
     display: flex;
@@ -974,5 +1076,88 @@ table tbody .bx {
     width: 10rem;
     height: 10rem;
     border-radius: 100%;
-    margin-right: 4rem;
+    margin-right: 3rem;
+}
+
+.profile-container .profile-name {
+    font-weight: var(--header-extrabold);
+    font-size: 22px;
+}
+
+.profile-container .profile-info {
+    width: 100% ;
+}
+
+.profile-container .profile-info .header {
+    min-width: 80%;
+    width: 80%;
+}
+
+.profile-container .profile-info .details {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    gap: 6rem;
+    align-items: center;
+}       
+.profile-container .more-details {
+    height: 100vh;
+}
+
+.profile-container .more-details .contact {
+    width: 24rem;
+    margin-right: 1.7rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    height: fit-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.profile-container .more-details .contact h4 {
+    font-weight: 600;
+    text-align: center;
+}
+
+.profile-container .more-details .contact .contact-container {
+    padding-left: 1rem;
+}
+
+.profile-container .more-details .contact .contact-item, .profile-container .more-details .bio .bio-item  {
+    margin-bottom: 1.7rem;
+}
+
+.profile-container .more-details .contact .side-icon {
+    color: var(--primary-color);
+    /* font-weight: bold; */
+    font-size: 25px;
+    margin-right: 1rem;
+}
+
+.profile-container .more-details .bio {
+    width: 100%;
+    /* background-color: var(--primary-color-light); */
+
+     padding: 1rem;
+    border-radius: var(--border-radius);
+    height: fit-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.profile-container .more-details .bio h4 {
+    font-weight: 600;
+}
+
+.profile-container .more-details .bio .exp {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    gap: 4rem;
+}
+
+.profile-container .modal .modal-header .modal-title {
+    font-weight: var(--header-extrabold);
+}
+
+.profile-container .modal .modal-footer .submit-btn {
+    padding: 0.5rem;
 }

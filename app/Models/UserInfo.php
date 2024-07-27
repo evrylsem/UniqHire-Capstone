@@ -18,6 +18,8 @@ class UserInfo extends Model
         'state',
         'disability_id',
         'pwd_card',
+        'age',
+        'about'
     ];
 
     public function user() {

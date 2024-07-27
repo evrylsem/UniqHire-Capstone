@@ -33,7 +33,7 @@
             <div class="sidebar-menu">
                 <ul class="">
                     <li class="side-item">
-                        <a href="{{ route('profile') }}" class="{{ request()->routeIs('profile') ? 'active' : '' }}">
+                        <a href="{{ route('profile')}}" class="{{ request()->routeIs('profile') ? 'active' : '' }}">
                             <i class='bx bx-user-circle side-icon'></i>
                             <span class="side-title">Profile</span>
                         </a>

@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function(){
 
     // })->name('contact');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
+    Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');;
 
     //Admin Middleware
     Route::get('/pwd/all', [AdminController::class, 'showPwds'])->middleware('role:Admin')->name('pwd-list');
