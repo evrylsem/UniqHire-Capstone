@@ -6,17 +6,24 @@ use App\Models\CrowdfundEvent;
 use App\Models\Disability;
 use App\Models\EducationLevel;
 use App\Models\TrainingProgram;
+use App\Models\User;
+use App\Models\UserInfo;
+use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
 use DateTime;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AgencyController extends Controller
 {
-    public function showPrograms() {
+    public function showPrograms()
+    {
         $userId = auth()->id();
         $programs = TrainingProgram::where('agency_id', $userId)
-        ->latest()
-        ->with('crowdfund')
-        ->get();
+            ->latest()
+            ->with('crowdfund')
+            ->get();
 
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
@@ -46,7 +53,8 @@ class AgencyController extends Controller
         return view('agency.showProg', compact('program'));
     }
 
-    public function showAddForm() {
+    public function showAddForm()
+    {
         $disabilities = Disability::all();
         $levels = EducationLevel::all();
         return view('agency.addProg', compact('disabilities', 'levels'));
@@ -78,6 +86,16 @@ class AgencyController extends Controller
             'education_id' => $request->education,
         ]);
 
+        //NOTIFY PWD USERS!!!
+        $pwdUsers = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'PWD');
+        })->get();
+
+        foreach ($pwdUsers as $user) {
+            Log::info('Sending notifications to user: ' . $user->id);
+            $user->notify(new NewTrainingProgramNotification($trainingProgram));
+        }
+
         // if ($request->has('goal') && $request->goal !== null) {
         //     CrowdfundEvent::create([
         //         'program_id' => $trainingProgram->id,
@@ -92,21 +110,23 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::find($id);
 
-        if ($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
+            // Find and delete related notifications
+            DB::table('notifications')
+                ->where('data', 'like', '%"training_program_id":' . $id . '%')
+                ->delete();
+
             $program->delete();
         }
 
         return redirect()->route('programs-manage');
-
     }
 
     public function editProgram($id)
     {
         $program = TrainingProgram::find($id);
 
-        if ($program && $program->agency_id == auth()->id())
-        {
+        if ($program && $program->agency_id == auth()->id()) {
             $disabilities = Disability::all();
             $levels = EducationLevel::all();
 
@@ -114,7 +134,6 @@ class AgencyController extends Controller
         }
 
         return redirect()->route('programs-manage');
-
     }
 
     public function updateProgram(Request $request, $id)
@@ -128,7 +147,7 @@ class AgencyController extends Controller
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date',
-                'goal' => 'nullable|numeric' 
+                'goal' => 'nullable|numeric'
             ]);
 
             $program->update([
@@ -148,7 +167,7 @@ class AgencyController extends Controller
             //     ]);
             // }
 
-        return redirect()->route('programs-show', $id);
+            return redirect()->route('programs-show', $id);
         }
     }
 }

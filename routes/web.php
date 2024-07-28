@@ -5,6 +5,7 @@ use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PwdController;
 use App\Http\Controllers\UserInfoController;
+use App\Http\Controllers\NotificationController;
 use App\Models\UserInfo;
 use App\Models\TrainingProgram;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/admin/pwdusers', [AuthController::class, 'showAccs'])->name('admin-pwdusers');
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
     // Route::get('/home/#about', function(){
 
@@ -58,16 +59,18 @@ Route::middleware('auth')->group(function(){
     Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
 
     Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
-    
+
     Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
     Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');
-    
+
     Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
+
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 
     Route::get('/browse/training-programs', [PwdController::class, 'showPrograms'])->middleware('role:PWD')->name('pwd-list-program');
     Route::get('/training-details/{id}', [PwdController::class, 'showDetails'])->middleware('role:PWD')->name('training-details');
-
 });
 
 

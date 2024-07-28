@@ -48,7 +48,7 @@
                         </a>
                     </li>
                     <div class="submenu" id="trainings-submenu">
-                        <li >
+                        <li>
                             <a href="">
                                 <i class='bx bx-timer'></i>
                                 <span class="side-title">On-going</span>
@@ -115,8 +115,6 @@
                     <li class=""><a href="{{ url('/logout')}}"><i class='bx bx-log-out-circle side-icon'></i><span class="side-title">Logout</span></a></li>
                 </div>
             </div>
-
-
         </nav>
         <div class="">
             <div class=" content-container">
@@ -148,17 +146,86 @@
             <div class="content-container">
                 @yield('page-content')
             </div>
-
         </div>
         @else
         <div class="container-fluid">
             @yield('auth-content')
         </div>
-
         @endif
-
-
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notifDropdown = document.getElementById('notifDropdown');
+            const notificationsMenu = document.getElementById('notificationsMenu');
+            const badge = document.querySelector('.badge');
+
+            function fetchNotifications() {
+                fetch("{{ route('notifications') }}")
+                    .then(response => response.json())
+                    .then(data => {
+                        notificationsMenu.innerHTML = '';
+                        let unreadCount = 0;
+
+                        if (data.length > 0) {
+                            data.forEach(notif => {
+                                if (!notif.read_at) {
+                                    unreadCount++;
+                                }
+                                notificationsMenu.innerHTML += `
+                                <li class="${notif.read_at ? 'read' : 'unread'}">
+                                    <a href="{{ url('/training-programs') }}/${notif.data.training_program_id}" data-id="${notif.id}" class="notif-item">
+                                        ${notif.data.title || 'No title'}
+                                    </a>
+                                </li>
+                            `;
+                            });
+                        } else {
+                            notificationsMenu.innerHTML = '<li>No new notifications</li>';
+                        }
+
+                        badge.textContent = unreadCount > 0 ? unreadCount : '';
+                    });
+            }
+
+            function markNotificationAsRead(id) {
+                fetch("{{ route('notifications.markAsRead') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        notification_id: id
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        fetchNotifications(); // Refresh notifications
+                    }
+                });
+            }
+
+            notifDropdown.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetchNotifications();
+            });
+
+            notificationsMenu.addEventListener('click', function(e) {
+                if (e.target.classList.contains('notif-item')) {
+                    const notifId = e.target.getAttribute('data-id');
+                    markNotificationAsRead(notifId);
+                }
+            });
+
+            // Fetch notifications on page load
+            fetchNotifications();
+        });
+    </script>
+
+
+
+
+
 </body>
 <script>
     function toggleSubmenu() {

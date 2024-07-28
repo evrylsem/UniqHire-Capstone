@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -12,14 +13,16 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function showProfile() {
+    public function showProfile()
+    {
         $id = Auth::user()->id;
         $user = User::find($id);
         $disabilities = Disability::all();
         return view('auth.profile', compact('disabilities', 'user'));
     }
 
-    public function editProfile(Request $request) {
+    public function editProfile(Request $request)
+    {
         $id = Auth::user()->id;
         $user = User::find($id);
         $request->validate([
@@ -31,14 +34,14 @@ class AuthController extends Controller
             'about' => 'nullable|string'
         ]);
 
-        if($user->userInfo->disability_id == 1){
+        if ($user->userInfo->disability_id == 1) {
             $user->userInfo->update([
                 'name' => $request->name,
                 'contactnumber' => $request->contactnumber,
                 'city' => $request->city,
                 'state' => $request->state,
                 'about' => $request->about,
-            ]);  
+            ]);
         } else {
             $user->userInfo->update([
                 'name' => $request->name,
@@ -48,10 +51,10 @@ class AuthController extends Controller
                 'state' => $request->state,
                 'about' => $request->about,
                 'disability_id' => $request->disability,
-            ]);  
+            ]);
         }
 
-              
+
 
         return redirect()->route('profile');
     }
@@ -83,22 +86,25 @@ class AuthController extends Controller
         return view('homepage', compact('images', 'pwdCount', 'trainerCount', 'employerCount', 'sponsorCount'));
     }
 
-    public function showForgotPass() {
+    public function showForgotPass()
+    {
         return view('auth.forgotPass');
     }
 
     //LOGIN PROCESS
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required|string|',
             'password' => 'required|string',
         ]);
 
-        if(Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
         }
@@ -109,17 +115,19 @@ class AuthController extends Controller
     }
 
     // REGISTRATION PROCESS
-    public function showRegistration() {
+    public function showRegistration()
+    {
         $roles = Role::all();
         $disabilities = Disability::all();
         return view('auth.register', compact('roles', 'disabilities'));
     }
 
-    public function register(Request $request) {
-        if($request->generate_email || ($request->email && $request->generate_email)){
+    public function register(Request $request)
+    {
+        if ($request->generate_email || ($request->email && $request->generate_email)) {
             $email = fake()->unique()->safeEmail();
         } else {
-           $email = $request->email;
+            $email = $request->email;
         }
 
         $request->validate([
@@ -128,14 +136,14 @@ class AuthController extends Controller
             // 'email' => 'required|string|email|unique:users,email|max:255',
             'contactnumber' => 'required|string|max:255',
             'password' => 'required|string|min:4|max:255|confirmed',
-            'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
-            // 'disability' => 'required|string|exists:disabilities,disability_name',
+            'city' => 'required|string|max:255',
+            // 'disability' => 'required|string|exists:disabilities,id',
             'pwd_card' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // 'role' => 'required|string|exists:roles,role_name',
         ]);
 
-        
+
 
         $user = User::create([
             'email' => $email,
@@ -150,8 +158,8 @@ class AuthController extends Controller
             'name' => $request->name,
             // 'lastname' => $request->lastname,
             'contactnumber' => $request->contactnumber,
-            'city' => $request->city,
             'state' => $request->state,
+            'city' => $request->city,
             'disability_id' => $request->disability,
             'pwd_card' => null,
         ]);

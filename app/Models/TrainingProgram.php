@@ -21,7 +21,8 @@ class TrainingProgram extends Model
         'education_id'
     ];
 
-    public function agency() {
+    public function agency()
+    {
         return $this->belongsTo(User::class, 'agency_id');
     }
 
