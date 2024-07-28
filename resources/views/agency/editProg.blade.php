@@ -1,17 +1,13 @@
 @extends('layout')
 @section('page-title', 'Edit Training Program')
 @section('page-content')
-<form action="{{ route('programs-update', $program->id) }}" method="POST" class="container">
+<form action="{{ route('programs-edit', $program->id) }}" method="POST" class="container edit-form">
     @csrf
     @method('PUT')
-    <div class="row mt-2 mb-2">
-        <div class="col default-text header-texts border-bottom">
-            <a href="{{ route('programs-manage') }}" class="m-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(4, 176, 0, 1);">
-                    <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z"></path>
-                </svg>
-            </a>
-            Edit Training Program
+    <div class="row mt-2 mb-2 border-bottom">
+        <div class="text-start header-texts back-link-container">
+            <a href="{{ route('programs-show', $program->id) }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
+            Edit Training Program.
         </div>
     </div>
     <div class="row">
@@ -51,13 +47,13 @@
         <div class="col">
             <div class="mb-3">
                 <label for="start_date">Start Date: </label>
-                <input type="date" name="start_date" value="{{ $program->start }}" required>
+                <input type="date" name="start_date" class="date-input" value="{{ $program->start }}" required>
             </div>
         </div>
         <div class="col">
             <div class="mb-3">
                 <label for="end_date">End Date: </label>
-                <input type="date" name="end_date" value="{{ $program->end }}" required>
+                <input type="date" name="end_date" class="date-input" value="{{ $program->end }}" required>
             </div>
         </div>
     </div>
@@ -67,7 +63,7 @@
                 <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
                     @foreach ($disabilities as $disability)
                     @if ($disability->id != 1)
-                        <option value="{{ $disability->id }}" {{ $program->disability_id == $disability->id ? 'selected' : '' }}>{{ $disability->disability_name }}</option>
+                    <option value="{{ $disability->id }}" {{ $program->disability_id == $disability->id ? 'selected' : '' }}>{{ $disability->disability_name }}</option>
                     @endif
                     @endforeach
                 </select>
@@ -85,9 +81,27 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-center mt-3 prog-btn">
-        <button type="reset" class="delete-btn">Clear</button>
-        <button type="submit" class="edit-btn btn-default">Update</button>
+    
+    <div class="d-flex justify-content-evenly mt-3 prog-btn">
+        <button type="reset" class="deny-btn border-0">Clear</button>
+        <button type="submit" class="submit-btn border-0">Update</button>
     </div>
 </form>
 @endsection
+
+<script>
+    function toggleCrowdfund() {
+        var hostCrowdfund = document.getElementById('host-crowdfund');
+        var crowdfundSection = document.getElementById('crowdfund-section');
+
+        if (hostCrowdfund.checked) {
+            // crowdfundSection.style.display = 'block';
+            document.getElementById('amount-needed').disabled = false;
+            document.getElementById('amount-needed').required = true;
+        } else {
+            // crowdfundSection.style.display = 'none';
+            document.getElementById('amount-needed').disabled = true;
+            document.getElementById('amount-needed').required = false;
+        }
+    }
+</script>

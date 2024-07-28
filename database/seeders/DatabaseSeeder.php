@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\UserInfo;
+use App\Models\TrainingProgram;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -53,8 +54,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'firstname' => 'Evryl',
-            'lastname' => 'Claire',
+            'name' => 'Evryl Claire',
+            // 'lastname' => 'Claire',
             'contactnumber' => '09123456789',
             'province' => 'cebu',
             'city' => 'bulacao',
@@ -73,8 +74,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'firstname' => 'Juan',
-            'lastname' => 'Dela Cruz',
+            'name' => 'Juan Dela Cruz',
+            // 'lastname' => 'Dela Cruz',
             'contactnumber' => '09123456789',
             'province' => 'cebu',
             'city' => 'bulacao',
@@ -84,5 +85,71 @@ class DatabaseSeeder extends Seeder
 
 
         $pwduser->role()->attach($pwd);
+
+        $traineruser1 = User::create([        
+            'email' => 'trainer@example.com',
+            'password' => Hash::make('sheesh'),
+            
+        ]);
+
+        UserInfo::create([
+            'name' => 'Bilat Way Hugas',
+            // 'lastname' => 'Way Hugas',
+            'contactnumber' => '09123456789',
+            'city' => 'cebu',
+            'state' => 'bulacao',
+            'disability_id' => $none->id, // Assign a disability ID here
+            'user_id' => $traineruser1->id,
+        ]);
+
+        TrainingProgram::create([
+            'id' => '001',
+            'agency_id' => $traineruser1->id,
+            'title' => 'Luto gamit tiil program',
+            'description' => 'Wa kay kamot? Wa nay problema kay sa programa namo makat on mog luto gamit tiil',
+            'city' => 'Cebu City',
+            'participants' => 30,
+            'start' => date("Y-m-d"),
+            'end' => date("Y-m-d"),
+            'disability_id' => $leg->id,
+            'education_id' => $hsgrad->id,
+            'created_at' => date("Y-m-d"),
+            'updated_at' => date("Y-m-d"),
+        ]); 
+
+        $traineruser1->role()->attach($trainer);
+
+        $traineruser2 = User::create([        
+            'email' => 'trainer2@example.com',
+            'password' => Hash::make('sheesh'),
+            
+        ]);
+
+        UserInfo::create([
+            'name' => 'Ungart',
+            // 'lastname' => 'Way Hugas',
+            'contactnumber' => '09123456789',
+            'city' => 'Talisay City',
+            'state' => 'Cebu',
+            'disability_id' => $none->id, // Assign a disability ID here
+            'user_id' => $traineruser2->id,
+        ]);
+
+        TrainingProgram::create([
+            'id' => '002',
+            'agency_id' => $traineruser2->id,
+            'title' => 'Tudloan masabaan ang amang',
+            'description' => 'Di makatabi? No problem kay sa program namo diha raka kitag amang nga saba',
+            'city' => 'Talisay City',
+            'participants' => 30,
+            'start' => date("Y-m-d"),
+            'end' => date("Y-m-d"),
+            'disability_id' => $arm->id,
+            'education_id' => $hsgrad->id,
+            'created_at' => date("Y-m-d"),
+            'updated_at' => date("Y-m-d"),
+        ]); 
+
+        $traineruser2->role()->attach($trainer);
     }
 }

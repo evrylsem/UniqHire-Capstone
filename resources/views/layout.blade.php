@@ -7,13 +7,16 @@
     <title>UniqHire | @yield('page-title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    <link rel="icon" href="{{ asset('images/tab-icon.png') }}">
+
+    @include('slugs.links')
+
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="{{ asset('images/tab-icon.png') }}">
+
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="layout-container">
         @if (Auth::check())
         <nav class="sidebar">
             <header class="">
@@ -29,29 +32,68 @@
             </header>
             <div class="sidebar-menu">
                 <ul class="">
-                    <li><a href="#">
+                    <li class="side-item">
+                        <a href="{{ route('profile')}}" class="{{ request()->routeIs('profile') ? 'active' : '' }}">
                             <i class='bx bx-user-circle side-icon'></i>
                             <span class="side-title">Profile</span>
-                        </a></li>
+                        </a>
+                    </li>
+
+                    <!-- PWD ROLE ACCESS -->
+                    @if (Auth::user()->hasRole('PWD'))
+                    <li class="side-item">
+                        <a href="#" class="trainings-drop" onclick="toggleSubmenu();">
+                            <i class='bx bxs-school side-icon'></i>
+                            <span class="side-title">Trainings &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i id="arrow-drop" class='bx bxs-right-arrow'></i></span>
+                        </a>
+                    </li>
+                    <div class="submenu" id="trainings-submenu">
+                        <li>
+                            <a href="">
+                                <i class='bx bx-timer'></i>
+                                <span class="side-title">On-going</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class='bx bx-calendar-check'></i>
+                                <span class="side-title">Completed</span>
+                            </a>
+                        </li>
+                    </div>
+                    <li class="side-item">
+                        <a href="#">
+                            <i class='bx bx-briefcase-alt-2 side-icon'></i>
+                            <span class="side-title">Job Application</span>
+                        </a>
+                    </li>
+                    <li class="side-item">
+                        <a href="#">
+                            <i class='bx bx-cog side-icon'></i>
+                            <span class="side-title">Settings</span>
+                        </a>
+                    </li>
+                    @endif
+
                     <!-- ADMIN ROLE ACCESS -->
                     @if (Auth::user()->hasRole('Admin'))
-                    <li><a href="{{route('pwd-list')}}">
+                    <li class="side-item"><a href="{{route('pwd-list')}}">
                             <i class='bx bx-handicap side-icon'></i>
                             <span class="side-title">PWDs</span>
                         </a></li>
-                    <li><a href="{{route('trainer-list')}}">
+                    <li class="side-item"><a href="{{route('trainer-list')}}">
                             <i class='bx bxs-school side-icon'></i>
                             <span class="side-title">Training Agencies</span>
                         </a></li>
-                    <li><a href="{{route('employee-list')}}">
+                    <li class="side-item"><a href="{{route('employee-list')}}">
                             <i class='bx bx-briefcase-alt-2 side-icon'></i>
-                            <span class="side-title">Companies</span>
+                            <span class="side-title">Employers</span>
                         </a></li>
-                    <li><a href="{{route('sponsor-list')}}">
+                    <li class="side-item"><a href="{{route('sponsor-list')}}">
                             <i class='bx bx-dollar-circle side-icon'></i>
                             <span class="side-title">Sponsors</span>
                         </a></li>
-                    <li><a href="">
+                    <li class="side-item"><a href="">
                             <i class='bx bx-cog side-icon'></i>
                             <span class="side-title">Settings</span>
                         </a></li>
@@ -59,10 +101,12 @@
                     @endif
                     <!-- TRAINER ROLE ACCESS -->
                     @if (Auth::user()->hasRole('Trainer'))
-                    <li><a href="{{route('programs-manage')}}">
+                    <li class="side-item">
+                        <a href="{{route('programs-manage')}}">
                             <i class='bx bxs-school side-icon'></i>
                             <span class="side-title">Training Programs</span>
-                        </a></li>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- <li><a href="#"><i class='bx bx-cog side-icon'></i><span class="side-title">Sponsor</span></a></li> -->
@@ -72,40 +116,30 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid">
+        <div class="">
             <div class=" content-container">
-                <nav class="navbar">
-                    <div class="container-fluid border-bottom">
-                        <ul class="d-flex align-items-center">
-                            <li class="logo-container"><a href="#"><img class="logo-small" src="{{ asset('images/logo.png') }}" alt=""></a></li>
-                            <li class="nav-item"><a href="{{route('home')}}">Home</a></li>
-                            @if (Auth::user()->hasRole('PWD'))
-                            <li class="nav-item"><a href="">Browse Training Programs</a></li>
-                            <li class="nav-item"><a href="">Find Work</a></li>
-                            @endif
-                            <li class="nav-item"><a href="#about">About</a></li>
-                            <li class="nav-item"><a href="#about">Contact Us</a></li>
-                        </ul>
-                        <ul class="d-flex align-items-center">
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class='bx bxs-inbox'></i>
-                                    <span class="badge bg-danger">{{ Auth::user()->unreadNotifications->count() }}</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" id="notificationsMenu">
-                                    @forelse (Auth::user()->unreadNotifications as $notification)
-                                    <li>
-                                        <a class="dropdown-item" href="{{ url('/training-programs/' . $notification->data['training_program_id']) }}">
-                                            {{ $notification->data['title'] }}
-                                        </a>
-                                    </li>
-                                    @empty
-                                    <li><a class="dropdown-item" href="#">No new notifications</a></li>
-                                    @endforelse
-                                </ul>
-                            </li>
-                            <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->firstname . " " . Auth::user()->userInfo->lastname }}</span></li>
-                        </ul>
+                <nav class="navbar border-bottom">
+                    <div class="navbar-container">
+                        <div>
+                            <ul class="d-flex align-items-center">
+                                <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
+                                <li class="nav-item"><a href="{{route('home')}}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
+                                @if (Auth::user()->hasRole('PWD'))
+                                <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program') ? 'active' : '' }}">Browse Training Programs</a></li>
+                                <li class="nav-item"><a href="">Find Work</a></li>
+                                @endif
+
+                                <!-- <li class="nav-item"><a href="{{ route('home') }}/#about" class="">About</a></li> -->
+
+                            </ul>
+                        </div>
+                        <div>
+                            <ul class="d-flex align-items-center">
+                                <li class="nav-item user-notif"><a href="#"><i class='bx bxs-inbox'></i></a></li>
+                                <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->name }}</span></li>
+                            </ul>
+                        </div>
+
                     </div>
                 </nav>
             </div>
@@ -193,5 +227,14 @@
 
 
 </body>
+<script>
+    function toggleSubmenu() {
+        var submenu = document.getElementById('trainings-submenu');
+        var icon = document.getElementById('arrow-drop');
+
+        submenu.classList.toggle('active-drop');
+        icon.classList.toggle('arrow-down');
+    }
+</script>
 
 </html>

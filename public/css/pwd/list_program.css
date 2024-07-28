@@ -1,0 +1,107 @@
+#filter {
+    text-align: center;
+    font-weight: 700;
+}
+
+#filterContainer {
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    background-color: white;
+}
+
+#filterLabel {
+    font-weight: 600;
+    margin-top: 1em;
+}
+
+.searchField {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 40%;
+    border: none;
+    
+}
+
+.searchField:focus {
+    box-shadow: none;
+    outline: none;
+    /* border: 1px solid #ccc; */
+}
+
+.searchButton {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #04B000;
+    color: white;
+    border: none;
+}
+
+.dropdown-menu {
+    padding: 0.5em;
+}
+
+#main-container {
+    display: flex;
+    flex-direction: row;
+    padding: 1em;
+    height: 30%;
+    border-bottom: 1px solid #ccc;
+
+}
+
+#training_image {
+    height: 10em;
+    width: 10em;
+    margin-right: 1em;
+}
+
+#main-requirement {
+    margin-top: 0.5em;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+#main-requirement h6 {
+    background-color: rgba(4, 176, 0, 0.3);
+    color: #04B000;
+    padding: 0.5em;
+    border-radius: 15px;
+    border: 1px solid #04B000;
+    cursor: default;
+}
+
+#main-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+#main-content {
+    margin-right: 3em;
+    width: 30em;
+}
+
+.main-author{
+    color: rgb(55, 55, 55, 0.63);
+}
+
+#main-date {
+    margin-right: 1em;
+    color: #758694;
+}
+
+.training-description{
+    height: 3em;
+    white-space: normal; 
+    overflow: hidden; 
+    text-overflow: ellipsis;    
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+
+.main-hr {
+    padding: 0;
+    margin: 0;
+}

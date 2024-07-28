@@ -3,100 +3,108 @@
 @section('page-title', 'Program Details')
 
 @section('page-content')
-<div class="container vh-100">
-    <div class="row">
-        <div class="col">
-            <div class="row">
-                <div class="col default-text header-texts border-bottom">
-                    <a href="{{ route('programs-manage') }}" class="m-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 24 24" style="fill: rgba(4, 176, 0, 1);">
-                            <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z"></path>
-                        </svg>
-                    </a>
-                    JOB DETAILS
-                </div>
-            </div>
-            <!-- DEVELOPER SIDE -->
-            <div class="row">
-                <div class="col mt-2">
-                    <h2>{{ $program->title }}</h2>
-                    <p class="sub-text prog-loc">
-                        <i class='bx bx-map sub-text'></i>{{ $program->city }} City
-                    </p>
-                </div>
-                <div class="col">
-                    <div class="row d-flex justify-content-end mt-3 prog-btn">
-                        <form class="d-flex justify-content-end" action="{{ route('programs-edit', $program->id) }}" method="GET">
-                            <button class="edit-btn btn-default">Edit</button>
-                        </form>
-                        <form class="d-flex justify-content-end" action="{{ route('programs-delete', $program->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="delete-btn">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                <p class="prog-desc mt-3">
-                    {{ $program->description }}
-                </p>
-            </div>
-            <div class="row mt-3">
-                <div class="col">
-                    <p class="bold-texts">Company</p>
-                    <p>Inclusive Vulcanizing</p>
-                    <p class="mt-3 bold-texts">Shift Schedule</p>
-                    <p>24 hours/day</p>
-                </div>
-                <div class="col">
-                    <p class="bold-texts">Salary</p>
-                    <p>10k/Month</p>
-                </div>
-            </div>
-            <div class="row mt-3 mb-5 p-3 border-top">
-                <div class="col text-center">
-                    <p class="bold-texts">We Accept</p>
-                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btn">Leg Amputee</span>
-                </div>
-                <div class="col text-center">
-                    <p class="bold-texts">Education Level</p>
-                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btn">Highschool Level</span>
-                </div>
-                <div class="col text-center">
-                    <p class="bold-texts">Certifications</p>
-                    <span class="btn-default btn-outlinee d-inline-flex p-2 prog-btn">ICT Training</sp>
-                </div>
-            </div>
+<div class="mb-5 show-prog-container">
+    <a href="{{ route('programs-manage', $program->id) }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
+    <div class="prog-details">
+        <div class="fs-3 text-center">
+            Training Program Details
         </div>
-        <!-- APPLICANT SIDE -->
-        <div class="col border-start">
-            <div class="row border-bottom">
-                <p class="text-center default-text header-texts">APPLICANTS</p>
+        <div class="prog-texts">
+            <div class="row mb-3">
+                <div class="col">
+                    <h3>{{ $program->title }}</h3>
+                    <p class="sub-text">by {{ $program->agency->userInfo->name }}</p>
+                    <p class="sub-text prog-loc"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
+                </div>
+                <div class="col text-end prog-btn">
+                    <form action="{{ route('programs-edit', $program->id) }}" method="GET">
+                        <button class="submit-btn border-0">Edit</button>
+                    </form>
+                    <form action="{{ route('programs-delete', $program->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="deny-btn border-0">Delete</button>
+                    </form>
+                </div>
             </div>
-            <div class="row card card-default">
-                <div class="col container">
-                    <div class="row">
-                        <div class="col">
-                            <p>Claire Anon</p>
-                            <p class="sub-text prog-loc">
-                                <i class='bx bx-map sub-text'></i>{{ $program->city }} City
-                            </p>
-                            <p>Leg Amputee</p>
+            <div>
+                <div class="mb-5">
+                    <div class="col">
+                        {{ $program->description }}
+                    </div>
+                </div>
+                <div class="row more-info">
+                    <div class="col">
+                        <h5>Start Date</h5>
+                        <p>{{ \Carbon\Carbon::parse($program->start)->format('M d, Y') }}</p>
+                    </div>
+                    <div class="col">
+                        <h5>End Date</h5>
+                        <p>{{ \Carbon\Carbon::parse($program->end)->format('M d, Y') }}</p>
+                    </div>
+                </div>
+                <div class="row more-info">
+                    <div class="col">
+                        <h5>We Accept</h5>
+                        <span class="match-info">{{ $program->disability->disability_name }}</span>
+                    </div>
+                    <div class="col">
+                        <h5>Education Level</h5>
+                        <span class="match-info">{{ $program->education->education_name }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <!-- <div class="crowdfund-progress mb-3">
+                        @if ($program->crowdfund)
+                        
+                        <p class="sub-text">
+                            Crowdfunding Progress: {{ $program->crowdfund->progress }}%
+                        </p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $program->crowdfund->progress }}%</div>
                         </div>
-                        <div class="col">
-                            <div class="row d-flex justify-content-center mt-3 prog-btn">
-                                <form class="d-flex justify-content-end" action="">
-                                    <button class="edit-btn btn-default">Accept</button>
-                                </form>
-                                <form class="d-flex justify-content-end" action="">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="delete-btn">Decline</button>
-                                </form>
-                            </div>
-                        </div>
+                        
+                        @endif
+                    </div> -->
+                        <h5>Sponsors</h5>
+                        <span class=""></span>
                     </div>
                 </div>
             </div>
+
+
+        </div>
+
+    </div>
+    <div class="enrollee-requests">
+        <div class="fs-3 text-center">
+            Enrollee Requests
+        </div>
+        <div class="request-grid">
+            <a href="">
+                <div class="request-container">
+                    <div class="request-owner mb-2">
+                        <div class="request-pic">
+
+                        </div>
+                        <div>
+                            <p class="fs-5">Name</p>
+                            <p class="mb-2 location"><i class='bx bx-map sub-text'></i>Location</p>
+                            <span class="match-info">disability</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-end btn-container">
+                            <button type="submit" class="submit-btn border-0">Accept</button>
+                            <button type="submit" class="deny-btn border-0">Deny</button>
+                        </div>
+
+                        >
+                    </div>
+                </div>
+            </a>
+
         </div>
     </div>
 </div>

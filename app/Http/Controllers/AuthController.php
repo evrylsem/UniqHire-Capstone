@@ -13,6 +13,52 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public function showProfile()
+    {
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $disabilities = Disability::all();
+        return view('auth.profile', compact('disabilities', 'user'));
+    }
+
+    public function editProfile(Request $request)
+    {
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'contactnumber' => 'required|string|max:255',
+            'age' => 'nullable|integer|min:1|max:99',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'about' => 'nullable|string'
+        ]);
+
+        if ($user->userInfo->disability_id == 1) {
+            $user->userInfo->update([
+                'name' => $request->name,
+                'contactnumber' => $request->contactnumber,
+                'city' => $request->city,
+                'state' => $request->state,
+                'about' => $request->about,
+            ]);
+        } else {
+            $user->userInfo->update([
+                'name' => $request->name,
+                'contactnumber' => $request->contactnumber,
+                'age' => $request->age,
+                'city' => $request->city,
+                'state' => $request->state,
+                'about' => $request->about,
+                'disability_id' => $request->disability,
+            ]);
+        }
+
+
+
+        return redirect()->route('profile');
+    }
+
     public function showHomePage()
     {
         $images = [
@@ -21,8 +67,28 @@ class AuthController extends Controller
             'images/20.png',
             'images/21.png',
         ];
+        $pwdCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'PWD');
+        })->count();
 
-        return view('homepage', compact('images'));
+        $trainerCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Trainer');
+        })->count();
+
+        $employerCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Employer');
+        })->count();
+
+        $sponsorCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Sponsor');
+        })->count();
+
+        return view('homepage', compact('images', 'pwdCount', 'trainerCount', 'employerCount', 'sponsorCount'));
+    }
+
+    public function showForgotPass()
+    {
+        return view('auth.forgotPass');
     }
 
     //LOGIN PROCESS
@@ -65,8 +131,8 @@ class AuthController extends Controller
         }
 
         $request->validate([
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            // 'lastname' => 'nullable|string|max:255',
             // 'email' => 'required|string|email|unique:users,email|max:255',
             'contactnumber' => 'required|string|max:255',
             'password' => 'required|string|min:4|max:255|confirmed',
@@ -74,7 +140,7 @@ class AuthController extends Controller
             'city' => 'required|string|max:255',
             // 'disability' => 'required|string|exists:disabilities,id',
             'pwd_card' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            // 'role' => 'required|string|exists:roles,id',
+            // 'role' => 'required|string|exists:roles,role_name',
         ]);
 
 
@@ -89,8 +155,8 @@ class AuthController extends Controller
 
         UserInfo::create([
             'user_id' => $user->id,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
+            'name' => $request->name,
+            // 'lastname' => $request->lastname,
             'contactnumber' => $request->contactnumber,
             'province' => $request->province,
             'city' => $request->city,
