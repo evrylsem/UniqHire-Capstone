@@ -1102,8 +1102,8 @@ table tbody .bx {
 
 .profile-container .profile-info .details {
     display: grid;
-    grid-template-columns: repeat(2, 2fr);
-    gap: 6rem;
+    grid-template-columns: repeat(2, 1fr);
+    /* gap: 6rem; */
     align-items: center;
 }       
 .profile-container .more-details {
@@ -1168,3 +1168,4 @@ table tbody .bx {
 .profile-container .modal .modal-footer .submit-btn {
     padding: 0.5rem;
 }
+
