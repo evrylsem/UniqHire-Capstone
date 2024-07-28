@@ -36,11 +36,11 @@
                 <div class="row more-info">
                     <div class="col">
                         <h5>Start Date</h5>
-                        <p>{{ $program->start_date }}</p>
+                        <p>{{ \Carbon\Carbon::parse($program->start)->format('M d, Y') }}</p>
                     </div>
                     <div class="col">
                         <h5>End Date</h5>
-                        <p>{{ $program->start_date }}</p>
+                        <p>{{ \Carbon\Carbon::parse($program->end)->format('M d, Y') }}</p>
                     </div>
                 </div>
                 <div class="row more-info">

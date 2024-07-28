@@ -30,7 +30,8 @@
     --side-shadow-01: 0 20px 35px rgba(0, 0, 0, 0.1);
     --side-shadow-02: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
     --side-shadow-03: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
-    --side-shadow-04: rgba(0, 0, 0, 0.15) 0px 2px 8px;;
+    --side-shadow-04: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    --side-shadow-05: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
 
     --border-radius: 0.5rem;
 
@@ -530,6 +531,7 @@ table tbody .bx {
     background-color: var(--bg-color-02);
     left: 8rem;
     top: 8rem;
+    z-index: 98;
 }
 
 .pwd-browse-prog .filter-container i {
@@ -547,14 +549,16 @@ table tbody .bx {
 
 .pwd-browse-prog .searchbar-container {
     position: fixed;
-    top: 7.5rem;
+    top: 6.8rem;
     z-index: 98;
-    width: fit-content;
-    padding: 1rem;
-    height: 4rem;
-    background-color: transparent;
+    width: 49%;
+    padding: 1.5rem;
+    height: 5rem;
+    background-color: var(--bg-color-01);
+    /* border: 1px solid; */
     display: flex;
     align-items: center;
+    box-shadow: var(--side-shadow-05);
 }
 
 .pwd-browse-prog .searchbar {
@@ -659,6 +663,9 @@ table tbody .bx {
     width: 100%;
 }
 
+/* .pagination {
+    height: 2rem;
+} */
 
 .pagination .page-item.active {
    background-color: var(--primary-color);

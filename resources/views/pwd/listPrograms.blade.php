@@ -48,64 +48,22 @@
             <div class="col d-flex justify-content-center">
                 <form role="search" action="{{ route('pwd-list-program') }}" method="GET" id="searchForm">
                     <div class="d-flex searchbar">
-                        <input class="form-control" type="search" placeholder="Search Training Agency" aria-label="Search" id="searchInput" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
+                        <input class="form-control" type="search" placeholder="Search Training Programs" aria-label="Search" id="searchInput" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
                         <button class="btn btn-outline-success searchButton" type="submit">Search</button>
                     </div>
                 </form>
             </div>
         </div>
+
         <div class="prog-grid">
-            @if($filteredPrograms != null)
-            @foreach ($filteredPrograms as $filtered)
+            @foreach ($paginatedItems as $ranked)
             <div class="row prog-card mb-2">
                 <div class="col ">
-                    <a href="" class="d-flex prog-texts" data-id="{{ $filtered->id }}" onclick="openPopup(event)">
+                    <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup(event)">
                         <div class="prog-texts-container">
                             <div class=" d-flex mb-2">
                                 <div class="prog-img"></div>
                                 <div class="d-flex justify-content-between prog-head">
-                                    <div class="header">
-                                        <h4 class="text-cap">{{$filtered->title}}</h4>
-                                        <p class="sub-text text-cap">{{$filtered->agency->userInfo->name}}</p>
-                                        <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i> {{(str_contains($filtered->city, 'City') ? $filtered->city : $filtered->city . ' City')}}</p>
-                                    </div>
-                                    <div class="text-end date-posted">
-                                        <p>{{ $filtered->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="row prog-desc mb-1">
-                                <p>{{$filtered->description}}</p>
-                            </div>
-                            <div class="row d-flex">
-                                <div class="match-info">
-                                    {{$filtered->disability->disability_name}}
-                                </div>
-                                <div class="match-info">
-                                    {{$filtered->education->education_name}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
-                            >
-                        </div>
-                    </a>
-                </div>
-            </div>
-            @endforeach
-            <div class="pagination">
-                {{ $filteredPrograms->links() }}
-            </div>
-            @else
-            @foreach ($rankedPrograms as $ranked)
-            <div class="row prog-card mb-2">
-                <div class="col ">
-                    <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup({event})">
-                        <div class="prog-texts-container">
-                            <div class=" d-flex mb-2">
-                                <div class="prog-img"></div>
-                                <div class="d-flex justify-content-between">
                                     <div class="header">
                                         <h4 class="text-cap">{{$ranked['program']->title}}</h4>
                                         <p class="sub-text text-cap">{{$ranked['program']->agency->userInfo->name}}</p>
@@ -137,16 +95,10 @@
             </div>
             @endforeach
             <div class="pagination">
-                {{ $ranked['program']->links() }}
+                {{ $paginatedItems->links() }}
             </div>
-            @endif
 
         </div>
-
-
-
-
-
     </div>
 </div>
 
@@ -155,6 +107,8 @@
 <script>
     function submitForm() {
         document.getElementById('filterForm').submit();
+
+
     }
 
     function checkAndSubmit() {
@@ -169,6 +123,22 @@
         var container = document.getElementById('popup');
         var programId = event.currentTarget.getAttribute('data-id');
 
-        container.style.display = 'flex';
+        // Make an AJAX request to fetch the program details
+        fetch(`/training-details/${programId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('title').textContent = data.title;
+                document.getElementById('agency').textContent = data.agency.user_info.name;
+                document.getElementById('city').textContent = data.city;
+                document.getElementById('desc').textContent = data.description;
+                document.getElementById('start').textContent = data.start;
+                document.getElementById('end').textContent = data.end;
+                document.getElementById('disability').textContent = data.disability.disability_name;
+                document.getElementById('education').textContent = data.education.education_name;
+            })
+            .catch(error => console.error('Error fetching program details:', error));
+
+        // Display the popup
+        container.style.display = 'block';
     }
 </script>
