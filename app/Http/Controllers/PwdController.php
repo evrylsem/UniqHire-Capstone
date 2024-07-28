@@ -92,6 +92,7 @@ class PwdController extends Controller
     }
 
     public function showDetails($id) {
-        
+        $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
+        return response()->json($program);
     }
 }
