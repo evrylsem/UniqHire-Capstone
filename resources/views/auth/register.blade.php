@@ -101,11 +101,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <select type="text" class="form-select" id="provinceSelect" name="province" required placeholder="Province">
+                            <select type="text" class="form-select" id="provinceSelect" name="state" required placeholder="Province">
                                 <option value="">Select Province</option>
                             </select>
                             <label for="provinceSelect">Province</label>
-                            @error('province')
+                            @error('state')
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
                         </div>

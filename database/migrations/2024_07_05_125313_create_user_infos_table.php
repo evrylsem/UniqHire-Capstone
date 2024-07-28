@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->string('contactnumber');
-            $table->string('province');
+            $table->string('state');
             $table->string('city');
             $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
             $table->string('pwd_card')->nullable();

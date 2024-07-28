@@ -14,7 +14,7 @@ class UserInfo extends Model
         'name',
         // 'lastname',
         'contactnumber',
-        'province',
+        'state',
         'city',
         'disability_id',
         'pwd_card',

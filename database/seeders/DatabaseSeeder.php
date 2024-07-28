@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Evryl Claire',
             // 'lastname' => 'Claire',
             'contactnumber' => '09123456789',
-            'province' => 'cebu',
+            'state' => 'cebu',
             'city' => 'bulacao',
             'disability_id' => $arm->id, // Assign a disability ID here
             'user_id' => $adminuser->id,
@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Juan Dela Cruz',
             // 'lastname' => 'Dela Cruz',
             'contactnumber' => '09123456789',
-            'province' => 'cebu',
+            'state' => 'cebu',
             'city' => 'bulacao',
             'disability_id' => $arm->id, // Assign a disability ID here
             'user_id' => $pwduser->id,
@@ -86,10 +86,10 @@ class DatabaseSeeder extends Seeder
 
         $pwduser->role()->attach($pwd);
 
-        $traineruser1 = User::create([        
+        $traineruser1 = User::create([
             'email' => 'trainer@example.com',
             'password' => Hash::make('sheesh'),
-            
+
         ]);
 
         UserInfo::create([
@@ -115,14 +115,14 @@ class DatabaseSeeder extends Seeder
             'education_id' => $hsgrad->id,
             'created_at' => date("Y-m-d"),
             'updated_at' => date("Y-m-d"),
-        ]); 
+        ]);
 
         $traineruser1->role()->attach($trainer);
 
-        $traineruser2 = User::create([        
+        $traineruser2 = User::create([
             'email' => 'trainer2@example.com',
             'password' => Hash::make('sheesh'),
-            
+
         ]);
 
         UserInfo::create([
@@ -148,7 +148,7 @@ class DatabaseSeeder extends Seeder
             'education_id' => $hsgrad->id,
             'created_at' => date("Y-m-d"),
             'updated_at' => date("Y-m-d"),
-        ]); 
+        ]);
 
         $traineruser2->role()->attach($trainer);
     }
