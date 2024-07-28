@@ -60,7 +60,7 @@
             @foreach ($rankedPrograms as $ranked)                
                     <div class="row prog-card mb-2">
                         <div class="col ">
-                            <a href="{{ route('training-details', $ranked['program']->id) }}" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup(event)">
+                            <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup(event)">
                                 <div class="prog-texts-container">
                                     <div class=" d-flex mb-2">
                                         <div class="prog-img"></div>
@@ -123,10 +123,26 @@
         event.preventDefault(); // Prevent the default anchor behavior
         var container = document.getElementById('details-container');
         var programId = event.currentTarget.getAttribute('data-id');
-        document.getElementById('rankedPrograms').submit();
 
+        // Make an AJAX request to fetch the program details
+        fetch(`/training-details/${programId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('title').textContent = data.title;
+                document.getElementById('agency').textContent = data.agency.user_info.name;
+                document.getElementById('city').textContent = data.city;
+                document.getElementById('desc').textContent = data.description;
+                document.getElementById('start').textContent = data.start;
+                document.getElementById('end').textContent = data.end;
+                document.getElementById('disability').textContent = data.disability.disability_name;
+                document.getElementById('education').textContent = data.education.education_name;
+            })
+            .catch(error => console.error('Error fetching program details:', error));
+
+        // Display the popup
         container.style.display = 'block';
     }
+
     // Close the popup when clicking on the close button
     // document.getElementById('close-popup').addEventListener('click', function(e) {
     //     e.preventDefault();

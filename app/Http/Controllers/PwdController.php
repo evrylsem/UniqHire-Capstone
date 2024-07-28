@@ -88,8 +88,8 @@ class PwdController extends Controller
     }
 
     public function showDetails($id) {
-        $program = TrainingProgram::findOrFail($id);
-
-        return view('pwd.show', compact('program'));
+        $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
+        return response()->json($program);
+        
     }
 }
