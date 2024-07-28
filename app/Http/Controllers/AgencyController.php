@@ -170,4 +170,52 @@ class AgencyController extends Controller
             return redirect()->route('programs-show', $id);
         }
     }
+
+    public function showCalendar(Request $request) {
+        log::info("calendar reach in showCalendar!");
+        if($request->ajax())
+    	{
+    		$data = TrainingProgram::whereDate('start', '>=', $request->start)
+                       ->whereDate('end',   '<=', $request->end)
+                       ->get(['agency_id', 'title', 'start', 'end']);
+            return response()->json($data);
+    	}
+        return view('agency.calendar');
+    }   
+
+    public function action(Request $request)
+    {
+        log::info("calendar reach in action!");
+        if($request->ajax())
+    	{
+    		if($request->type == 'add')
+    		{
+    			$event = TrainingProgram::create([
+    				'title'		=>	$request->title,
+    				'start'		=>	$request->start,
+    				'end'		=>	$request->end
+    			]);
+
+    			return response()->json($event);
+    		}
+
+    		if($request->type == 'update')
+    		{
+    			$event = TrainingProgram::find($request->id)->update([
+    				'title'		=>	$request->title,
+    				'start'		=>	$request->start,
+    				'end'		=>	$request->end
+    			]);
+
+    			return response()->json($event);
+    		}
+
+    		if($request->type == 'delete')
+    		{
+    			$event = TrainingProgram::find($request->id)->delete();
+
+    			return response()->json($event);
+    		}
+    	}
+    }
 }
