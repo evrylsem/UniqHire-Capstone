@@ -43,7 +43,6 @@
             </div>
         </form>
     </div>
-    <!-- <div class="col empty-space"></div> -->
     <div class="d-flex flex-column align-items-center">
         <div class="mb-4 searchbar-container">
             <div class="col d-flex justify-content-center">
@@ -149,7 +148,6 @@
 
 
     </div>
-    <!-- <div class="col empty-space"></div> -->
 </div>
 
 @endsection
@@ -159,7 +157,6 @@
         document.getElementById('filterForm').submit();
     }
 
-    // Function to check if the input is empty and submit the form
     function checkAndSubmit() {
         var searchInput = document.getElementById('searchInput');
         if (searchInput.value.trim() === ' ') {
@@ -168,7 +165,7 @@
     }
 
     function openPopup(event) {
-        event.preventDefault(); // Prevent the default anchor behavior
+        event.preventDefault();
         var container = document.getElementById('popup');
         var programId = event.currentTarget.getAttribute('data-id');
 
