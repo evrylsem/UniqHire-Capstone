@@ -23,7 +23,7 @@
                 <p id="desc"></p>
             </div>
             <div class="row more-info">
-                <div class="col">
+                <div class="col ">
                     <h5>Start Date</h5>
                     <p id="start"></p>
                 </div>
@@ -35,11 +35,11 @@
             <div class="row more-info">
                 <div class="col">
                     <h5>We Accept</h5>
-                    <span class="requirement" id="disability"></span>
+                    <span class="match-info" id="disability"></span>
                 </div>
                 <div class="col">
                     <h5>Education Level</h5>
-                    <span class="requirement" id="education"></span>
+                    <span class="match-info" id="education"></span>
                 </div>
             </div>
         </div>

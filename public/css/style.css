@@ -626,7 +626,7 @@ table tbody .bx {
     padding: 1rem;
 }
 
-.pwd-browse-prog .prog-card .match-info, .profile-container .profile-info .details .disability, .show-prog-container .prog-details .more-info .match-info, .show-prog-container .enrollee-requests .request-container .match-info {
+.pwd-browse-prog .prog-card .match-info, .profile-container .profile-info .details .disability, .show-prog-container .prog-details .more-info .match-info, .show-prog-container .enrollee-requests .request-container .match-info, .popup .details-container .match-info {
     background-color: var(--primary-color-light);
     width: fit-content;
     padding: 0.5rem;

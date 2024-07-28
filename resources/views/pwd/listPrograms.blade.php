@@ -139,6 +139,6 @@
             .catch(error => console.error('Error fetching program details:', error));
 
         // Display the popup
-        container.style.display = 'block';
+        container.style.display = 'flex';
     }
 </script>
