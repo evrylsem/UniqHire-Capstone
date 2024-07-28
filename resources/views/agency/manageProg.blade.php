@@ -12,7 +12,7 @@
             <a href="{{ route('programs-show', $program->id) }}" class="prog-texts">
                 <h3>{{ $program->title }}</h3>
                 <p class="sub-text prog-loc">
-                    <i class='bx bx-map sub-text prog-loc'></i>{{ $program->city }}
+                    <i class='bx bx-map sub-text prog-loc'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}
                 </p>
                 <div class="prog-desc-container">
                     <p class="prog-desc mt-3">

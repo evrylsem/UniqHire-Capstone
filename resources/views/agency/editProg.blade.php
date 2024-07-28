@@ -1,7 +1,7 @@
 @extends('layout')
 @section('page-title', 'Edit Training Program')
 @section('page-content')
-<form action="{{ route('programs-edit', $program->id) }}" method="POST" class="container">
+<form action="{{ route('programs-edit', $program->id) }}" method="POST" class="container edit-form">
     @csrf
     @method('PUT')
     <div class="row mt-2 mb-2 border-bottom">
@@ -81,26 +81,7 @@
             </div>
         </div>
     </div>
-    <!-- <hr>
-    <div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()" {{ $program->crowdfund ? 'checked' : '' }}>
-            <label class="form-check-label" for="flexCheckDefault">
-                Host a crowdfunding for this?
-            </label>
-        </div>
-    </div>
-    <div class="row" id="crowdfund-section">
-        <div class="col">
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" value="{{ $program->crowdfund->goal }}" {{ $program->crowdfund ? '' : 'disabled' }}>
-                <label for="floatingInput">Amount Needed</label>
-                @error('goal')
-                <span class="error-msg">{{ $message }}</span>
-                @enderror
-            </div>
-        </div>
-    </div> -->
+    
     <div class="d-flex justify-content-evenly mt-3 prog-btn">
         <button type="reset" class="deny-btn border-0">Clear</button>
         <button type="submit" class="submit-btn border-0">Update</button>
