@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniqHire | @yield('page-title')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-H7c5xz2/Bo9F3OeY8QhMDCz1p6wD5wF2gskM8H/o6cc1xVxrmT4eZ1QyD/0G0F9E" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-6C0P9i8FAEEG7T46Yc4J9E5DPur2Tz8tQ1PUgVJ7X1EoO9dJQy5Qig0P8Jk7+KD6" crossorigin="anonymous"></script>
 
     @include('slugs.links')
 
@@ -135,11 +137,18 @@
                         </div>
                         <div>
                             <ul class="d-flex align-items-center">
-                                <li class="nav-item user-notif"><a href="#"><i class='bx bxs-inbox'></i></a></li>
+                                <li class="nav-item user-notif dropdown">
+                                    <a href="#" class="dropdown-toggle" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class='bx bxs-inbox'></i>
+                                        <span id="notification-badge" class="badge bg-danger d-none">0</span> <!-- Badge element -->
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+                                        <!-- Notifications will be dynamically added here -->
+                                    </ul>
+                                </li>
                                 <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->name }}</span></li>
                             </ul>
                         </div>
-
                     </div>
                 </nav>
             </div>
@@ -153,79 +162,39 @@
         </div>
         @endif
     </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const notifDropdown = document.getElementById('notifDropdown');
-            const notificationsMenu = document.getElementById('notificationsMenu');
-            const badge = document.querySelector('.badge');
-
+        $(document).ready(function() {
             function fetchNotifications() {
-                fetch("{{ route('notifications') }}")
-                    .then(response => response.json())
-                    .then(data => {
-                        notificationsMenu.innerHTML = '';
-                        let unreadCount = 0;
+                $.get("{{ route('notifications.getNotifications') }}", function(data) {
+                    var notifDropdown = $('#notificationDropdown').next('.dropdown-menu');
+                    var badge = $('#notification-badge');
+                    notifDropdown.empty(); // Clear existing notifications
 
-                        if (data.length > 0) {
-                            data.forEach(notif => {
-                                if (!notif.read_at) {
-                                    unreadCount++;
-                                }
-                                notificationsMenu.innerHTML += `
-                                <li class="${notif.read_at ? 'read' : 'unread'}">
-                                    <a href="{{ url('/training-programs') }}/${notif.data.training_program_id}" data-id="${notif.id}" class="notif-item">
-                                        ${notif.data.title || 'No title'}
-                                    </a>
-                                </li>
-                            `;
-                            });
-                        } else {
-                            notificationsMenu.innerHTML = '<li>No new notifications</li>';
-                        }
-
-                        badge.textContent = unreadCount > 0 ? unreadCount : '';
-                    });
-            }
-
-            function markNotificationAsRead(id) {
-                fetch("{{ route('notifications.markAsRead') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        notification_id: id
-                    })
-                }).then(response => {
-                    if (response.ok) {
-                        fetchNotifications(); // Refresh notifications
+                    if (data.length > 0) {
+                        badge.removeClass('d-none').text(data.length);
+                        data.forEach(function(notification) {
+                            notifDropdown.append(
+                                '<li><a class="dropdown-item" href="' + notification.data.url + '">' + notification.data.title + '</a></li>'
+                            );
+                        });
+                    } else {
+                        badge.addClass('d-none');
+                        notifDropdown.append('<li><span class="dropdown-item">No notifications</span></li>');
                     }
+                }).fail(function() {
+                    console.error('Failed to fetch notifications');
                 });
             }
 
-            notifDropdown.addEventListener('click', function(e) {
-                e.preventDefault();
-                fetchNotifications();
-            });
-
-            notificationsMenu.addEventListener('click', function(e) {
-                if (e.target.classList.contains('notif-item')) {
-                    const notifId = e.target.getAttribute('data-id');
-                    markNotificationAsRead(notifId);
-                }
-            });
-
             // Fetch notifications on page load
             fetchNotifications();
+
+            // Handle dropdown showing
+            $('#notificationDropdown').on('show.bs.dropdown', function() {
+                fetchNotifications();
+            });
         });
     </script>
-
-
-
-
-
 </body>
 <script>
     function toggleSubmenu() {

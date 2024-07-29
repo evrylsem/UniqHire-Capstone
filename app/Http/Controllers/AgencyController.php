@@ -14,6 +14,7 @@ use DateTime;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class AgencyController extends Controller
 {
@@ -92,7 +93,6 @@ class AgencyController extends Controller
         })->get();
 
         foreach ($pwdUsers as $user) {
-            Log::info('Sending notifications to user: ' . $user->id);
             $user->notify(new NewTrainingProgramNotification($trainingProgram));
         }
 
