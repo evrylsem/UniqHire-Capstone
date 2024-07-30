@@ -8,6 +8,8 @@ use App\Models\EducationLevel;
 use App\Models\TrainingProgram;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\Enrollee;
+use App\Models\TrainingApplication;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
 use DateTime;
@@ -44,13 +46,18 @@ class AgencyController extends Controller
     public function showProgramDetails($id)
     {
         $program = TrainingProgram::findOrFail($id);
+        $userId = auth()->id();
+        $applications = TrainingApplication::whereHas('program', function($query) use ($userId) {
+            $query->where('agency_id', $userId);
+        })->get();
+
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
             $goal = $program->crowdfund->goal ?? 1; // Default to 1 to avoid division by zero
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program'));
+        return view('agency.showProg', compact('program', 'applications'));
     }
 
     public function showAddForm()
@@ -172,50 +179,69 @@ class AgencyController extends Controller
     }
 
     public function showCalendar(Request $request) {
-        log::info("calendar reach in showCalendar!");
-        if($request->ajax())
-    	{
-    		$data = TrainingProgram::whereDate('start', '>=', $request->start)
-                       ->whereDate('end',   '<=', $request->end)
-                       ->get(['agency_id', 'title', 'start', 'end']);
+        
+        $user = auth()->user()->userInfo->user_id;
+        log::info($user);
+        
+        if ($request->ajax()) {
+            $data = TrainingProgram::where('agency_id', $user)
+                                   ->whereDate('start', '>=', $request->start)
+                                   ->whereDate('end', '<=', $request->end)
+                                   ->get(['agency_id', 'title', 'start', 'end']);
+        
             return response()->json($data);
-    	}
+        }
+        
         return view('agency.calendar');
     }   
 
-    public function action(Request $request)
-    {
-        log::info("calendar reach in action!");
-        if($request->ajax())
-    	{
-    		if($request->type == 'add')
-    		{
-    			$event = TrainingProgram::create([
-    				'title'		=>	$request->title,
-    				'start'		=>	$request->start,
-    				'end'		=>	$request->end
-    			]);
+    public function accept(Request $request) {
+        log::info("nakaabot sa accept");
+        $validatedData = $request->validate([
+            'training_application_id' => 'required|exists:training_applications,training_id',
+            'completion_status' => 'required|in:Completed,Ongoing,Not completed',
+        ]);
 
-    			return response()->json($event);
-    		}
+        Enrollee::create($validatedData);
 
-    		if($request->type == 'update')
-    		{
-    			$event = TrainingProgram::find($request->id)->update([
-    				'title'		=>	$request->title,
-    				'start'		=>	$request->start,
-    				'end'		=>	$request->end
-    			]);
-
-    			return response()->json($event);
-    		}
-
-    		if($request->type == 'delete')
-    		{
-    			$event = TrainingProgram::find($request->id)->delete();
-
-    			return response()->json($event);
-    		}
-    	}
+        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
+
+    
+
+    // public function action(Request $request)
+    // {
+    //     log::info("calendar reach in action!");
+    //     if($request->ajax())
+    // 	{
+    // 		if($request->type == 'add')
+    // 		{
+    // 			$event = TrainingProgram::create([
+    // 				'title'		=>	$request->title,
+    // 				'start'		=>	$request->start,
+    // 				'end'		=>	$request->end
+    // 			]);
+
+    // 			return response()->json($event);
+    // 		}
+
+    // 		if($request->type == 'update')
+    // 		{
+    // 			$event = TrainingProgram::find($request->id)->update([
+    // 				'title'		=>	$request->title,
+    // 				'start'		=>	$request->start,
+    // 				'end'		=>	$request->end
+    // 			]);
+
+    // 			return response()->json($event);
+    // 		}
+
+    // 		if($request->type == 'delete')
+    // 		{
+    // 			$event = TrainingProgram::find($request->id)->delete();
+
+    // 			return response()->json($event);
+    // 		}
+    // 	}
+    // }
 }

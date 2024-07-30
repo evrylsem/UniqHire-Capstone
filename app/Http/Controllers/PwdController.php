@@ -7,6 +7,7 @@ use App\Models\UserInfo;
 use App\Models\TrainingProgram;
 use App\Models\Disability;
 use App\Models\EducationLevel;
+use App\Models\TrainingApplication;
 use App\Http\Requests\StoreUserInfoRequest;
 use App\Http\Requests\UpdateUserInfoRequest;
 use Illuminate\Support\Facades\Log;
@@ -66,9 +67,9 @@ class PwdController extends Controller
         $paginatedItems = new LengthAwarePaginator($currentItems, count($rankedPrograms), $perPage);
         $paginatedItems->setPath($request->url());        
 
-        $viewName = $request->input('view', 'pwd.listPrograms');
+        // $viewName = $request->input('view', 'pwd.listPrograms');
 
-        return view( $viewName, compact('paginatedItems','disabilities', 'educations'));
+        return view( 'pwd.listPrograms', compact('paginatedItems','disabilities', 'educations'));
     }
 
     private function calculateSimilarity($user, $program)
@@ -94,50 +95,77 @@ class PwdController extends Controller
     }
 
     public function showCalendar(Request $request) {
-        log::info("calendar reach in showCalendar!");
-        if($request->ajax())
-    	{
-    		$data = TrainingProgram::whereDate('start', '>=', $request->start)
-                       ->whereDate('end',   '<=', $request->end)
-                       ->get(['id', 'title', 'start', 'end']);
-            return response()->json($data);
-    	}
+        Log::info("calendar reached in showCalendar!");
+    
+        $userId = Auth()->user()->id;
+    
+        if ($request->ajax()) {
+            // Get the training programs based on the enrollee's application for the authenticated user
+            $trainingPrograms = TrainingProgram::whereIn('id', function($query) use ($userId) {
+                $query->select('training_program_id')
+                      ->from('training_applications')
+                      ->whereIn('training_id', function($query) use ($userId) {
+                          $query->select('training_application_id')
+                                ->from('enrollees')
+                                ->where('user_id', $userId);
+                      });
+            })
+            ->whereDate('start', '>=', $request->start)
+            ->whereDate('end', '<=', $request->end)
+            ->get(['id', 'title', 'start', 'end']);
+    
+            return response()->json($trainingPrograms);
+        }
+    
         return view('pwd.calendar');
-    }   
+    }    
+    
+    public function application(Request $request) {
 
-    public function action(Request $request)
-    {
-        log::info("calendar reach in action!");
-        if($request->ajax())
-    	{
-    		if($request->type == 'add')
-    		{
-    			$event = TrainingProgram::create([
-    				'title'		=>	$request->title,
-    				'start'		=>	$request->start,
-    				'end'		=>	$request->end
-    			]);
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'training_program_id' => 'required|exists:training_programs,id',
+            'application_status' => 'required|in:Pending,Approved,Denied',
+        ]);
 
-    			return response()->json($event);
-    		}
+        $trainingApplication = TrainingApplication::create($validatedData);
 
-    		if($request->type == 'update')
-    		{
-    			$event = TrainingProgram::find($request->id)->update([
-    				'title'		=>	$request->title,
-    				'start'		=>	$request->start,
-    				'end'		=>	$request->end
-    			]);
-
-    			return response()->json($event);
-    		}
-
-    		if($request->type == 'delete')
-    		{
-    			$event = TrainingProgram::find($request->id)->delete();
-
-    			return response()->json($event);
-    		}
-    	}
+        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
+
+    // public function action(Request $request) 
+    // {
+    //     log::info("calendar reach in action!");
+    //     if($request->ajax())
+    // 	{
+    // 		if($request->type == 'add')
+    // 		{
+    // 			$event = TrainingProgram::create([
+    // 				'title'		=>	$request->title,
+    // 				'start'		=>	$request->start,
+    // 				'end'		=>	$request->end
+    // 			]);
+
+    // 			return response()->json($event);
+    // 		}
+
+    // 		if($request->type == 'update')
+    // 		{
+    // 			$event = TrainingProgram::find($request->id)->update([
+    // 				'title'		=>	$request->title,
+    // 				'start'		=>	$request->start,
+    // 				'end'		=>	$request->end
+    // 			]);
+
+    // 			return response()->json($event);
+    // 		}
+
+    // 		if($request->type == 'delete')
+    // 		{
+    // 			$event = TrainingProgram::find($request->id)->delete();
+
+    // 			return response()->json($event);
+    // 		}
+    // 	}
+    // }
 }
