@@ -82,6 +82,7 @@
             Enrollee Requests
         </div>
         <div class="request-grid">
+        @foreach ($applications as $application)
             <a href="">
                 <div class="request-container">
                     <div class="request-owner mb-2">
@@ -89,24 +90,58 @@
 
                         </div>
                         <div>
-                            <p class="fs-5">Name</p>
-                            <p class="mb-2 location"><i class='bx bx-map sub-text'></i>Location</p>
-                            <span class="match-info">disability</span>
+                            <p class="fs-5">{{ $application->user->userInfo->name }}</p>
+                            <p class="mb-2 location"><i class='bx bx-map sub-text'></i>{{ $application->user->userInfo->city }}</p>
+                            <span class="match-info">{{ $application->user->userInfo->disability->disability_name }}</span>
                         </div>
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="text-end btn-container">
-                            <button type="submit" class="submit-btn border-0">Accept</button>
-                            <button type="submit" class="deny-btn border-0">Deny</button>
+                            <button type="button" class="submit-btn border-0" id="accept-button" data-application-id="{{ $application->training_id }}">Accept</button>
+                            <button type="button" class="deny-btn border-0">Deny</button>
                         </div>
 
                         >
                     </div>
                 </div>
             </a>
-
+        @endforeach
         </div>
     </div>
 </div>
 
+<script>
+    var acceptButton = document.getElementById('accept-button');
+    console.log("kaabot ari sa script nga wala pa giclick");
+    
+    acceptButton.addEventListener('click', function(e) {
+            e.preventDefault();
+        console.log("kaabot ari sa script");
+            var applicationId = acceptButton.getAttribute('data-application-id');
+
+            fetch(`/agency/accept`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    training_application_id: applicationId,
+                    completion_status: 'Ongoing'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Accepted successfully.');
+                } else {
+                    alert('Failed to submit application.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+</script>
+
 @endsection
+

@@ -4,15 +4,26 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <title>UniqHire | @yield('page-title')</title>
+
+        <!-- Bootstrap library -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-H7c5xz2/Bo9F3OeY8QhMDCz1p6wD5wF2gskM8H/o6cc1xVxrmT4eZ1QyD/0G0F9E" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-6C0P9i8FAEEG7T46Yc4J9E5DPur2Tz8tQ1PUgVJ7X1EoO9dJQy5Qig0P8Jk7+KD6" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <!-- Fullcalendar library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 
         @include('slugs.links')
 
+        <!-- Boxicons library -->
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
         <link rel="icon" href="{{ asset('images/tab-icon.png') }}">
 
     </head>
@@ -70,11 +81,18 @@
                             </a>
                         </li>
                         <li class="side-item">
+                            <a href="{{ route('pwd-calendar') }}">
+                                <i class='bx bx-calendar side-icon'></i>
+                                <span class="side-title">Calendar</span>
+                            </a>
+                        </li>
+                        <li class="side-item">
                             <a href="#">
                                 <i class='bx bx-cog side-icon'></i>
                                 <span class="side-title">Settings</span>
                             </a>
                         </li>
+
                         @endif
 
                         <!-- ADMIN ROLE ACCESS -->
@@ -107,6 +125,12 @@
                             <a href="{{route('programs-manage')}}">
                                 <i class='bx bxs-school side-icon'></i>
                                 <span class="side-title">Training Programs</span>
+                            </a>
+                        </li>
+                        <li class="side-item">
+                            <a href="{{ route('agency-calendar') }}">
+                                <i class='bx bx-calendar side-icon'></i>
+                                <span class="side-title">Calendar</span>
                             </a>
                         </li>
                         @endif
@@ -153,6 +177,9 @@
                     </nav>
                 </div>
                 <div class="content-container">
+                    @yield('calendar')
+                </div>
+                <div class="content-container">
                     @yield('page-content')
                 </div>
             </div>
@@ -178,23 +205,51 @@
                                 );
                             });
                         } else {
-                            badge.addClass('d-none');
-                            notifDropdown.append('<li><span class="dropdown-item">No notifications</span></li>');
+                            notificationsMenu.innerHTML = '<li>No new notifications</li>';
                         }
-                    }).fail(function() {
-                        console.error('Failed to fetch notifications');
+
+                        badge.textContent = unreadCount > 0 ? unreadCount : '';
                     });
                 }
 
-                // Fetch notifications on page load
-                fetchNotifications();
+                function markNotificationAsRead(id) {
+                    fetch("{{ route('notifications.markAsRead') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            notification_id: id
+                        })
+                    }).then(response => {
+                        if (response.ok) {
+                            fetchNotifications(); // Refresh notifications
+                        }
+                    });
+                }
 
-                // Handle dropdown showing
-                $('#notificationDropdown').on('show.bs.dropdown', function() {
+                notifDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
                     fetchNotifications();
                 });
+
+                notificationsMenu.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('notif-item')) {
+                        const notifId = e.target.getAttribute('data-id');
+                        markNotificationAsRead(notifId);
+                    }
+                });
+
+                // Fetch notifications on page load
+                fetchNotifications();
             });
         </script>
+
+
+
+
+
     </body>
     <script>
         function toggleSubmenu() {
