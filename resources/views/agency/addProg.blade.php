@@ -82,7 +82,7 @@
             </div>
         </div>
     </div>
-    <!-- <hr>
+    <hr>
     <div>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
@@ -101,7 +101,7 @@
                 @enderror
             </div>
         </div>
-    </div> -->
+    </div>
     <div class="d-flex justify-content-between mt-3 prog-btn">
         <button type="reset" class="deny-btn border-0">Clear</button>
         <button type="submit" class="submit-btn border-0">Add</button>

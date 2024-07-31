@@ -79,7 +79,7 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
-            // 'goal' => 'nullable|numeric' 
+            'goal' => 'nullable|numeric' 
         ]);
 
         // Create a new training program
@@ -103,12 +103,12 @@ class AgencyController extends Controller
             $user->notify(new NewTrainingProgramNotification($trainingProgram));
         }
 
-        // if ($request->has('goal') && $request->goal !== null) {
-        //     CrowdfundEvent::create([
-        //         'program_id' => $trainingProgram->id,
-        //         'goal' => $request->goal,
-        //     ]);
-        // }
+        if ($request->has('goal') && $request->goal !== null) {
+            CrowdfundEvent::create([
+                'program_id' => $trainingProgram->id,
+                'goal' => $request->goal,
+            ]);
+        }
 
         return redirect()->route('programs-manage');
     }
@@ -167,12 +167,25 @@ class AgencyController extends Controller
                 'education_id' => $request->education,
             ]);
 
-            // if ($request->has('goal') && $request->goal !== null) {
-            //     CrowdfundEvent::create([
-            //         'program_id' => $program->id,
-            //         'goal' => $request->goal,
-            //     ]);
-            // }
+            if ($request->has('goal') && $request->goal !== null) {
+                $crowdfundEvent = $program->crowdfund;
+
+                if ($crowdfundEvent) {
+                    $crowdfundEvent->update([
+                        'goal' => $request->goal,
+                    ]);
+                } else {
+                    CrowdfundEvent::create([
+                        'program_id' => $program->id,
+                        'goal' => $request->goal,
+                    ]);
+                }
+            } else {
+                // If goal is not present, it means the crowdfund checkbox is unchecked, so delete the crowdfund event if it exists
+                if ($program->crowdfund) {
+                    $program->crowdfund->delete();
+                }
+            }
 
             return redirect()->route('programs-show', $id);
         }

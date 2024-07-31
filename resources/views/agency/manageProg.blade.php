@@ -19,16 +19,24 @@
                         {{ $program->description }}
                     </p>
                 </div>
-                <!-- <div class="crowdfund-progress mb-3">
-                    @if ($program->crowdfund)
+                @if ($program->crowdfund)
+                <div class="crowdfund-progress mb-3">
+
                     <p class="sub-text">
-                        Crowdfunding Progress: {{ $program->crowdfund->progress }}%
+                        Goal Amount: &nbsp;&nbsp;<span>{{$program->crowdfund->goal . ' PHP'}}</span>
                     </p>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $program->crowdfund->progress }}%</div>
+                    <p class="sub-text">
+                        Crowdfunding Progress:
+                    </p>
+                    <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" @if ($program->crowdfund->progress > 0)
+                            style="width: {{$program->crowdfund->progress}}%;"
+                            else
+                            style="width: 10%;"
+                            @endif >{{ $program->crowdfund->progress }}%</div>
                     </div>
-                    @endif
-                </div> -->
+                </div>
+                @endif
                 <div class="d-flex prog-details">
                     <p class="sub-text">
                         <i class='bx bx-group sub-text'></i> Number Participants

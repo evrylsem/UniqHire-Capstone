@@ -86,7 +86,7 @@
                             </a>
                         </li>
                         <li class="side-item">
-                            <a href="{{ route('pwd-calendar') }}">
+                            <a href="{{ route('pwd-calendar') }}" class="{{ request()->routeIs('pwd-calendar') ? 'active' : '' }}">
                                 <i class='bx bx-calendar side-icon'></i>
                                 <span class="side-title">Calendar</span>
                             </a>
@@ -127,13 +127,13 @@
                         <!-- TRAINER ROLE ACCESS -->
                         @if (Auth::user()->hasRole('Trainer'))
                         <li class="side-item">
-                            <a href="{{route('programs-manage')}}">
+                            <a href="{{route('programs-manage')}}" class="{{ request()->routeIs('programs-manage', 'programs-add', 'programs-edit', 'programs-show') ? 'active' : '' }}">
                                 <i class='bx bxs-school side-icon'></i>
                                 <span class="side-title">Training Programs</span>
                             </a>
                         </li>
                         <li class="side-item">
-                            <a href="{{ route('agency-calendar') }}">
+                            <a href="{{ route('agency-calendar') }}" class="{{ request()->routeIs('agency-calendar') ? 'active' : '' }}">
                                 <i class='bx bx-calendar side-icon'></i>
                                 <span class="side-title">Calendar</span>
                             </a>
