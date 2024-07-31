@@ -17,12 +17,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class PwdController extends Controller
 {
 
-    public function showPrograms(Request $request) {
-        $user = auth()->user()->userInfo;        
+    public function showPrograms(Request $request)
+    {
+        $user = auth()->user()->userInfo;
         $disabilities = Disability::all();
         $educations = EducationLevel::all();
-        $query = TrainingProgram::query();        
-        
+        $query = TrainingProgram::query();
+
         // Filtering the programs through searching program title
         if ($request->filled('search')) {
             $query->where("title", "LIKE", "%" . $request->search . "%");
@@ -42,7 +43,7 @@ class PwdController extends Controller
         }
 
         $filteredPrograms = $query->get();
-        
+
 
         $rankedPrograms = [];
 
@@ -65,11 +66,11 @@ class PwdController extends Controller
         $perPage = 5;
         $currentItems = array_slice($rankedPrograms, ($currentPage - 1) * $perPage, $perPage);
         $paginatedItems = new LengthAwarePaginator($currentItems, count($rankedPrograms), $perPage);
-        $paginatedItems->setPath($request->url());        
+        $paginatedItems->setPath($request->url());
 
         // $viewName = $request->input('view', 'pwd.listPrograms');
 
-        return view( 'pwd.listPrograms', compact('paginatedItems','disabilities', 'educations'));
+        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations'));
     }
 
     private function calculateSimilarity($user, $program)
@@ -89,38 +90,41 @@ class PwdController extends Controller
         return $similarityScore;
     }
 
-    public function showDetails($id) {
+    public function showDetails($id)
+    {
         $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
         return response()->json($program);
     }
 
-    public function showCalendar(Request $request) {
+    public function showCalendar(Request $request)
+    {
         Log::info("calendar reached in showCalendar!");
-    
+
         $userId = Auth()->user()->id;
-    
+
         if ($request->ajax()) {
             // Get the training programs based on the enrollee's application for the authenticated user
-            $trainingPrograms = TrainingProgram::whereIn('id', function($query) use ($userId) {
+            $trainingPrograms = TrainingProgram::whereIn('id', function ($query) use ($userId) {
                 $query->select('training_program_id')
-                      ->from('training_applications')
-                      ->whereIn('training_id', function($query) use ($userId) {
-                          $query->select('training_application_id')
-                                ->from('enrollees')
-                                ->where('user_id', $userId);
-                      });
+                    ->from('training_applications')
+                    ->whereIn('training_id', function ($query) use ($userId) {
+                        $query->select('training_application_id')
+                            ->from('enrollees')
+                            ->where('user_id', $userId);
+                    });
             })
-            ->whereDate('start', '>=', $request->start)
-            ->whereDate('end', '<=', $request->end)
-            ->get(['id', 'title', 'start', 'end']);
-    
+                ->whereDate('start', '>=', $request->start)
+                ->whereDate('end', '<=', $request->end)
+                ->get(['id', 'title', 'start', 'end']);
+
             return response()->json($trainingPrograms);
         }
-    
+
         return view('pwd.calendar');
-    }    
-    
-    public function application(Request $request) {
+    }
+
+    public function application(Request $request)
+    {
 
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
