@@ -93,7 +93,26 @@ class PwdController extends Controller
     public function showDetails($id)
     {
         $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
-        return response()->json($program);
+        $userId = auth()->user()->id; // Get the authenticated user's ID
+        
+        // Get the application status for the specific program
+        $application = TrainingApplication::where('user_id', $userId)
+            ->where('training_program_id', $id)
+            ->first();
+        $applicationStatus = $application ? $application->application_status : 'Apply';
+
+         // Check if the user has any pending or approved applications
+        $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
+        ->whereIn('application_status', ['Pending', 'Approved'])
+        ->exists();
+
+        Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
+     
+        return response()->json([
+            'program' => $program,
+            'application_status' => $applicationStatus,
+            'has_pending_or_approved' => $hasPendingOrApproved
+        ]);
     }
 
     public function showCalendar(Request $request)
@@ -132,7 +151,7 @@ class PwdController extends Controller
             'application_status' => 'required|in:Pending,Approved,Denied',
         ]);
 
-        $trainingApplication = TrainingApplication::create($validatedData);
+        TrainingApplication::create($validatedData);
 
         return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
