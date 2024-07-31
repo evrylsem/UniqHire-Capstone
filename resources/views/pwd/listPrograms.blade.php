@@ -127,16 +127,28 @@
         fetch(`/training-details/${programId}`)
             .then(response => response.json())
             .then(data => {
-                document.getElementById('title').textContent = data.title;
-                document.getElementById('agency').textContent = data.agency.user_info.name;
-                document.getElementById('city').textContent = data.city;
-                document.getElementById('desc').textContent = data.description;
-                document.getElementById('start').textContent = data.start;
-                document.getElementById('end').textContent = data.end;
-                document.getElementById('disability').textContent = data.disability.disability_name;
-                document.getElementById('education').textContent = data.education.education_name;
+                document.getElementById('title').textContent = data.program.title;
+                document.getElementById('agency').textContent = data.program.agency.user_info.name;
+                document.getElementById('city').textContent = data.program.city;
+                document.getElementById('desc').textContent = data.program.description;
+                document.getElementById('start').textContent = data.program.start;
+                document.getElementById('end').textContent = data.program.end;
+                document.getElementById('disability').textContent = data.program.disability.disability_name;
+                document.getElementById('education').textContent = data.program.education.education_name;
 
                 document.getElementById('apply-button').setAttribute('data-program-id', programId);
+
+                var buttonLabel = document.getElementById('button-label');
+                var applyButton = document.getElementById('apply-button');
+                buttonLabel.textContent = data.application_status;
+
+                if (data.has_pending_or_approved) {
+                    applyButton.disabled = true;  // Disable the button
+                    alert('You have a pending or approved application for another program. You cannot apply for more at this time.');
+                }
+                else {
+                    applyButton.disabled = data.application_status !== 'Apply';  // Enable or disable based on status
+                }
             })
             .catch(error => console.error('Error fetching program details:', error));
 
