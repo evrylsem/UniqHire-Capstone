@@ -135,6 +135,8 @@
                 document.getElementById('end').textContent = data.end;
                 document.getElementById('disability').textContent = data.disability.disability_name;
                 document.getElementById('education').textContent = data.education.education_name;
+
+                document.getElementById('apply-button').setAttribute('data-program-id', programId);
             })
             .catch(error => console.error('Error fetching program details:', error));
 
