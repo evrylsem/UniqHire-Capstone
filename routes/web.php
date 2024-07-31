@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
 
 
     // General 
-    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
     // PWD Middleware

@@ -30,7 +30,7 @@ class NewTrainingProgramNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     /**
@@ -57,7 +57,7 @@ class NewTrainingProgramNotification extends Notification
             'start_date' => $this->trainingProgram->start,
             'end_date' => $this->trainingProgram->end,
             'training_program_id' => $this->trainingProgram->id,
-            'url' => url('/training-programs/' . $this->trainingProgram->id),
+            'url' => url('/browse/training-programs/' . $this->trainingProgram->id),
         ];
     }
 }
