@@ -936,7 +936,7 @@ table tbody .bx {
     width: 100%;
     height: 80vh;
     position: fixed;
-    top: 8rem;
+    top: 9rem;
     margin-bottom: 3rem;
     padding-right: 3rem;
     padding-left: 7rem;
@@ -944,7 +944,7 @@ table tbody .bx {
 
 .show-prog-container .prog-details {
     /* background-color: var(--bg-color-02); */
-    width: 47%;
+    min-width: 47%;
     max-height: 100vh;
     overflow-y: scroll;
     border: 1px solid lightgray;
@@ -953,13 +953,23 @@ table tbody .bx {
     box-shadow: var(--side-shadow-02);
 }
 
+.show-prog-container .prog-details .fs-3 {
+    position: fixed;
+    background-color: var(--bg-color-01);
+    min-width: 42.45%;
+    max-width: 42.45%;
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    z-index: 95;
+}
+
 /* .show-prog-container .enrollee-requests {
     background-color: var(--primary-color-light);
 } */
 
 .show-prog-container .enrollee-requests {
-    width: 38%;
-    max-height: 100vh; /* Adjust as needed */
+    min-width: 47%;
+    max-height: 100vh;
     overflow-y: scroll;
     border: 1px solid lightgray;
     border-radius: var(--border-radius);
@@ -969,10 +979,13 @@ table tbody .bx {
 .show-prog-container .fs-3 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid lightgray;
+    /* border-bottom: 1px solid lightgray; */
+    box-shadow: var(--side-shadow-05);
 }
 
 .show-prog-container .prog-details .prog-texts {
+    position: relative;
+    top: 3.5rem;
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
@@ -1016,13 +1029,37 @@ table tbody .bx {
     height: 10rem;
 }
 
+.show-prog-container .enrollee-requests .fs-3 {
+    position: fixed;
+    background-color: var(--bg-color-01);
+    min-width: 42.45%;
+    max-width: 42.45%;
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    z-index: 95;
+}
+
+.show-prog-container .enrollee-requests .outer {
+    height: 100%;
+    position: relative;
+    top: 3.5rem;
+    background-color: var(--bg-color-02);
+    
+}
+
 .show-prog-container .enrollee-requests .request-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(1, 2fr);
     gap: 0.5rem;
     padding: 1rem;
     background-color: var(--bg-color-02);
-    height: 100%;
+    /* height: 100%; */
+}
+
+.show-prog-container .enrollee-requests a {
+    height: fit-content;
+    width: 100%;
+    display: flex;
 }
 
 .show-prog-container .enrollee-requests .request-container {
@@ -1032,7 +1069,8 @@ table tbody .bx {
     padding-right: 1.5rem;
     background-color: var(--bg-color-01);
     border: 1px solid lightgray;
-    display: flex;
+    
+    height: fit-content;
 }
 .show-prog-container .enrollee-requests .request-container:hover {
     background-color: var(--bg-color-02);
@@ -1189,3 +1227,134 @@ table tbody .bx {
     padding: 0.5rem;
 }
 
+/* CALENDAR */
+.calendar-container {
+    position: relative;
+    top: 8rem;
+    display: flex;
+    justify-content: center;
+    /* height: 80vh; */
+    /* overflow-y: hidden; */
+    padding-left: 4.5rem;
+}
+
+.calendar-container .calendar {
+    width: 80%;
+    /* height: 10%; */
+    /* height: 80vh;
+    overflow-y: scroll; */
+}
+
+/* .fc-right .fc-button-group {
+    background-color: var(--primary-color);
+} */
+ /* .fc-right .fc-button-group .fc-button {
+    background-color: var(--primary-color);
+    color: var(--primary-color);
+} */
+
+.fc-right .fc-button-group .fc-button.fc-state-default {
+    /* background: var(--primary-color-light); */
+    color: var(--primary-color);
+}
+
+.fc-right .fc-button-group .fc-button.fc-state-active {
+    background: var(--primary-color);
+    /* background-color: var(--bg-color-01); */
+    color: var(--bg-color-01);
+    /* font-weight: 700; */
+    text-decoration: underline;
+}
+
+.fc-right .fc-button-group .fc-button.fc-state-hover {
+    background-color: var(--hover-color);
+    color: var(--primary-color);
+}
+
+.fc-left .fc-button-group .fc-button.fc-state-hover {
+    background: var(--primary-color);
+    
+}
+
+.fc-left .fc-button-group .fc-button.fc-state-hover span {
+    color: var(--bg-color-01);
+}
+
+.fc-left .fc-today-button.fc-state-disabled {
+    background-color: var(--primary-color);
+    color: var(--bg-color-01);
+    /* font-weight: var(--header-extrabold); */
+}
+
+.fc-unthemed td.fc-today {
+    background: var(--primary-color-light);
+}
+
+.fc-event-container .fc-day-grid-event {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    
+}
+
+.fc-event-container .fc-day-grid-event span {
+    color: var(--bg-color-01);
+    font-weight: var(--header-extrabold);
+    text-transform: capitalize;
+}
+
+.fc-toolbar.fc-header-toolbar {
+    margin: 0;
+    padding: 1.5rem;
+    background-color: var(--primary-color-light);
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    border-top: 1px solid var(--primary-color);
+    border-right: 1px solid var(--primary-color);
+    border-left: 1px solid var(--primary-color);
+}
+
+.fc {
+    border: 1px dashed var(--primary-color);
+    padding: 1rem;
+    background-color: var(--bg-color-02);
+    border-radius: var(--border-radius);
+}
+
+.fc th, .fc td {
+    border: 1px solid var(--primary-color);
+    /* background-color: var(--bg-color-01); */
+}
+
+/* .fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content, .fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
+    border: 1px solid var(--bg-color-02);
+} */
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+    padding: 0.5rem;
+}
+
+.fc-day-header {
+    background-color: var(--primary-color);
+    
+}
+
+.fc-day-header span {
+    color: var(--bg-color-01);
+    font-size: 20px;
+}
+
+.fc-agenda-view .fc-day-grid .fc-row .fc-content-skeleton {
+    padding-top: 1rem;
+}
+
+.fc-day-grid-event  {
+    margin-top: 0.3rem;
+}
+
+.fc-icon {
+    color: var(--primary-color);
+}
+
+.fc-center h2 {
+    font-weight: var(--header-extrabold);
+}
