@@ -10,8 +10,11 @@
         <!-- Bootstrap library -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-H7c5xz2/Bo9F3OeY8QhMDCz1p6wD5wF2gskM8H/o6cc1xVxrmT4eZ1QyD/0G0F9E" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-6C0P9i8FAEEG7T46Yc4J9E5DPur2Tz8tQ1PUgVJ7X1EoO9dJQy5Qig0P8Jk7+KD6" crossorigin="anonymous"></script> -->
+
 
         <!-- Fullcalendar library -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -170,6 +173,7 @@
                                             <!-- Notifications will be dynamically added here -->
                                         </ul>
                                     </li>
+
                                     <li class="nav-item user-index"><span>{{ Auth::user()->userInfo->name }}</span></li>
                                 </ul>
                             </div>
@@ -205,50 +209,25 @@
                                 );
                             });
                         } else {
-                            notificationsMenu.innerHTML = '<li>No new notifications</li>';
+                            badge.addClass('d-none');
+                            notifDropdown.append('<li><span class="dropdown-item">No notifications</span></li>');
                         }
-
-                        badge.textContent = unreadCount > 0 ? unreadCount : '';
+                    }).fail(function() {
+                        console.error('Failed to fetch notifications');
                     });
                 }
-
-                function markNotificationAsRead(id) {
-                    fetch("{{ route('notifications.markAsRead') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            notification_id: id
-                        })
-                    }).then(response => {
-                        if (response.ok) {
-                            fetchNotifications(); // Refresh notifications
-                        }
-                    });
-                }
-
-                notifDropdown.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    fetchNotifications();
-                });
-
-                notificationsMenu.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('notif-item')) {
-                        const notifId = e.target.getAttribute('data-id');
-                        markNotificationAsRead(notifId);
-                    }
-                });
 
                 // Fetch notifications on page load
                 fetchNotifications();
+
+                // Handle dropdown showing
+                $('#notificationDropdown').on('show.bs.dropdown', function() {
+                    fetchNotifications();
+                });
             });
         </script>
 
-
-
-
+        @yield('scripts')
 
     </body>
     <script>
