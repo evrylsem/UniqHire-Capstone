@@ -824,8 +824,8 @@ table tbody .bx {
 }
 
 .agency-prog-container .prog-card, .agency-prog-container .add-prog-card {
-    height: 21rem;
-    width: 21rem;
+    height: 22rem;
+    width: 22rem;
     background-color: var(--bg-color-02);
     border-radius: var(--border-radius);
     box-shadow: var(--side-shadow-03);
@@ -854,6 +854,7 @@ table tbody .bx {
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;
+    margin: 0;
 }
 
 .agency-prog-container .prog-card {
@@ -862,6 +863,7 @@ table tbody .bx {
 
 .agency-prog-container .prog-loc {
     font-size: 17px;
+    margin-bottom: 0;
 }
 
 .agency-prog-container .prog-desc-container {
@@ -876,6 +878,10 @@ table tbody .bx {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 16px;
+}
+
+.agency-prog-container .prog-card .prog-details {
+    /* height: 1.5rem; */
 }
 
 .agency-prog-container .prog-card .prog-details p {
@@ -899,10 +905,24 @@ table tbody .bx {
     height: 3rem;
 }
 
-.agency-prog-container .prog-card .progress-bar, .prog-details-container .prog-details .progress-bar {
+.progress-bar, .progress-bar {
     background-color: var(--primary-color);
     font-weight: bolder;
     padding: 0.5rem;
+}
+
+.crowdfund-progress p.sub-text {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.crowdfund-progress p span {
+    color: var(--primary-color);
+    font-weight: var(--header-extrabold);
+}
+
+.crowdfund-progress .progress {
+    height: 1.5rem;
 }
 
 /* TRAINING PROGRAM DETAILS */

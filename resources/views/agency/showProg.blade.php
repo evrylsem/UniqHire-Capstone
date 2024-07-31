@@ -55,20 +55,24 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <!-- <div class="crowdfund-progress mb-3">
                         @if ($program->crowdfund)
-                        
-                        <p class="sub-text">
-                            Crowdfunding Progress: {{ $program->crowdfund->progress }}%
-                        </p>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $program->crowdfund->progress }}%</div>
+                        <div class="crowdfund-progress mb-3">
+                            <p class="sub-text">
+                                Goal Amount: &nbsp;&nbsp;<span>{{$program->crowdfund->goal . ' PHP'}}</span>
+                            </p>
+                            <p class="sub-text">
+                                Crowdfunding Progress:
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ $program->crowdfund->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $program->crowdfund->progress }}%</div>
+                            </div>
+
+
                         </div>
-                        
-                        @endif
-                    </div> -->
+
                         <h5>Sponsors</h5>
                         <span class=""></span>
+                        @endif
                     </div>
                 </div>
             </div>
