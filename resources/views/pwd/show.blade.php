@@ -13,9 +13,9 @@
                     <p class="sub-text" id="city"><i class='bx bx-map sub-text'></i></p>
                 </div>
                 <div class="col text-end prog-btn">
-                    <form action="" method="POST">
-                        <button class="submit-btn border-0">Apply</button>
-                    </form>
+
+                        <button type="button" class="submit-btn border-0" id="apply-button" data-user-id="{{ Auth::user()->id }}" data-program-id="">Apply</button>
+
                 </div>
             </div>
 
@@ -51,6 +51,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var closeBtn = document.getElementById('close-popup');
         var container = document.getElementById('popup');
+        var applyButton = document.getElementById('apply-button');
 
         function togglePopup() {
             if (container.style.display === 'none' || container.style.display === '') {
@@ -68,5 +69,36 @@
         function openPopup() {
             container.style.display = 'flex';
         }
+
+        applyButton.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            var userId = applyButton.getAttribute('data-user-id');
+            var programId = applyButton.getAttribute('data-program-id');
+
+            fetch(`/pwd/application`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    training_program_id: programId,
+                    application_status: 'Pending'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Application submitted successfully.');
+                    container.style.display = 'none';
+                } else {
+                    alert('Failed to submit application.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
     });
 </script>
