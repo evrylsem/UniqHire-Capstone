@@ -352,7 +352,7 @@ ul, li {
 
 .layout-container .bxs-inbox {
     color: var(--primary-color);
-    font-size: 26px;
+    font-size: 33px;
 }
 
 .home-container .home-top {
@@ -379,8 +379,8 @@ ul, li {
     font-size: 23px;
 }
 
-.home-container .carousel-container, .carousel-container img {
-    height: 35rem;
+.home-container .carousel-container {
+    box-shadow: var(--side-shadow-01);
 }
 
 .home-container .carousel-container, .carousel-container img {
@@ -453,6 +453,66 @@ ul, li {
     border-radius: 1.5rem;
     width: 7.5rem;
 }
+
+/* span.badge {
+    border-radius: 100%;
+    height: 1.5rem;
+    width: 1.5rem;
+    display: inline;
+} */
+
+
+#notificationDropdown::after {
+    display: none;
+}
+
+.dropdown-toggle {
+    display: flex;
+}
+
+span.badge {
+    position: absolute;
+    top: 2.7rem;
+    right: 1.3rem;
+    border: 1.5px solid white;
+}
+
+.layout-container .dropdown-menu.show {
+    position: absolute;
+    top: 4rem;
+    right: 2rem;
+    width: 30rem;
+}
+
+.layout-container .dropdown-menu.show li a {
+    height: fit-content;
+    padding: 1rem;
+    
+}
+
+.layout-container .dropdown-menu.show li a, .layout-container .dropdown-menu .dropdown-item .notif-content {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+} 
+
+.layout-container .dropdown-menu.show li a:hover {
+    background-color: var(--primary-color-light);
+}
+
+.layout-container .dropdown-menu .dropdown-item .notif-owner {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.layout-container .dropdown-menu .dropdown-item .notif-content {
+    font-size: 17px;
+}
+
+.layout-container .dropdown-menu .dropdown-item div.sub-text {
+    font-weight: normal;
+}
+
 
 /* AUTH CONTENT */
 .login-container .logo-big {

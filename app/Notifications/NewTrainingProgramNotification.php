@@ -57,6 +57,7 @@ class NewTrainingProgramNotification extends Notification
             'start_date' => $this->trainingProgram->start,
             'end_date' => $this->trainingProgram->end,
             'training_program_id' => $this->trainingProgram->id,
+            'agency_name' => $this->trainingProgram->agency->name,
             'url' => url('/browse/training-programs/' . $this->trainingProgram->id),
         ];
     }

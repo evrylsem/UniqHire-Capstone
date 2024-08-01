@@ -165,11 +165,12 @@
                             <div>
                                 <ul class="d-flex align-items-center">
                                     <li class="nav-item user-notif dropdown">
+
                                         <a href="#" class="dropdown-toggle" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class='bx bxs-inbox'></i>
                                             <span id="notification-badge" class="badge bg-danger d-none">0</span> <!-- Badge element -->
                                         </a>
-                                        <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
                                             <!-- Notifications will be dynamically added here -->
                                         </ul>
                                     </li>
@@ -205,7 +206,19 @@
                             badge.removeClass('d-none').text(data.length);
                             data.forEach(function(notification) {
                                 notifDropdown.append(
-                                    '<li><a class="dropdown-item" href="' + notification.data.url + '">' + notification.data.title + '</a></li>'
+                                    '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                                    '<span class="notif-owner">' +
+                                    notification.data.agency_name +
+                                    '</span>' +
+                                    ' has posted a new training' +
+                                    '<div class="notif-content sub-text">' +
+                                    'Entitled ' +
+                                    '<span class="sub-text">' +
+                                    notification.data.title +
+                                    '</span>' +
+                                    '. Click to check this out.' +
+                                    '</div>' +
+                                    '</a></li>'
                                 );
                             });
                         } else {
