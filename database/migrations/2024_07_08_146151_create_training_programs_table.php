@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('participants')->nullable();
             $table->date('start');
             $table->date('end');
+            
             //requirements
             $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
             $table->foreignId('education_id')->constrained('education_levels')->onDelete('cascade');

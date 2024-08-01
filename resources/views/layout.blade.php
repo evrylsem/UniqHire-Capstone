@@ -8,24 +8,21 @@
         <title>UniqHire | @yield('page-title')</title>
 
         <!-- Bootstrap library -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-H7c5xz2/Bo9F3OeY8QhMDCz1p6wD5wF2gskM8H/o6cc1xVxrmT4eZ1QyD/0G0F9E" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-6C0P9i8FAEEG7T46Yc4J9E5DPur2Tz8tQ1PUgVJ7X1EoO9dJQy5Qig0P8Jk7+KD6" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-6C0P9i8FAEEG7T46Yc4J9E5DPur2Tz8tQ1PUgVJ7X1EoO9dJQy5Qig0P8Jk7+KD6" crossorigin="anonymous"></script> -->
         <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 
 
-        <!-- Fullcalendar library -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 
         @include('slugs.links')
 
         <!-- Boxicons library -->
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
 
         <link rel="icon" href="{{ asset('images/tab-icon.png') }}">
 
@@ -165,11 +162,12 @@
                             <div>
                                 <ul class="d-flex align-items-center">
                                     <li class="nav-item user-notif dropdown">
+
                                         <a href="#" class="dropdown-toggle" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class='bx bxs-inbox'></i>
                                             <span id="notification-badge" class="badge bg-danger d-none">0</span> <!-- Badge element -->
                                         </a>
-                                        <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
                                             <!-- Notifications will be dynamically added here -->
                                         </ul>
                                     </li>
@@ -205,7 +203,23 @@
                             badge.removeClass('d-none').text(data.length);
                             data.forEach(function(notification) {
                                 notifDropdown.append(
-                                    '<li><a class="dropdown-item" href="' + notification.data.url + '">' + notification.data.title + '</a></li>'
+                                    '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                                    '<span class="notif-owner">' +
+                                    notification.data.agency_name +
+                                    '</span>' +
+                                    ' has posted a new training' +
+                                    '<div class="notif-content sub-text">' +
+                                    'Entitled ' +
+                                    '<span class="sub-text">' +
+                                    notification.data.title +
+                                    '</span>' +
+                                    '. Starts on ' +
+                                    '<span class="sub-text">' +
+                                    notification.data.start_date + //Change Format pero if dili makaya kay ayaw nlng sya iapil og display
+                                    '</span>' +
+                                    '. Click to check this out.' +
+                                    '</div>' +
+                                    '</a></li>'
                                 );
                             });
                         } else {
