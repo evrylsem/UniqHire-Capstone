@@ -16,7 +16,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-6C0P9i8FAEEG7T46Yc4J9E5DPur2Tz8tQ1PUgVJ7X1EoO9dJQy5Qig0P8Jk7+KD6" crossorigin="anonymous"></script> -->
 
 
-        
+
 
         @include('slugs.links')
 
@@ -211,6 +211,10 @@
                                     'Entitled ' +
                                     '<span class="sub-text">' +
                                     notification.data.title +
+                                    '</span>' +
+                                    '. Starts on ' +
+                                    '<span class="sub-text">' + 
+                                    notification.data.start_date + //Change Format pero if dili makaya kay ayaw nlng sya iapil og display
                                     '</span>' +
                                     '. Click to check this out.' +
                                     '</div>' +

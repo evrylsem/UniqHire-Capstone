@@ -640,6 +640,19 @@ table tbody .bx {
     border-bottom-right-radius: 0;
 }
 
+.pwd-browse-prog .searchbar-container .searchbar .submit-btn {
+    background-color: var(--primary-color);
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.pwd-browse-prog .searchbar-container .searchbar .submit-btn:hover {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
+}
+
 .pwd-browse-prog .prog-grid {
     position: relative;
     top: 4.5rem;

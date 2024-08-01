@@ -49,7 +49,7 @@
                 <form role="search" action="{{ route('pwd-list-program') }}" method="GET" id="searchForm">
                     <div class="d-flex searchbar">
                         <input class="form-control" type="search" placeholder="Search Training Programs" aria-label="Search" id="searchInput" onchange="checkAndSubmit()" name="search" value="{{ request('search') }}">
-                        <button class="btn btn-outline-success searchButton" type="submit">Search</button>
+                        <button class="submit-btn border-0" type="submit">Search</button>
                     </div>
                 </form>
             </div>
@@ -122,6 +122,8 @@
         event.preventDefault();
         var container = document.getElementById('popup');
         var programId = event.currentTarget.getAttribute('data-id');
+
+
 
         // Make an AJAX request to fetch the program details
         fetch(`/training-details/${programId}`)
