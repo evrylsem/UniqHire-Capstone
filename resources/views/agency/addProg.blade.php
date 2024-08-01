@@ -23,8 +23,21 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="city" required placeholder="First Name">
-                <label for="floatingInput">City</label>
+                <select type="text" class="form-select" id="provinceSelect" name="state" required placeholder="Province">
+                    <option value="">Select Province</option>
+                </select>
+                <label for="provinceSelect">Province</label>
+                @error('state')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select type="text" class="form-select" id="citySelect" name="city" required placeholder="City">
+                    <option value="">Select City</option>
+                </select>
+                <label for="citySelect">City</label>
                 @error('city')
                 <span class="error-msg">{{ $message }}</span>
                 @enderror
@@ -125,5 +138,49 @@
             document.getElementById('amount-needed').disabled = true;
             document.getElementById('amount-needed').required = false;
         }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProvinces();
+
+        document.getElementById('provinceSelect').addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
+    });
+
+
+
+    function fetchProvinces() {
+        fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                var provinceSelect = document.getElementById('provinceSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.name;
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
+
+    function fetchCities(provinceCode) {
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.name;
+                    option.text = city.name;
+                    citySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching cities:', error));
     }
 </script>

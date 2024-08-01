@@ -13,6 +13,7 @@ class TrainingProgram extends Model
         'agency_id',
         'title',
         'description',
+        'state',
         'city',
         'participants',
         'start',

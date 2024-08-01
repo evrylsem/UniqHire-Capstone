@@ -48,7 +48,7 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
-        $applications = TrainingApplication::whereHas('program', function($query) use ($userId) {
+        $applications = TrainingApplication::whereHas('program', function ($query) use ($userId) {
             $query->where('agency_id', $userId);
         })->get();
 
@@ -73,19 +73,21 @@ class AgencyController extends Controller
         // Validate the request data
         $request->validate([
             'title' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'description' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
-            'goal' => 'nullable|numeric' 
+            'goal' => 'nullable|numeric'
         ]);
 
         // Create a new training program
         $trainingProgram = TrainingProgram::create([
             'agency_id' => auth()->id(),
             'title' => $request->title,
+            'state' => $request->state,
             'city' => $request->city,
             'description' => $request->description,
             'start' => $request->start_date,
@@ -150,6 +152,7 @@ class AgencyController extends Controller
         if ($program && $program->agency_id == auth()->id()) {
             $request->validate([
                 'title' => 'required|string|max:255',
+                'state' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
@@ -159,6 +162,7 @@ class AgencyController extends Controller
 
             $program->update([
                 'title' => $request->title,
+                'state' => $request->state,
                 'city' => $request->city,
                 'description' => $request->description,
                 'start' => $request->start_date,
@@ -191,24 +195,26 @@ class AgencyController extends Controller
         }
     }
 
-    public function showCalendar(Request $request) {
-        
+    public function showCalendar(Request $request)
+    {
+
         $user = auth()->user()->userInfo->user_id;
         log::info($user);
-        
+
         if ($request->ajax()) {
             $data = TrainingProgram::where('agency_id', $user)
-                                   ->whereDate('start', '>=', $request->start)
-                                   ->whereDate('end', '<=', $request->end)
-                                   ->get(['agency_id', 'title', 'start', 'end']);
-        
+                ->whereDate('start', '>=', $request->start)
+                ->whereDate('end', '<=', $request->end)
+                ->get(['agency_id', 'title', 'start', 'end']);
+
             return response()->json($data);
         }
-        
-        return view('agency.calendar');
-    }   
 
-    public function accept(Request $request) {
+        return view('agency.calendar');
+    }
+
+    public function accept(Request $request)
+    {
         log::info("nakaabot sa accept");
         $validatedData = $request->validate([
             'training_application_id' => 'required|exists:training_applications,training_id',
@@ -220,7 +226,7 @@ class AgencyController extends Controller
         return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
 
-    
+
 
     // public function action(Request $request)
     // {

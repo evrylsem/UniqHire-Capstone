@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('agency_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
+            $table->string('state');
             $table->string('city');
             $table->integer('participants')->nullable();
             $table->date('start');
