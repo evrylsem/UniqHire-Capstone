@@ -18,7 +18,6 @@
                     <button type="button" class="submit-btn border-0" id="apply-button" data-user-id="{{ Auth::user()->id }}" data-program-id="">
                         <span id="button-label"></span>
                     </button>
-
                 </div>
             </div>
 

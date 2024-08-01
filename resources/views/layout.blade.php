@@ -29,6 +29,16 @@
     </head>
 
     <body>
+        @if (session('success'))
+        <script>
+            Swal.fire({
+                title: "Success",
+                text: "{{ session('success') }}",
+                icon: "success"
+            });
+        </script>
+
+        @endif
         <div class="layout-container">
             @if (Auth::check())
             <nav class="sidebar">
@@ -55,12 +65,12 @@
                         <!-- PWD ROLE ACCESS -->
                         @if (Auth::user()->hasRole('PWD'))
                         <li class="side-item">
-                            <a href="#" class="trainings-drop" onclick="toggleSubmenu();">
+                            <a href="{{route('trainings')}}" class="trainings-drop {{ request()->routeIs('trainings') ? 'active' : '' }}">
                                 <i class='bx bxs-school side-icon'></i>
-                                <span class="side-title">Trainings &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i id="arrow-drop" class='bx bxs-right-arrow'></i></span>
+                                <span class="side-title">Trainings</span>
                             </a>
                         </li>
-                        <div class="submenu" id="trainings-submenu">
+                        <!-- <div class="submenu" id="trainings-submenu">
                             <li>
                                 <a href="">
                                     <i class='bx bx-timer'></i>
@@ -79,7 +89,7 @@
                                 <i class='bx bx-briefcase-alt-2 side-icon'></i>
                                 <span class="side-title">Job Application</span>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="side-item">
                             <a href="{{ route('pwd-calendar') }}" class="{{ request()->routeIs('pwd-calendar') ? 'active' : '' }}">
                                 <i class='bx bx-calendar side-icon'></i>
@@ -151,7 +161,7 @@
                                     <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
                                     <li class="nav-item"><a href="{{route('home')}}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                                     @if (Auth::user()->hasRole('PWD'))
-                                    <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program') ? 'active' : '' }}">Browse Training Programs</a></li>
+                                    <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program', 'programs-show') ? 'active' : '' }}">Browse Training Programs</a></li>
                                     <li class="nav-item"><a href="">Find Work</a></li>
                                     @endif
 
@@ -191,60 +201,59 @@
             </div>
             @endif
         </div>
-        <script>
-            $(document).ready(function() {
-                function fetchNotifications() {
-                    $.get("{{ route('notifications.getNotifications') }}", function(data) {
-                        var notifDropdown = $('#notificationDropdown').next('.dropdown-menu');
-                        var badge = $('#notification-badge');
-                        notifDropdown.empty(); // Clear existing notifications
-
-                        if (data.length > 0) {
-                            badge.removeClass('d-none').text(data.length);
-                            data.forEach(function(notification) {
-                                notifDropdown.append(
-                                    '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
-                                    '<span class="notif-owner">' +
-                                    notification.data.agency_name +
-                                    '</span>' +
-                                    ' has posted a new training' +
-                                    '<div class="notif-content sub-text">' +
-                                    'Entitled ' +
-                                    '<span class="sub-text">' +
-                                    notification.data.title +
-                                    '</span>' +
-                                    '. Starts on ' +
-                                    '<span class="sub-text">' + 
-                                    notification.data.start_date + //Change Format pero if dili makaya kay ayaw nlng sya iapil og display
-                                    '</span>' +
-                                    '. Click to check this out.' +
-                                    '</div>' +
-                                    '</a></li>'
-                                );
-                            });
-                        } else {
-                            badge.addClass('d-none');
-                            notifDropdown.append('<li><span class="dropdown-item">No notifications</span></li>');
-                        }
-                    }).fail(function() {
-                        console.error('Failed to fetch notifications');
-                    });
-                }
-
-                // Fetch notifications on page load
-                fetchNotifications();
-
-                // Handle dropdown showing
-                $('#notificationDropdown').on('show.bs.dropdown', function() {
-                    fetchNotifications();
-                });
-            });
-        </script>
 
         @yield('scripts')
 
     </body>
     <script>
+        $(document).ready(function() {
+            function fetchNotifications() {
+                $.get("{{ route('notifications.getNotifications') }}", function(data) {
+                    var notifDropdown = $('#notificationDropdown').next('.dropdown-menu');
+                    var badge = $('#notification-badge');
+                    notifDropdown.empty(); // Clear existing notifications
+
+                    if (data.length > 0) {
+                        badge.removeClass('d-none').text(data.length);
+                        data.forEach(function(notification) {
+                            notifDropdown.append(
+                                '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                                '<span class="notif-owner text-cap">' +
+                                notification.data.agency_name +
+                                '</span>' +
+                                ' has posted a new training' +
+                                '<div class="notif-content sub-text">' +
+                                'Entitled ' +
+                                '<span class="sub-text text-cap">' +
+                                notification.data.title +
+                                '</span>' +
+                                '. Starts on ' +
+                                '<span class="sub-text">' +
+                                notification.data.start_date + //Change Format pero if dili makaya kay ayaw nlng sya iapil og display
+                                '</span>' +
+                                '. Click to check this out.' +
+                                '</div>' +
+                                '</a></li>'
+                            );
+                        });
+                    } else {
+                        badge.addClass('d-none');
+                        notifDropdown.append('<li><span class="dropdown-item">No notifications</span></li>');
+                    }
+                }).fail(function() {
+                    console.error('Failed to fetch notifications');
+                });
+            }
+
+            // Fetch notifications on page load
+            fetchNotifications();
+
+            // Handle dropdown showing
+            $('#notificationDropdown').on('show.bs.dropdown', function() {
+                fetchNotifications();
+            });
+        });
+
         function toggleSubmenu() {
             var submenu = document.getElementById('trainings-submenu');
             var icon = document.getElementById('arrow-drop');

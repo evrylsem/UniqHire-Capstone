@@ -9,6 +9,7 @@ use App\Models\TrainingProgram;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\Enrollee;
+use App\Models\PwdFeedback;
 use App\Models\TrainingApplication;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
@@ -27,6 +28,8 @@ class AgencyController extends Controller
             ->latest()
             ->with('crowdfund')
             ->get();
+        
+            
 
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
@@ -48,6 +51,7 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
+        $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->get();
         $applications = TrainingApplication::whereHas('program', function($query) use ($userId) {
             $query->where('agency_id', $userId);
         })->get();
@@ -58,7 +62,7 @@ class AgencyController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program', 'applications'));
+        return view('agency.showProg', compact('program','applications', 'reviews'));
     }
 
     public function showAddForm()
@@ -257,4 +261,11 @@ class AgencyController extends Controller
     // 		}
     // 	}
     // }
+
+    //TEMPORARY LOGIC
+    public function showEnrolleeProfile($id) {
+        $user = User::find($id);
+        $enrollees = Enrollee::all();
+        return view('auth.profile', compact('user', 'enrollees'));
+    }
 }

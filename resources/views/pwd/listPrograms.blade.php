@@ -59,7 +59,7 @@
             @foreach ($paginatedItems as $ranked)
             <div class="row prog-card mb-2">
                 <div class="col ">
-                    <a href="" class="d-flex prog-texts" data-id="{{ $ranked['program']->id }}" onclick="openPopup(event)">
+                    <a href="{{ route('programs-show', $ranked['program']->id ) }}" class="d-flex prog-texts">
                         <div class="prog-texts-container">
                             <div class=" d-flex mb-2">
                                 <div class="prog-img"></div>
@@ -145,11 +145,10 @@
                 buttonLabel.textContent = data.application_status;
 
                 if (data.has_pending_or_approved) {
-                    applyButton.disabled = true;  // Disable the button
+                    applyButton.disabled = true; // Disable the button
                     alert('You have a pending or approved application for another program. You cannot apply for more at this time.');
-                }
-                else {
-                    applyButton.disabled = data.application_status !== 'Apply';  // Enable or disable based on status
+                } else {
+                    applyButton.disabled = data.application_status !== 'Apply'; // Enable or disable based on status
                 }
             })
             .catch(error => console.error('Error fetching program details:', error));
