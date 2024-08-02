@@ -82,8 +82,10 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" name="state" placeholder="State" value="{{ $user->userInfo->state }}">
-                                                <label for="floatingInput">State</label>
+                                                <select type="text" class="form-select" id="provinceSelect" name="state" required placeholder="Province">
+                                                    <option value="">{{ $user->userInfo->state }}</option>
+                                                </select>
+                                                <label for="provinceSelect">Province</label>
                                                 @error('state')
                                                 <span class="error-msg">{{ $message }}</span>
                                                 @enderror
@@ -91,11 +93,14 @@
                                         </div>
                                         <div class="col">
                                             <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" name="city" placeholder="City" value="{{ $user->userInfo->city }}">
-                                                <label for="floatingInput">City</label>
+                                                <select type="text" class="form-select" id="citySelect" name="city" required placeholder="City">
+                                                    <option value="">{{ $user->userInfo->city }}</option>
+                                                </select>
+                                                <label for="citySelect">City</label>
                                                 @error('city')
                                                 <span class="error-msg">{{ $message }}</span>
                                                 @enderror
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -196,3 +201,86 @@
 </div>
 
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProvinces();
+
+        document.getElementById('provinceSelect').addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
+    });
+
+
+
+    function fetchProvinces() {
+        fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                var provinceSelect = document.getElementById('provinceSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.name;
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
+
+    function fetchCities(provinceCode) {
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.name;
+                    option.text = city.name;
+                    citySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching cities:', error));
+    }
+
+    function togglePWDSection() {
+        var roleSelect = document.getElementById('role');
+        var pwdSection = document.getElementById('pwd-section');
+        var disabilitySection = document.getElementById('disability-section');
+        var disabilitySelect = document.getElementById('floatingSelect');
+
+        if (roleSelect.value === '2') {
+            pwdSection.style.display = 'block';
+            disabilitySection.style.display = 'block';
+            for (var i = 0; i < disabilitySelect.options.length; i++) {
+                if (disabilitySelect.options[i].value === '1') {
+                    disabilitySelect.remove(i);
+                    break;
+                }
+                var optionExists = false;
+            }
+
+        } else {
+            pwdSection.style.display = 'none';
+            disabilitySection.style.display = 'none';
+            for (var i = 0; i < disabilitySelect.options.length; i++) {
+                if (disabilitySelect.options[i].value === '1') {
+                    optionExists = true;
+                    break;
+                }
+            }
+            if (!optionExists) {
+                var notApplicableOption = document.createElement('option');
+                notApplicableOption.value = '1';
+                notApplicableOption.text = 'Not Applicable';
+                disabilitySelect.add(notApplicableOption);
+            }
+
+            disabilitySelect.value = '1';
+        }
+    }
+</script>
