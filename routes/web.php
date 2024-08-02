@@ -21,11 +21,6 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotPass'])->name(
 Route::get('/register', [AuthController::class, 'showRegistration'])->name('register-form');
 Route::post('/register', [AuthController::class, 'register']);
 
-// Route::post('/register/pwd', [AuthController::class, 'pwdSection'])->name('pwd-section');
-// Route::get('/displayusers/{$id}', [UserInfoController::class, 'showAll']);
-
-
-
 
 Route::get('/all', [AuthController::class, 'showAccs']);
 
@@ -37,14 +32,14 @@ Route::get('/admin/pwdusers', [AuthController::class, 'showAccs'])->name('admin-
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
-    // Route::get('/home/#about', function(){
-
-    // })->name('about');
-    // Route::get('/home/#contact', function () {
-
-    // })->name('contact');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
-    Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');;
+    Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
+    Route::get('/user/{id}', [AgencyController::class, 'showEnrolleeProfile'])->name('show-profile');
+
+
 
     //Admin Middleware
     Route::get('/pwd/all', [AdminController::class, 'showPwds'])->middleware('role:Admin')->name('pwd-list');
@@ -57,38 +52,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage-program', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
     Route::get('/add-program', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
     Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
-
     Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
-
     Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
     Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');
-
-    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
-
     Route::get('/agency/calendar', [AgencyController::class, 'showCalendar'])->middleware('role:Trainer')->name('agency-calendar');
     // Route::post('/agency/action', [AgencyController::class, 'action'])->middleware('role:Trainer')->name('agency-action');
-    Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Trainer')->name('agency-accept');
+    Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Trainer')->name('agency-accept');    
 
 
-    // General 
-    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
-    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
     // PWD Middleware
     Route::get('/browse/training-programs', [PwdController::class, 'showPrograms'])->middleware('role:PWD')->name('pwd-list-program');
     Route::get('/training-details/{id}', [PwdController::class, 'showDetails'])->middleware('role:PWD')->name('training-details');
     Route::get('/pwd/calendar', [PwdController::class, 'showCalendar'])->middleware('role:PWD')->name('pwd-calendar');
     // Route::post('/pwd/action', [PwdController::class, 'action'])->middleware('role:PWD')->name('pwd-action');
-    Route::post('/pwd/application', [PwdController::class, 'application'])->middleware('role:PWD')->name('pwd-application');
+    Route::post('/training-program/apply', [PwdController::class, 'application'])->middleware('role:PWD')->name('pwd-application');
+    Route::get('/training-programs', [PwdController::class, 'showTrainings'])->middleware('role:PWD')->name('trainings');
+    Route::post('/training-program/rate', [PwdController::class, 'rateProgram'])->middleware('role:PWD')->name('rate-program');
 });
-
-
-// Route::middleware('role:Admin')->group(function(){
-//     Route::get('/', function () {
-//         return view('welcome');
-//     })->name('home');
-
-//     Route::get('/admin/dashboard', function() {
-//         return view('admin.dashboard');
-//     })->name('admin-dash');
-// });

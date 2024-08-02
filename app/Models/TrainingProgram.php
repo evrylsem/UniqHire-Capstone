@@ -40,4 +40,9 @@ class TrainingProgram extends Model
     {
         return $this->hasOne(CrowdfundEvent::class, 'program_id');
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(PwdFeedback::class, 'program_id');
+    }
 }

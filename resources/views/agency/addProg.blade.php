@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-between mt-3 prog-btn">
+    <div class="d-flex justify-content-evenly mt-3 prog-btn">
         <button type="reset" class="deny-btn border-0">Clear</button>
         <button type="submit" class="submit-btn border-0">Add</button>
     </div>

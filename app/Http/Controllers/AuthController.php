@@ -107,11 +107,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
+        } else {
+            return back()->with('error', 'The provided credentials do not match our records');
+            // return back()->withErrors([
+            //     'email' => 'The provided credentials do not match our records',
+            // ])->with('error', 'The provided credentials do not match our records');
         }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records',
-        ]);
     }
 
     // REGISTRATION PROCESS
@@ -164,7 +165,8 @@ class AuthController extends Controller
             'pwd_card' => null,
         ]);
 
-        return redirect()->route('login-page');
+        // return redirect()->route('login-page');
+        return redirect()->route('login-page')->with('success', 'Account registered successfully!');
     }
 
     public function logout(Request $request)
