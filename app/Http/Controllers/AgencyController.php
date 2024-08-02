@@ -219,7 +219,10 @@ class AgencyController extends Controller
             'completion_status' => 'required|in:Completed,Ongoing,Not completed',
         ]);
 
-        Enrollee::create($validatedData);
+        Enrollee::create([
+            'training_application_id' => $validatedData['training_application_id'],
+            'completion_status' => $validatedData['completion_status']
+        ]);
 
         return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
@@ -265,7 +268,8 @@ class AgencyController extends Controller
     //TEMPORARY LOGIC
     public function showEnrolleeProfile($id) {
         $user = User::find($id);
-        $enrollees = Enrollee::all();
+        $enrollees =
+        Enrollee::where('user_id', $id)->get();
         return view('auth.profile', compact('user', 'enrollees'));
     }
 }

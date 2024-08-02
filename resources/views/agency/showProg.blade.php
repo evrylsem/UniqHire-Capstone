@@ -41,7 +41,7 @@
                                     <div class="request-grid">
                                         @forelse ($applications as $application)
                                         <div class="request-container">
-                                            <a href="">
+                                            <a href="{{ route('show-profile', $application->user->id) }}">
                                                 <div class="request-owner mb-2">
                                                     <div class="request-pic">
 
@@ -87,9 +87,11 @@
                 </div>
                 @elseif (Auth::user()->hasRole('PWD'))
                 <div class="col prog-btn">
+                    <!-- <form action="{{ route('pwd-application') }}" method="POST"> -->
                     <button type="button" class="submit-btn border-0" id="apply-button" data-user-id="{{ Auth::user()->id }}" data-program-id="">
                         Apply
                     </button>
+                    <!-- </form> -->
                 </div>
                 @endif
             </div>
