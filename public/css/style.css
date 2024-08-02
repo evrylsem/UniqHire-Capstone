@@ -1005,6 +1005,16 @@ table tbody .bx {
     height: 1.5rem;
 }
 
+#addCompetencyBtn {
+    margin-top: 10px;
+}
+.form-check {
+    margin-bottom: 5px;
+}
+.error-msg {
+    color: red;
+}
+
 /* TRAINING PROGRAM DETAILS */
 /* .prog-details-container {
     padding-top: 1rem;

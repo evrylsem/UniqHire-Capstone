@@ -54,64 +54,76 @@
                 @enderror
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label for="">Start Date: </label>
-                <input type="date" name="start_date" class="date-input">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="">Start Date: </label>
+                    <input type="date" name="start_date" class="date-input">
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="">End Date: </label>
+                    <input type="date" name="end_date" class="date-input">
+                </div>
             </div>
         </div>
-        <div class="col">
-            <div class="mb-3">
-                <label for="">End Date: </label>
-                <input type="date" name="end_date" class="date-input">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-floating mb-3">
-                <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
-                    @foreach ($disabilities as $disability)
-                    @if ($disability->disability_name != 'Not Applicable')
-                    <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
-                    @endif
-                    @endforeach
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
+                        @foreach ($disabilities as $disability)
+                        @if ($disability->disability_name != 'Not Applicable')
+                        <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
+                        @endif
+                        @endforeach
 
-                </select>
-                <label for="floatingSelect">Disability</label>
+                    </select>
+                    <label for="floatingSelect">Disability</label>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="form-floating mb-3">
-                <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
-                    @foreach ($levels as $level)
-                    <option value="{{ $level->id }}">{{ $level->education_name }}</option>
-                    @endforeach
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
+                        @foreach ($levels as $level)
+                        <option value="{{ $level->id }}">{{ $level->education_name }}</option>
+                        @endforeach
 
-                </select>
-                <label for="floatingSelect">Education Level</label>
+                    </select>
+                    <label for="floatingSelect">Education Level</label>
+                </div>
             </div>
         </div>
-    </div>
-    <hr>
-    <div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
-            <label class="form-check-label" for="flexCheckDefault">
-                Host a crowdfunding for this?
-            </label>
+        <hr>
+        <div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Host a crowdfunding for this?
+                </label>
+            </div>
         </div>
-    </div>
-    <div class="row" id="crowdfund-section">
+        <div class="row" id="crowdfund-section">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled>
+                    <label for="floatingInput">Amount Needed</label>
+                    @error('goal')
+                    <span class="error-msg">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <!-- COMPETENCY -->
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled>
-                <label for="floatingInput">Amount Needed</label>
-                @error('goal')
-                <span class="error-msg">{{ $message }}</span>
-                @enderror
+                <div id="competencyListContainer">
+                    <label for="competencyList">Competencies</label>
+                    <div id="competencyList"></div>
+                    <button type="button" id="addCompetencyBtn" class="btn btn-outline-primary mt-2"><i class="bx bx-plus"></i> Add Competency</button>
+                    <button type="button" id="saveCompetencyBtn" class="btn btn-outline-success mt-2 d-none">Save Competencies</button>
+                    <button type="button" id="editCompetencyBtn" class="btn btn-outline-warning mt-2 d-none">Edit Competencies</button>
+                </div>
             </div>
         </div>
     </div>
@@ -147,9 +159,89 @@
             var provinceCode = this.value;
             fetchCities(provinceCode);
         });
+
+        let competencyCount = 0;
+        const addCompetencyBtn = document.getElementById('addCompetencyBtn');
+        const saveCompetencyBtn = document.getElementById('saveCompetencyBtn');
+        const editCompetencyBtn = document.getElementById('editCompetencyBtn');
+        const competencyList = document.getElementById('competencyList');
+
+        function toggleButtons() {
+            if (competencyCount >= 4) {
+                addCompetencyBtn.classList.add('d-none');
+            } else {
+                addCompetencyBtn.classList.remove('d-none');
+            }
+
+            if (competencyCount > 0) {
+                saveCompetencyBtn.classList.remove('d-none');
+            } else {
+                saveCompetencyBtn.classList.add('d-none');
+            }
+        }
+
+        addCompetencyBtn.addEventListener('click', function() {
+            if (competencyCount < 4) {
+                competencyCount++;
+                const competencyItem = document.createElement('div');
+                competencyItem.className = 'input-group mb-3';
+                competencyItem.innerHTML = `
+                    <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" required>
+                    <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+                `;
+                competencyList.appendChild(competencyItem);
+
+                competencyItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    competencyList.removeChild(competencyItem);
+                    competencyCount--;
+                    toggleButtons();
+                });
+
+                toggleButtons();
+            }
+        });
+
+        saveCompetencyBtn.addEventListener('click', function() {
+            const competencyInputs = competencyList.querySelectorAll('input[name="competencies[]"]');
+            competencyInputs.forEach(function(input) {
+                const competencyText = document.createElement('span');
+                competencyText.className = 'competency-text';
+                competencyText.innerText = input.value;
+                competencyList.appendChild(competencyText);
+                competencyList.appendChild(document.createElement('br'));
+                input.parentElement.remove();
+            });
+            saveCompetencyBtn.classList.add('d-none');
+            editCompetencyBtn.classList.remove('d-none');
+            addCompetencyBtn.classList.add('d-none');
+        });
+
+        editCompetencyBtn.addEventListener('click', function() {
+            const competencyTexts = competencyList.querySelectorAll('.competency-text');
+            competencyCount = competencyTexts.length; // Reset competency count
+            competencyTexts.forEach(function(text) {
+                const competencyItem = document.createElement('div');
+                competencyItem.className = 'input-group mb-3';
+                competencyItem.innerHTML = `
+                    <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" value="${text.innerText}" required>
+                    <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+                `;
+                competencyList.appendChild(competencyItem);
+                text.nextSibling.remove();
+                text.remove();
+
+                competencyItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    competencyList.removeChild(competencyItem);
+                    competencyCount--;
+                    toggleButtons();
+                });
+            });
+            editCompetencyBtn.classList.add('d-none');
+            toggleButtons();
+        });
+
+        toggleButtons(); // Initialize the button states
     });
-
-
 
     function fetchProvinces() {
         fetch('https://psgc.cloud/api/provinces')
@@ -168,7 +260,7 @@
     }
 
     function fetchCities(provinceCode) {
-        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities`)
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
             .then(response => response.json())
             .then(data => {
                 var citySelect = document.getElementById('citySelect');

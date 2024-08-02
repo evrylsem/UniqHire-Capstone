@@ -194,7 +194,7 @@
     }
 
     function fetchCities(provinceCode) {
-        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities`)
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
             .then(response => response.json())
             .then(data => {
                 var citySelect = document.getElementById('citySelect');
