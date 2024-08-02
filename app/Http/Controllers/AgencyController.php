@@ -11,6 +11,7 @@ use App\Models\UserInfo;
 use App\Models\Enrollee;
 use App\Models\PwdFeedback;
 use App\Models\TrainingApplication;
+use App\Models\Competency;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
 use DateTime;
@@ -84,7 +85,9 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
-            'goal' => 'nullable|numeric'
+            'goal' => 'nullable|numeric',
+            'competencies' => 'array|max:4',
+            'competencies.*' => 'string|distinct',
         ]);
 
         // try {
@@ -99,6 +102,12 @@ class AgencyController extends Controller
             'disability_id' => $request->disability,
             'education_id' => $request->education,
         ]);
+
+        if ($request->has('competencies')) {
+            $competencyIds = Competency::whereIn('name', $request->competencies)->pluck('id');
+            $trainingProgram->competencies()->sync($competencyIds);
+        }
+
 
         //NOTIFY PWD USERS!!!
         $pwdUsers = User::whereHas('role', function ($query) {

@@ -46,4 +46,9 @@ class TrainingProgram extends Model
     {
         return $this->hasMany(PwdFeedback::class, 'program_id');
     }
+
+    public function competencies()
+    {
+        return $this->belongsToMany(Competency::class, 'program_competency');
+    }
 }
