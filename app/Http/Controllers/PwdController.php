@@ -202,7 +202,7 @@ class PwdController extends Controller
         $request->validate([
             'program_id' => 'required|exists:training_programs,id',
             'rating' => 'required|integer|between:1,5',
-            'content' => 'required|string|max:1000',
+            'content' => 'string|max:1000',
         ]);
 
         try {
@@ -212,9 +212,11 @@ class PwdController extends Controller
                 'rating' => $request->rating,
                 'content' => $request->content,
             ]);
-            return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
+            // return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
+            return back()->with('success', 'Thank you for leaving us a review!');
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
+            // return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
+            return back()->with('error', 'An error occurred while submitting your feedback. Please try again later.');
         }
     }
 }

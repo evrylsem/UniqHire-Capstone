@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('program_id')->constrained('training_programs')->onDelete('cascade');
             $table->foreignId('pwd_id')->constrained('users')->onDelete('cascade');
             $table->tinyInteger('rating')->unsigned();
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->timestamps();
         });
     }

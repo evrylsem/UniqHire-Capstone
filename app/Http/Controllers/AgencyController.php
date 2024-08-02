@@ -51,7 +51,7 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
-        $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->get();
+        $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::whereHas('program', function($query) use ($userId) {
             $query->where('agency_id', $userId);
         })->get();
@@ -85,36 +85,41 @@ class AgencyController extends Controller
             // 'education' => 'required|exists:education_levels,id',
             'goal' => 'nullable|numeric' 
         ]);
-
-        // Create a new training program
-        $trainingProgram = TrainingProgram::create([
-            'agency_id' => auth()->id(),
-            'title' => $request->title,
-            'city' => $request->city,
-            'description' => $request->description,
-            'start' => $request->start_date,
-            'end' => $request->end_date,
-            'disability_id' => $request->disability,
-            'education_id' => $request->education,
-        ]);
-
-        //NOTIFY PWD USERS!!!
-        $pwdUsers = User::whereHas('role', function ($query) {
-            $query->where('role_name', 'PWD');
-        })->get();
-
-        foreach ($pwdUsers as $user) {
-            $user->notify(new NewTrainingProgramNotification($trainingProgram));
-        }
-
-        if ($request->has('goal') && $request->goal !== null) {
-            CrowdfundEvent::create([
-                'program_id' => $trainingProgram->id,
-                'goal' => $request->goal,
+        
+        // try {
+            $trainingProgram = TrainingProgram::create([
+                'agency_id' => auth()->id(),
+                'title' => $request->title,
+                'city' => $request->city,
+                'description' => $request->description,
+                'start' => $request->start_date,
+                'end' => $request->end_date,
+                'disability_id' => $request->disability,
+                'education_id' => $request->education,
             ]);
-        }
 
-        return redirect()->route('programs-manage');
+            //NOTIFY PWD USERS!!!
+            $pwdUsers = User::whereHas('role', function ($query) {
+                $query->where('role_name', 'PWD');
+            })->get();
+
+            foreach ($pwdUsers as $user) {
+                $user->notify(new NewTrainingProgramNotification($trainingProgram));
+            }
+
+            if ($request->has('goal') && $request->goal !== null) {
+                CrowdfundEvent::create([
+                    'program_id' => $trainingProgram->id,
+                    'goal' => $request->goal,
+                ]);
+            }
+
+            return redirect()->route('programs-manage')->with('success', 'Training program created successfully!');
+        // } catch (\Exception $e) {
+        //     return back()->with('error', 'Failed to create training program. Review form.');
+        // }
+        // Create a new training program
+        
     }
 
     public function deleteProgram($id)
@@ -128,9 +133,10 @@ class AgencyController extends Controller
                 ->delete();
 
             $program->delete();
+            return redirect()->route('programs-manage')->with('success', 'Training program deleted successfully');
+        } else {
+            return redirect()->route('programs-manage')->with('error', 'Failed to delete training program');
         }
-
-        return redirect()->route('programs-manage');
     }
 
     public function editProgram($id)
@@ -191,7 +197,9 @@ class AgencyController extends Controller
                 }
             }
 
-            return redirect()->route('programs-show', $id);
+            return redirect()->route('programs-show', $id)->with('success', 'Training program has been updated successfully!');
+        } else {
+            return back()->with('error', 'Failed to update training program. Review form.');
         }
     }
 
@@ -225,6 +233,8 @@ class AgencyController extends Controller
         ]);
 
         return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+
+        // return back()->with('success', 'Application submitted successfully');
     }
 
     

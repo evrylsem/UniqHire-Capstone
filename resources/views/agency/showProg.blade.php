@@ -9,7 +9,17 @@
     @elseif(Auth::user()->hasRole('PWD'))
     <a href="{{ route('trainings') }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
     @endif -->
-    <a href="{{ url()->previous() }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
+    <div>
+        @if (Route::currentRouteName() == 'programs-show')
+        @if (Auth::user()->hasRole('Trainer'))
+        <a href="{{ route('programs-manage') }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
+        @endif
+
+        @if (Auth::user()->hasRole('PWD'))
+        <a href="{{ url()->previous() }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>
+        @endif
+        @endif
+    </div>
     <div class="prog-details" @if(Auth::user()->hasRole('PWD')) style="width: 90%;"
         @endif
         >
@@ -154,7 +164,9 @@
                 <div class="border reviews">
                     <div class="header border-bottom d-flex justify-content-between align-items-center">
                         <h3>Reviews</h3>
+                        @if (Auth::user()->hasRole('PWD'))
                         @include('slugs.feedback')
+                        @endif
                     </div>
                     <div class="outer">
                         <div class="review-grid">
@@ -172,7 +184,7 @@
                                             @endif
                                             @endfor
                                     </div>
-                                    {{$review->content}}
+                                    {{$review->content ?? ''}}
                                 </div>
                                 <div class="time text-end">
                                     {{$review->pwd->created_at->format('d M Y H:i:s')}}

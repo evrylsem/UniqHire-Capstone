@@ -29,6 +29,26 @@
     </head>
 
     <body>
+        @if (session('success'))
+        <script>
+            Swal.fire({
+                title: "Success",
+                text: "{{session('success')}}",
+                icon: "success",
+                timer: 3000,
+            });
+        </script>
+        @endif
+        @if (session('error'))
+        <script>
+            Swal.fire({
+                title: "Error",
+                text: "{{session('error')}}",
+                icon: "error",
+                timer: 3000,
+            });
+        </script>
+        @endif
         <div class="layout-container">
             @if (Auth::check())
             <nav class="sidebar">
