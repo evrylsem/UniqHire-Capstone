@@ -10,8 +10,8 @@
         @foreach ($programs as $program)
         <div class="prog-card">
             <a href="{{ route('programs-show', $program->id) }}" class="prog-texts">
-                <h3>{{ $program->title }}</h3>
-                <p class="sub-text prog-loc">
+                <h3 class="text-cap">{{ $program->title }}</h3>
+                <p class="sub-text prog-loc text-cap">
                     <i class='bx bx-map sub-text prog-loc'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}
                 </p>
                 <div class="prog-desc-container">

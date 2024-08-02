@@ -26,6 +26,9 @@
     --icon-color: rgb(81, 81, 81);
     --hover-color: #e4e4e4;
 
+    --color-01: rgb(222, 174, 0);
+    --color-light-01: rgba(251, 251, 111, 0.4);
+
     /* BOX EFFECTS */
     --side-shadow-01: 0 20px 35px rgba(0, 0, 0, 0.1);
     --side-shadow-02: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
@@ -487,7 +490,8 @@ span.badge {
     top: 4rem;
     right: 2rem;
     width: 30rem;
-    height: 20rem;
+    min-height: fit-content;
+    max-height: 20rem;
     overflow-y: scroll;
 }
 
@@ -706,7 +710,7 @@ table tbody .bx {
     padding: 1rem;
 }
 
-.pwd-browse-prog .prog-card .match-info, .profile-container .profile-info .details .disability, .show-prog-container .prog-details .more-info .match-info, .show-prog-container .enrollee-requests .request-container .match-info, .popup .details-container .match-info {
+.pwd-browse-prog .prog-card .match-info, .profile-container .profile-info .details .disability, .show-prog-container .prog-details .more-info .match-info, .popup .details-container .match-info, .match-info {
     background-color: var(--primary-color-light);
     width: fit-content;
     padding: 0.5rem;
@@ -743,6 +747,7 @@ table tbody .bx {
     width: 100%;
 }
 
+/* PAGINATION */
 /* .pagination {
     height: 2rem;
 } */
@@ -927,6 +932,9 @@ table tbody .bx {
 .agency-prog-container .add-prog-card a {
     font-size: 80px;
     color: var(--primary-color);
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .agency-prog-container .prog-card h3 {
@@ -1025,7 +1033,7 @@ table tbody .bx {
     justify-content: center;
     width: 100%;
     height: 80vh;
-    position: fixed;
+    position: absolute;
     top: 9rem;
     margin-bottom: 3rem;
     padding-right: 3rem;
@@ -1034,8 +1042,9 @@ table tbody .bx {
 
 .show-prog-container .prog-details {
     /* background-color: var(--bg-color-02); */
-    min-width: 47%;
-    max-height: 100vh;
+    /* min-width: 47%; */
+    width: 90%;
+    height: 80vh;
     overflow-y: scroll;
     border: 1px solid lightgray;
     margin-right: 1.5rem;
@@ -1046,16 +1055,13 @@ table tbody .bx {
 .show-prog-container .prog-details .fs-3 {
     position: fixed;
     background-color: var(--bg-color-01);
-    min-width: 42.45%;
-    max-width: 42.45%;
+    /* min-width: 42.45%;
+    max-width: 42.45%; */
+    width: 90%;
     border-top-right-radius: var(--border-radius);
     border-top-left-radius: var(--border-radius);
     z-index: 95;
 }
-
-/* .show-prog-container .enrollee-requests {
-    background-color: var(--primary-color-light);
-} */
 
 .show-prog-container .enrollee-requests {
     min-width: 47%;
@@ -1075,12 +1081,16 @@ table tbody .bx {
 
 .show-prog-container .prog-details .prog-texts {
     position: relative;
-    top: 3.5rem;
+    /* top: 3.5rem; */
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
+    padding: 3rem;
     background-color: var(--bg-color-02);
-    height: 100%;
+    height: fit-content;
+}
+
+.show-prog-container .prog-texts .header {
+    width: 100%;
 }
 
 .show-prog-container .prog-details h3 {
@@ -1091,10 +1101,6 @@ table tbody .bx {
     margin: 0;
 }
 
-/* .show-prog-container .prog-details, .show-prog-container .enrollee-requests {
-    padding-right: 0;
-    padding-left: 0;
-} */
 
 .show-prog-container .fs-3 {
     font-weight: 700;
@@ -1103,11 +1109,21 @@ table tbody .bx {
 .show-prog-container .prog-details .prog-btn .submit-btn {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
+    margin-bottom: 0.5rem;
 }
 
 .show-prog-container .prog-details .prog-btn .submit-btn, .show-prog-container .prog-details .prog-btn .deny-btn  {
-    width: 7rem;
+    width: 10rem;
     padding: 0.6rem;
+}
+
+.show-prog-container .prog-details .prog-btn .edit-delete {
+    display: flex;
+    justify-content: end;
+}
+
+.show-prog-container .prog-details .prog-btn .edit-delete button {
+    width: 5rem;
 }
 
 .show-prog-container .prog-details h5, .details-container .body h5 {
@@ -1119,40 +1135,22 @@ table tbody .bx {
     height: 10rem;
 }
 
-.show-prog-container .enrollee-requests .fs-3 {
-    position: fixed;
-    background-color: var(--bg-color-01);
-    min-width: 42.45%;
-    max-width: 42.45%;
-    border-top-right-radius: var(--border-radius);
-    border-top-left-radius: var(--border-radius);
-    z-index: 95;
-}
-
-.show-prog-container .enrollee-requests .outer {
-    height: 100%;
-    position: relative;
-    top: 3.5rem;
-    background-color: var(--bg-color-02);
-    
-}
-
-.show-prog-container .enrollee-requests .request-grid {
+.show-prog-container .request-grid {
     display: grid;
     grid-template-columns: repeat(1, 2fr);
     gap: 0.5rem;
     padding: 1rem;
-    background-color: var(--bg-color-02);
+    /* background-color: var(--bg-color-02); */
     /* height: 100%; */
 }
 
-.show-prog-container .enrollee-requests a {
+.show-prog-container .request-grid a {
     height: fit-content;
     width: 100%;
     display: flex;
 }
 
-.show-prog-container .enrollee-requests .request-container {
+.show-prog-container .request-grid .request-container {
     padding: 1rem;
     box-shadow: var(--side-shadow-02);
     border-radius: var(--border-radius);
@@ -1162,54 +1160,149 @@ table tbody .bx {
     
     height: fit-content;
 }
-.show-prog-container .enrollee-requests .request-container:hover {
+.show-prog-container .request-grid .request-container:hover {
     background-color: var(--bg-color-02);
 }
 
-.show-prog-container .enrollee-requests .request-container .request-owner {
-    display: flex;
+.show-prog-container .request-grid .request-container .request-owner {
+    display: grid;
+    grid-template-columns: 5rem auto;
     align-items: center;
     width: 100%;
 }
 
-.show-prog-container .enrollee-requests .request-container .request-owner p {
+.show-prog-container .request-grid .request-container .request-owner p {
     padding: 0;
     margin: 0;
 }
 
-.show-prog-container .enrollee-requests .request-container .request-owner .fs-5 {
+.show-prog-container .request-grid .request-container .request-owner .fs-5 {
     font-weight: 700;
 }
 
-.show-prog-container .enrollee-requests .request-container .request-owner .location {
+.show-prog-container .request-grid .request-container .request-owner .location {
     font-size: 17px;
 }
 
-.show-prog-container .enrollee-requests .request-container .request-pic {
-    width: 5rem;
-    height: 5rem;
+.show-prog-container .request-grid .request-container .request-pic {
+    width: 4rem;
+    height: 4rem;
     background-color: var(--primary-color-light);
     border-radius: 100%;
     margin-right: 1rem;
 }
 
-.show-prog-container .enrollee-requests .btn-container {
+.show-prog-container .request-grid .btn-container {
     margin-right: 0.5rem;
 }
 
-.show-prog-container .enrollee-requests .submit-btn {
+.show-prog-container .request-grid .submit-btn {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     background-color: var(--primary-color-light);
     color: var(--primary-color);
 }
 
-.show-prog-container .enrollee-requests .deny-btn {
+.show-prog-container .request-grid .deny-btn {
     width: 5rem;
 }
 
+.show-prog-container .prog-details .prog-texts .body {
+    height: fit-content;
+    width: 100%;
+}
 
+.show-prog-container .prog-details .prog-texts .requirements {
+    border-right: 1px solid lightgray;
+    width: 100%;
+}
 
+.show-prog-container .prog-details .prog-texts .enrollees {
+    padding-left: 3rem;
+    width: 100%;
+}
+
+.show-prog-container .prog-details .prog-texts .enrollees ul {
+    padding-left: 2rem;
+    overflow-y: scroll;
+    height: 30rem;
+}
+
+.show-prog-container .prog-details .prog-texts .enrollees li {
+    list-style: circle;
+}
+
+.show-prog-container .prog-details .prog-texts .modal-btn {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
+}
+
+/* RATING  */
+.show-prog-container .star-rating {
+    cursor: pointer;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.show-prog-container .star-rating .bx {
+    font-size: 40px;
+    color: var(--color-01);
+}
+
+.show-prog-container .outer {
+    padding: 2rem;
+    min-height: fit-content;
+    max-height: 40rem;
+    overflow-y: scroll;
+}
+
+.show-prog-container .review-grid {
+    /* padding: 2rem; */
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+    gap: 1rem;
+    /* justify-content: center; */
+    align-items: center;
+    width: 100%;
+}
+
+/* .show-prog-container .reviews {
+    height: 40rem;
+    overflow-y: scroll;
+} */
+
+.show-prog-container .reviews h3 {
+    font-weight: var(--header-extrabold);
+}
+
+.show-prog-container .reviews .header {
+    background-color: var(--bg-color-01);
+    padding: 1rem;
+}
+
+.show-prog-container .reviews .body-review {
+    /* margin: 2rem; */
+    width: 100%;
+    border-radius: var(--border-radius);
+}
+
+.show-prog-container .reviews .body-review .owner,  .show-prog-container .reviews .body-review .time {
+    background-color: var(--bg-color-01);
+    padding: 1rem;
+}
+
+.show-prog-container .reviews .body-review .owner {
+    font-weight: var(--header-extrabold);
+}
+
+.show-prog-container .reviews .body-review .content {
+    padding: 1rem;
+}
+
+.show-prog-container .reviews .body-review .bx {
+    color: var(--color-01);
+}
 
 /* PROFILE */
 .profile-container, .agency-prog-container, .edit-form, .add-form {
@@ -1281,6 +1374,11 @@ table tbody .bx {
     margin-bottom: 1.7rem;
 }
 
+.profile-container .more-details .bio .bio-item .about, .profile-container .details .age .sub-text {
+    font-style: italic;
+    font-weight: normal;
+}
+
 .profile-container .more-details .contact .side-icon {
     color: var(--primary-color);
     /* font-weight: bold; */
@@ -1318,7 +1416,7 @@ table tbody .bx {
 }
 
 /* CALENDAR */
-.calendar-container {
+.calendar-container, .trainings-container {
     position: relative;
     top: 8rem;
     display: flex;
@@ -1415,10 +1513,6 @@ table tbody .bx {
     /* background-color: var(--bg-color-01); */
 }
 
-/* .fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content, .fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
-    border: 1px solid var(--bg-color-02);
-} */
-
 .fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
     padding: 0.5rem;
 }
@@ -1447,4 +1541,41 @@ table tbody .bx {
 
 .fc-center h2 {
     font-weight: var(--header-extrabold);
+}
+
+/* TRAININGS */
+.trainings-container {
+    flex-direction: column;
+    width: 90%;
+}
+
+.trainings-container .status-btn-default {
+    background-color: var(--bg-color-01);
+}
+
+.trainings-container .status-btn-active {
+    background-color: var(--primary-color-light);
+}
+
+.trainings-container .table tbody tr {
+    height: 2.5rem;
+}
+
+.trainings-container .table tbody tr .status-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* width: 10rem; */
+    text-align: center;
+}
+
+.trainings-container .table tbody tr .match-info {
+    margin: 0;
+    padding-top: 0.5rem;
+    /* width: 5rem; */
+}
+
+.trainings-container .table tbody tr td a {
+    text-decoration: underline;
+    color: var(--primary-color);
 }

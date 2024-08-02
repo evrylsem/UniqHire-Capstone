@@ -4,9 +4,9 @@
 
 @section('auth-content')
 <div class="container register-container vh-100">
+
     <form method="POST" action="{{ route('register-form') }}" enctype="multipart/form-data">
         <div class="row" style="padding-top:3rem;">
-
             <div class="col">
                 <div class="text-start header-texts back-link-container">
                     <a href="{{ route('login-page') }}" class="m-1 back-link"><i class='bx bx-left-arrow-alt'></i></a>

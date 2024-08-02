@@ -10,6 +10,7 @@ use App\Models\EducationLevel;
 use App\Models\TrainingApplication;
 use App\Http\Requests\StoreUserInfoRequest;
 use App\Http\Requests\UpdateUserInfoRequest;
+use App\Models\PwdFeedback;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -191,4 +192,31 @@ class PwdController extends Controller
     // 		}
     // 	}
     // }
+
+    public function showTrainings() {
+        $trainings = TrainingProgram::all(); //temporary since wala pay ongoing ug completed
+        return view('pwd.trainings', compact('trainings'));
+    }
+
+    public function rateProgram(Request $request) {
+        $request->validate([
+            'program_id' => 'required|exists:training_programs,id',
+            'rating' => 'required|integer|between:1,5',
+            'content' => 'string|max:1000',
+        ]);
+
+        try {
+            PwdFeedback::create([
+                'program_id' => $request->program_id,
+                'pwd_id' => $request->user()->id,
+                'rating' => $request->rating,
+                'content' => $request->content,
+            ]);
+            // return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
+            return back()->with('success', 'Thank you for leaving us a review!');
+        } catch (\Exception $e) {
+            // return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
+            return back()->with('error', 'An error occurred while submitting your feedback. Please try again later.');
+        }
+    }
 }

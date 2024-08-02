@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class);
     }
 
+    public function feedbacks()
+    {
+        return $this->hasMany(PwdFeedback::class, 'pwd_id');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
