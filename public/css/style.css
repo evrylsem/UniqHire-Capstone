@@ -619,17 +619,16 @@ table tbody .bx {
 }
 
 .pwd-browse-prog .searchbar-container {
-    position: fixed;
+    /* position: fixed;
     top: 6.8rem;
     z-index: 98;
     width: 49%;
     padding: 1.5rem;
     height: 5rem;
     background-color: var(--bg-color-01);
-    /* border: 1px solid; */
     display: flex;
     align-items: center;
-    box-shadow: var(--side-shadow-05);
+    box-shadow: var(--side-shadow-05); */
 }
 
 .pwd-browse-prog .searchbar {
@@ -662,9 +661,16 @@ table tbody .bx {
     color: var(--primary-color);
 }
 
+.pwd-browse-prog .outer {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .pwd-browse-prog .prog-grid {
-    position: relative;
-    top: 4.5rem;
+    /* position: relative; */
+    /* top: 4.5rem; */
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 0.2rem;
