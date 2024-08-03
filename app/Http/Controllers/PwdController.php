@@ -95,6 +95,9 @@ class PwdController extends Controller
     {
         $program = TrainingProgram::with('agency.userInfo', 'disability', 'education', 'crowdfund')->findOrFail($id);
         $userId = auth()->user()->id;
+        $application = TrainingApplication::where('user_id', $userId)
+            ->where('training_program_id', $program->id)
+            ->first();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
 
         if ($program->crowdfund) {
@@ -103,7 +106,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews'));
+        return view('pwd.show', compact('program', 'reviews', 'application'));
 
 
         // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
@@ -162,12 +165,12 @@ class PwdController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'training_program_id' => 'required|exists:training_programs,id',
-            'application_status' => 'required|in:Pending,Approved,Denied',
         ]);
 
+        $validatedData['application_status'] = 'Pending';
         TrainingApplication::create($validatedData);
 
-        return back()->with('success', 'Your application is sent successfully!');
+        return back()->with('confirmation', 'Do you really want to apply for this training program?');
     }
 
     // public function action(Request $request) 

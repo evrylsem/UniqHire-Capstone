@@ -53,9 +53,7 @@ class AgencyController extends Controller
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
-        $applications = TrainingApplication::whereHas('program', function ($query) use ($userId) {
-            $query->where('agency_id', $userId);
-        })->get();
+        $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -152,7 +150,7 @@ class AgencyController extends Controller
                 ->delete();
 
             $program->delete();
-            return redirect()->route('programs-manage')->with('success', 'Training program deleted successfully');
+            return redirect()->route('programs-manage')->with('confirmation', 'Are you sure you want to delete this?');
         } else {
             return redirect()->route('programs-manage')->with('error', 'Failed to delete training program');
         }

@@ -21,9 +21,20 @@
                     <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
                 </div>
                 <div class="col prog-btn">
-                    <button type="" class="submit-btn border-0">
-                        Apply
-                    </button>
+                    <form action="{{ route('pwd-application') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="training_program_id" value="{{ $program->id }}">
+                        @if ($application && $application->application_status == 'Pending')
+                        <button type="submit" class="submit-btn border-0" disabled>
+                            Pending
+                        </button>
+                        @else
+                        <button type="submit" class="submit-btn border-0">
+                            Apply
+                        </button>
+                        @endif
+                    </form>
                 </div>
             </div>
             <div>
@@ -75,6 +86,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="tab-pane" id="competencies" role="tabpanel">
+
                     </div>
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
