@@ -106,7 +106,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('home'));
+            if (Auth::user()->hasRole('PWD')) {
+                return redirect()->intended(route('pwd-list-program'));
+            } else {
+                return redirect()->intended(route('home'));
+            }
         } else {
             return back()->with('error', 'The provided credentials do not match our records');
             // return back()->withErrors([
