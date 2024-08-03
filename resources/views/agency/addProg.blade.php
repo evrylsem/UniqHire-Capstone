@@ -121,8 +121,6 @@
                     <label for="competencyList">Competencies:</label>
                     <div id="competencyList"></div>
                     <button type="button" id="addCompetencyBtn" class="btn btn-outline-primary mt-2"><i class="bx bx-plus"></i> Add Competency</button>
-                    <button type="button" id="saveCompetencyBtn" class="btn btn-outline-success mt-2 d-none">Save Competencies</button>
-                    <button type="button" id="editCompetencyBtn" class="btn btn-outline-warning mt-2 d-none">Edit Competencies</button>
                 </div>
             </div>
         </div>
@@ -162,23 +160,13 @@
 
         let competencyCount = 0;
         const addCompetencyBtn = document.getElementById('addCompetencyBtn');
-        const saveCompetencyBtn = document.getElementById('saveCompetencyBtn');
-        const editCompetencyBtn = document.getElementById('editCompetencyBtn');
         const competencyList = document.getElementById('competencyList');
 
         function toggleButtons() {
-            const hasNonEmptyCompetency = Array.from(document.querySelectorAll('input[name="competencies[]"]'))
-                .some(input => input.value.trim() !== '');
             if (competencyCount >= 4) {
                 addCompetencyBtn.classList.add('d-none');
             } else {
                 addCompetencyBtn.classList.remove('d-none');
-            }
-
-            if (hasNonEmptyCompetency) {
-                saveCompetencyBtn.classList.remove('d-none');
-            } else {
-                saveCompetencyBtn.classList.add('d-none');
             }
         }
 
@@ -203,66 +191,6 @@
 
                 toggleButtons();
             }
-        });
-
-        saveCompetencyBtn.addEventListener('click', function() {
-            const competencyInputs = competencyList.querySelectorAll('input[name="competencies[]"]');
-            let hasNonEmptyCompetency = false;
-            competencyInputs.forEach(function(input) {
-                if (input.value.trim() !== '') {
-                    hasNonEmptyCompetency = true;
-                    const competencyText = document.createElement('span');
-                    competencyText.className = 'competency-text';
-                    competencyText.innerText = input.value;
-                    competencyList.appendChild(competencyText);
-                    competencyList.appendChild(document.createElement('br'));
-                    input.parentElement.remove();
-                }
-            });
-
-            // Remove empty competency items
-            const competencyItems = competencyList.querySelectorAll('.input-group');
-            competencyItems.forEach(function(item) {
-                const input = item.querySelector('input');
-                if (!input.value.trim()) {
-                    competencyList.removeChild(item);
-                    competencyCount--;
-                }
-            });
-
-            if (!hasNonEmptyCompetency) {
-                return;
-            }
-
-            saveCompetencyBtn.classList.add('d-none');
-            editCompetencyBtn.classList.remove('d-none');
-            addCompetencyBtn.classList.add('d-none');
-        });
-
-        editCompetencyBtn.addEventListener('click', function() {
-            const competencyTexts = competencyList.querySelectorAll('.competency-text');
-            competencyCount = competencyTexts.length; // Reset competency count
-            competencyTexts.forEach(function(text) {
-                const competencyItem = document.createElement('div');
-                competencyItem.className = 'input-group mb-3';
-                competencyItem.innerHTML = `
-                <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" value="${text.innerText}" required>
-                <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
-            `;
-                competencyList.appendChild(competencyItem);
-                text.nextSibling.remove();
-                text.remove();
-
-                competencyItem.querySelector('.remove-btn').addEventListener('click', function() {
-                    competencyList.removeChild(competencyItem);
-                    competencyCount--;
-                    toggleButtons();
-                });
-
-                competencyItem.querySelector('input').addEventListener('input', toggleButtons);
-            });
-            editCompetencyBtn.classList.add('d-none');
-            toggleButtons();
         });
 
         toggleButtons(); // Initialize the button states

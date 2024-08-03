@@ -104,7 +104,15 @@ class AgencyController extends Controller
         ]);
 
         if ($request->has('competencies')) {
-            $competencyIds = Competency::whereIn('name', $request->competencies)->pluck('id');
+            $competencies = $request->competencies;
+            $competencyIds = [];
+
+            foreach ($competencies as $competency) {
+                $existingCompetency = Competency::firstOrCreate(['name' => $competency]);
+                $competencyIds[] = $existingCompetency->id;
+            }
+
+            // Attach competencies to the training program
             $trainingProgram->competencies()->sync($competencyIds);
         }
 
@@ -154,12 +162,25 @@ class AgencyController extends Controller
     {
         $program = TrainingProgram::find($id);
 
-        if ($program && $program->agency_id == auth()->id()) {
-            $disabilities = Disability::all();
-            $levels = EducationLevel::all();
-
-            return view('agency.editProg', compact('program', 'disabilities', 'levels'));
+        if (!$program || $program->agency_id != auth()->id()) {
+            return redirect()->route('programs-manage');
         }
+
+        // Fetch provinces and cities
+        $provinceResponse = file_get_contents('https://psgc.cloud/api/provinces');
+        $provinces = json_decode($provinceResponse, true);
+
+        // Fetch disabilities and education levels
+        $disabilities = Disability::all();
+        $levels = EducationLevel::all();
+
+        // Return the view with all required data
+        return view('agency.editProg', [
+            'program' => $program,
+            'provinces' => $provinces,
+            'disabilities' => $disabilities,
+            'levels' => $levels,
+        ]);
 
         return redirect()->route('programs-manage');
     }
@@ -176,7 +197,9 @@ class AgencyController extends Controller
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date',
-                'goal' => 'nullable|numeric'
+                'goal' => 'nullable|numeric',
+                'competencies' => 'array|max:4',
+                'competencies.*' => 'string|distinct',
             ]);
 
             $program->update([
@@ -189,6 +212,19 @@ class AgencyController extends Controller
                 'disability_id' => $request->disability,
                 'education_id' => $request->education,
             ]);
+
+            if ($request->has('competencies')) {
+                $competencies = $request->competencies;
+                $competencyIds = [];
+
+                foreach ($competencies as $competency) {
+                    $existingCompetency = Competency::firstOrCreate(['name' => $competency]);
+                    $competencyIds[] = $existingCompetency->id;
+                }
+
+                // Attach competencies to the training program
+                $program->competencies()->sync($competencyIds);
+            }
 
             if ($request->has('goal') && $request->goal !== null) {
                 $crowdfundEvent = $program->crowdfund;

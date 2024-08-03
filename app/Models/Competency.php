@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Competency extends Model
 {
+    use HasFactory;
 
     protected $fillable = [
         'name',
@@ -14,8 +15,6 @@ class Competency extends Model
 
     public function trainingPrograms()
     {
-        return $this->belongsToMany(TrainingProgram::class, 'program_competency');
+        return $this->belongsToMany(TrainingProgram::class, 'program_competency', 'competency_id', 'training_program_id');
     }
-
-    use HasFactory;
 }
