@@ -1126,12 +1126,21 @@ table tbody .bx {
     width: 5rem;
 }
 
+.show-prog-container .prog-details .prog-btn .edit-delete .edit-btn {
+    background-color: transparent;
+    border: none;
+}
+
+.show-prog-container .prog-details .prog-btn .edit-delete .edit-btn:hover {
+    background-color: var(--primary-color-light);
+}
+
 .show-prog-container .prog-details h5, .details-container .body h5 {
     font-weight: 700;
     margin-bottom: 1.5rem;
 }
 
-.show-prog-container .prog-details .more-info, .details-container .body .more-info {
+.details-container .body .more-info {
     height: 10rem;
 }
 
@@ -1213,7 +1222,7 @@ table tbody .bx {
 }
 
 .show-prog-container .prog-details .prog-texts .requirements {
-    border-right: 1px solid lightgray;
+    /* border-right: 1px solid lightgray; */
     width: 100%;
 }
 
@@ -1302,6 +1311,41 @@ table tbody .bx {
 
 .show-prog-container .reviews .body-review .bx {
     color: var(--color-01);
+}
+
+/* SHOW PROG TABS */
+.show-prog-container .tab-content {
+    height: 30rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.show-prog-container .tab-content>.active {
+    height: 100%;
+}
+
+.show-prog-container .prog-details .more-info {
+    width: 100%;
+}
+
+.show-prog-container .prog-details .nav {
+    border-top: 1px solid lightgray;
+}
+
+
+.show-prog-container .prog-details .nav .nav-item {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    
+}
+
+.show-prog-container .prog-details .nav .nav-item a {
+    color: var(--text-color);
+}
+
+.show-prog-container .prog-details .nav .nav-item a.active {
+    color: var(--primary-color);
+    font-weight: bold;
 }
 
 /* PROFILE */

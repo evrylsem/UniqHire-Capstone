@@ -37,7 +37,7 @@
                 <td class="status-cell">
                     <p class="match-info">Completed</p>
                 </td>
-                <td class="text-cap"><a href="{{ route('programs-show', $training->id) }}">Show Details</a></td>
+                <td class="text-cap"><a href="{{ route('show-details', $training->id) }}">Show Details</a></td>
                 <!-- <td></td> -->
             </tr>
             @endforeach
