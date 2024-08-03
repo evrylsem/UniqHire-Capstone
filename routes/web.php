@@ -17,18 +17,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPass'])->name('forgot-password');
 
-
 Route::get('/register', [AuthController::class, 'showRegistration'])->name('register-form');
 Route::post('/register', [AuthController::class, 'register']);
-
-
-Route::get('/all', [AuthController::class, 'showAccs']);
-
 
 Route::get('/logout', [AuthController::class, 'logout']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/admin/pwdusers', [AuthController::class, 'showAccs'])->name('admin-pwdusers');
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
@@ -36,7 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
     Route::get('/user/{id}', [AgencyController::class, 'showEnrolleeProfile'])->name('show-profile');
 
 
@@ -52,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage-program', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
     Route::get('/add-program', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
     Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
+    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->middleware('role:Trainer')->name('programs-show');
     Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
     Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
     Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');

@@ -5,7 +5,6 @@
 @section('page-content')
 
 <div class="pwd-browse-prog">
-    @include('pwd.show')
     <div class="filter-container">
         <form action="{{ route('pwd-list-program') }}" method="GET" id="filterForm">
             <div class="d-flex justify-content-between mb-3">
@@ -59,7 +58,7 @@
             @foreach ($paginatedItems as $ranked)
             <div class="row prog-card mb-2">
                 <div class="col ">
-                    <a href="{{ route('programs-show', $ranked['program']->id ) }}" class="d-flex prog-texts">
+                    <a href="{{ route('training-details', $ranked['program']->id ) }}" class="d-flex prog-texts">
                         <div class="prog-texts-container">
                             <div class=" d-flex mb-2">
                                 <div class="prog-img"></div>
@@ -118,42 +117,5 @@
         }
     }
 
-    function openPopup(event) {
-        event.preventDefault();
-        var container = document.getElementById('popup');
-        var programId = event.currentTarget.getAttribute('data-id');
 
-
-
-        // Make an AJAX request to fetch the program details
-        fetch(`/training-details/${programId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('title').textContent = data.program.title;
-                document.getElementById('agency').textContent = data.program.agency.user_info.name;
-                document.getElementById('city').textContent = data.program.city;
-                document.getElementById('desc').textContent = data.program.description;
-                document.getElementById('start').textContent = data.program.start;
-                document.getElementById('end').textContent = data.program.end;
-                document.getElementById('disability').textContent = data.program.disability.disability_name;
-                document.getElementById('education').textContent = data.program.education.education_name;
-
-                document.getElementById('apply-button').setAttribute('data-program-id', programId);
-
-                var buttonLabel = document.getElementById('button-label');
-                var applyButton = document.getElementById('apply-button');
-                buttonLabel.textContent = data.application_status;
-
-                if (data.has_pending_or_approved) {
-                    applyButton.disabled = true; // Disable the button
-                    alert('You have a pending or approved application for another program. You cannot apply for more at this time.');
-                } else {
-                    applyButton.disabled = data.application_status !== 'Apply'; // Enable or disable based on status
-                }
-            })
-            .catch(error => console.error('Error fetching program details:', error));
-
-        // Display the popup
-        container.style.display = 'flex';
-    }
 </script>
