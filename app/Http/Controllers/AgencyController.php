@@ -54,15 +54,44 @@ class AgencyController extends Controller
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::whereHas('program', function ($query) use ($userId) {
             $query->where('agency_id', $userId);
-        })->get();
+        })->where('application_status', 'Pending')->get();
+
+        $application = TrainingApplication::where('user_id', $userId)
+        ->where('training_program_id', $id)
+        ->first();
+        $applicationStatus = $application ? $application->application_status : 'Apply';
+
+        // Check if the user has any pending or approved applications
+        $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
+        ->whereIn('application_status', ['Pending', 'Approved'])
+        ->exists();
+
+        // Check if the user has any active applications
+        $nonConflictingPrograms = [];
+        $currentApplication = TrainingApplication::where('user_id', $userId)
+            ->whereIn('application_status', ['Pending', 'Approved'])
+            ->first();
+
+        if ($currentApplication) {
+            $currentProgram = TrainingProgram::find($currentApplication->training_program_id);
+            $currentEndDate = $currentProgram->end;
+
+            // Get non-conflicting programs
+            $nonConflictingPrograms = TrainingProgram::where('start', '>', $currentEndDate)
+                ->pluck('id')
+                ->toArray();
+        }
+        
+        Log::info('Non-conflicting programs:', ['nonConflictingPrograms' => $nonConflictingPrograms]);
+
 
         if ($program->crowdfund) {
-            $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
-            $goal = $program->crowdfund->goal ?? 1; // Default to 1 to avoid division by zero
-            $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
+            $raisedAmount = $program->crowdfund->raised_amount ?? 0; 
+            $goal = $program->crowdfund->goal ?? 1; 
+            $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0;
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program', 'applications', 'reviews'));
+        return view('agency.showProg', compact('program', 'applications', 'reviews', 'applicationStatus', 'hasPendingOrApproved', 'nonConflictingPrograms'));
     }
 
     public function showAddForm()
@@ -227,20 +256,44 @@ class AgencyController extends Controller
 
     public function accept(Request $request)
     {
-        log::info("nakaabot sa accept");
+        Log::info("Reached accept method");
+
+        // Validate the incoming request
         $validatedData = $request->validate([
             'training_application_id' => 'required|exists:training_applications,training_id',
             'completion_status' => 'required|in:Completed,Ongoing,Not completed',
         ]);
 
+        $applicationId = $validatedData['training_application_id'];
+        $completionStatus = $validatedData['completion_status'];
+
+        // Find the application by training_id
+        $application = TrainingApplication::where('training_id', $applicationId)->first();
+
+        // Create Enrollee record
         Enrollee::create([
-            'training_application_id' => $validatedData['training_application_id'],
-            'completion_status' => $validatedData['completion_status']
+            'training_application_id' => $applicationId,
+            'completion_status' => $completionStatus,
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+        TrainingApplication::where('training_id', $applicationId)
+        ->update(['application_status' => 'Approved']);
 
-        // return back()->with('success', 'Application submitted successfully');
+        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+    }
+
+    public function application(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'training_program_id' => 'required|exists:training_programs,id',
+            'application_status' => 'required|in:Pending,Approved,Denied',
+        ]);
+
+        TrainingApplication::create($validatedData);
+
+        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
 
 

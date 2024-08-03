@@ -51,7 +51,6 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var closeBtn = document.getElementById('close-popup');
@@ -75,42 +74,7 @@
             container.style.display = 'flex';
         }
 
-        applyButton.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            console.log("naka abot sa applybutton");
-            var applyButton = this;
-            var userId = applyButton.getAttribute('data-user-id');
-            var programId = applyButton.getAttribute('data-program-id');
-            var buttonLabel = document.getElementById('button-label');
-
-            console.log("after ni sa data-user-id")
-
-            fetch(`/pwd/application`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    training_program_id: programId,
-                    application_status: 'Pending'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Application submitted successfully.');
-                    buttonLabel.textContent = 'Pending';
-                    applyButton.disabled = true;
-                    container.style.display = 'none';
-                } else {
-                    alert('Failed to submit application.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
+        
 
     });
 </script>

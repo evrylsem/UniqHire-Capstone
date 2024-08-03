@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
+    
     Route::get('/user/{id}', [AgencyController::class, 'showEnrolleeProfile'])->name('show-profile');
 
 
@@ -66,7 +67,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/training-details/{id}', [PwdController::class, 'showDetails'])->middleware('role:PWD')->name('training-details');
     Route::get('/pwd/calendar', [PwdController::class, 'showCalendar'])->middleware('role:PWD')->name('pwd-calendar');
     // Route::post('/pwd/action', [PwdController::class, 'action'])->middleware('role:PWD')->name('pwd-action');
-    Route::post('/training-program/apply', [PwdController::class, 'application'])->middleware('role:PWD')->name('pwd-application');
+    // Route::post('/training-program/apply', [PwdController::class, 'application'])->middleware('role:PWD')->name('pwd-application');
     Route::get('/training-programs', [PwdController::class, 'showTrainings'])->middleware('role:PWD')->name('trainings');
     Route::post('/training-program/rate', [PwdController::class, 'rateProgram'])->middleware('role:PWD')->name('rate-program');
+    Route::post('/show-program/{id}', [AgencyController::class, 'application'])->middleware('role:PWD')->name('programs-application');
 });

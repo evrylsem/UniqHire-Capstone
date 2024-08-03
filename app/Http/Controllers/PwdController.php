@@ -25,6 +25,11 @@ class PwdController extends Controller
         $educations = EducationLevel::all();
         $query = TrainingProgram::query();
 
+        $approvedProgramIds = TrainingApplication::where('user_id', auth()->id())
+        ->where('application_status', 'Approved')
+        ->pluck('training_program_id')
+        ->toArray();
+
         // Filtering the programs through searching program title
         if ($request->filled('search')) {
             $query->where("title", "LIKE", "%" . $request->search . "%");
@@ -43,6 +48,8 @@ class PwdController extends Controller
             });
         }
 
+        $query->whereNotIn('id', $approvedProgramIds);
+        
         $filteredPrograms = $query->get();
 
 
@@ -50,6 +57,7 @@ class PwdController extends Controller
 
         foreach ($filteredPrograms as $program) {
             $similarity = $this->calculateSimilarity($user, $program);
+            Log::info("Similarity score for program ID {$program->id}: " . $similarity);
             $rankedPrograms[] = [
                 'program' => $program,
                 'similarity' => $similarity
@@ -77,15 +85,18 @@ class PwdController extends Controller
     private function calculateSimilarity($user, $program)
     {
         $similarityScore = 0;
+        $weights = [
+            'disability' => 0.7,
+            'location' => 0.3
+        ];
 
         // Criteria: disability, location
-
         if ($user->disability_id === $program->disability_id) {
-            $similarityScore += 1;
+            $similarityScore += $weights['disability'];
         }
 
         if ($user->city === $program->city) {
-            $similarityScore += 1;
+            $similarityScore += $weights['location'];
         }
 
         return $similarityScore;
@@ -94,15 +105,13 @@ class PwdController extends Controller
     public function showDetails($id)
     {
         $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
-        $userId = auth()->user()->id; // Get the authenticated user's ID
+        $userId = auth()->user()->id;
         
-        // Get the application status for the specific program
         $application = TrainingApplication::where('user_id', $userId)
             ->where('training_program_id', $id)
             ->first();
         $applicationStatus = $application ? $application->application_status : 'Apply';
 
-         // Check if the user has any pending or approved applications
         $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
         ->whereIn('application_status', ['Pending', 'Approved'])
         ->exists();
@@ -143,19 +152,7 @@ class PwdController extends Controller
         return view('pwd.calendar');
     }
 
-    public function application(Request $request)
-    {
-
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'training_program_id' => 'required|exists:training_programs,id',
-            'application_status' => 'required|in:Pending,Approved,Denied',
-        ]);
-
-        TrainingApplication::create($validatedData);
-
-        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
-    }
+    
 
     // public function action(Request $request) 
     // {
