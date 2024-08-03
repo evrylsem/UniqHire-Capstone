@@ -30,8 +30,6 @@ class AgencyController extends Controller
             ->with('crowdfund')
             ->get();
 
-
-
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
             $today = new DateTime();
@@ -53,38 +51,7 @@ class AgencyController extends Controller
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
-        $applications = TrainingApplication::whereHas('program', function ($query) use ($userId) {
-            $query->where('agency_id', $userId);
-        })->where('application_status', 'Pending')->get();
-
-        $application = TrainingApplication::where('user_id', $userId)
-        ->where('training_program_id', $id)
-        ->first();
-        $applicationStatus = $application ? $application->application_status : 'Apply';
-
-        // Check if the user has any pending or approved applications
-        $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
-        ->whereIn('application_status', ['Pending', 'Approved'])
-        ->exists();
-
-        // Check if the user has any active applications
-        $nonConflictingPrograms = [];
-        $currentApplication = TrainingApplication::where('user_id', $userId)
-            ->whereIn('application_status', ['Pending', 'Approved'])
-            ->first();
-
-        if ($currentApplication) {
-            $currentProgram = TrainingProgram::find($currentApplication->training_program_id);
-            $currentEndDate = $currentProgram->end;
-
-            // Get non-conflicting programs
-            $nonConflictingPrograms = TrainingProgram::where('start', '>', $currentEndDate)
-                ->pluck('id')
-                ->toArray();
-        }
-        
-        Log::info('Non-conflicting programs:', ['nonConflictingPrograms' => $nonConflictingPrograms]);
-
+        $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; 
@@ -92,7 +59,7 @@ class AgencyController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0;
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program', 'applications', 'reviews', 'applicationStatus', 'hasPendingOrApproved', 'nonConflictingPrograms'));
+        return view('agency.showProg', compact('program', 'applications', 'reviews'));
     }
 
     public function showAddForm()
