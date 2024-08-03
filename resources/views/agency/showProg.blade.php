@@ -159,6 +159,14 @@
                         <ul>
                             <li><a href="">Kler</a></li>
                         </ul>
+                        <h5>Competencies</h5>
+                        <ul>
+                            @forelse ($program->competencies as $competency)
+                            <li>{{ $competency->name }}</li>
+                            @empty
+                            <li>No competencies yet.</li>
+                            @endforelse
+                        </ul>
                     </div>
                 </div>
                 <div class="border reviews">
