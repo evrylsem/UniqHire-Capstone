@@ -24,8 +24,9 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <select type="text" class="form-select" id="provinceSelect" name="state" required placeholder="Province">
-                    <option value="">{{ $program->state }}</option>
+                <select class="form-select" id="provinceSelect" name="state" required placeholder="Province">
+                    <option value="" disabled selected>Select Province</option>
+                    <!-- Provinces will be populated dynamically -->
                 </select>
                 <label for="provinceSelect">Province</label>
                 @error('state')
@@ -35,14 +36,14 @@
         </div>
         <div class="col">
             <div class="form-floating mb-3">
-                <select type="text" class="form-select" id="citySelect" name="city" required placeholder="City">
-                    <option value="">{{ $program->city }}</option>
+                <select class="form-select" id="citySelect" name="city" required placeholder="City">
+                    <option value="" disabled selected>Select City</option>
+                    <!-- Cities will be populated dynamically -->
                 </select>
                 <label for="citySelect">City</label>
                 @error('city')
                 <span class="error-msg">{{ $message }}</span>
                 @enderror
-                </select>
             </div>
         </div>
     </div>
@@ -136,7 +137,6 @@
         <button type="submit" class="submit-btn border-0">Update</button>
     </div>
 </form>
-@endsection
 
 <script>
     function toggleCrowdfund() {
@@ -155,7 +155,21 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        toggleCrowdfund();
+        fetchProvinces();
+
+        var provinceSelect = document.getElementById('provinceSelect');
+        var citySelect = document.getElementById('citySelect');
+        var selectedProvince = "{{ $program->state }}"; // Assuming 'state' is the province code or name
+        var selectedCity = "{{ $program->city }}"; // Assuming 'city' is the city name
+
+        if (selectedProvince) {
+            fetchCities(selectedProvince);
+        }
+
+        provinceSelect.addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
 
         let competencyCount = document.querySelectorAll('#competencyList .input-group').length;
         const addCompetencyBtn = document.getElementById('addCompetencyBtn');
@@ -201,6 +215,47 @@
             });
         });
 
+        toggleCrowdfund();
         toggleButtons(); // Initialize the button states
     });
+
+    function fetchProvinces() {
+        fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                var provinceSelect = document.getElementById('provinceSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.name;
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+
+                // Set the selected province
+                provinceSelect.value = "{{ $program->state }}";
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
+
+    function fetchCities(provinceCode) {
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.name;
+                    option.text = city.name;
+                    citySelect.appendChild(option);
+                });
+
+                // Set the selected city
+                citySelect.value = "{{ $program->city }}";
+            })
+            .catch(error => console.error('Error fetching cities:', error));
+    }
 </script>
+@endsection
