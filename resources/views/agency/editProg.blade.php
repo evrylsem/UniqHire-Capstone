@@ -24,8 +24,23 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="city" value="{{ $program->city }}" required placeholder="City">
-                <label for="floatingInput">City</label>
+                <select class="form-select" id="provinceSelect" name="state" required placeholder="Province">
+                    <option value="" disabled selected>Select Province</option>
+                    <!-- Provinces will be populated dynamically -->
+                </select>
+                <label for="provinceSelect">Province</label>
+                @error('state')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select class="form-select" id="citySelect" name="city" required placeholder="City">
+                    <option value="" disabled selected>Select City</option>
+                    <!-- Cities will be populated dynamically -->
+                </select>
+                <label for="citySelect">City</label>
                 @error('city')
                 <span class="error-msg">{{ $message }}</span>
                 @enderror
@@ -101,12 +116,27 @@
             </div>
         </div>
     </div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <div id="competencyListContainer">
+                <label for="competencyList">Competencies:</label>
+                <div id="competencyList">
+                    @foreach ($program->competencies as $competency)
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" value="{{ $competency->name }}" required>
+                        <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+                    </div>
+                    @endforeach
+                </div>
+                <button type="button" id="addCompetencyBtn" class="btn btn-outline-primary mt-2"><i class="bx bx-plus"></i> Add Competency</button>
+            </div>
+        </div>
+    </div>
     <div class="d-flex justify-content-evenly mt-3 prog-btn">
         <button type="reset" class="deny-btn border-0">Clear</button>
         <button type="submit" class="submit-btn border-0">Update</button>
     </div>
 </form>
-@endsection
 
 <script>
     function toggleCrowdfund() {
@@ -124,5 +154,108 @@
         }
     }
 
-    toggleCrowdfund();
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProvinces();
+
+        var provinceSelect = document.getElementById('provinceSelect');
+        var citySelect = document.getElementById('citySelect');
+        var selectedProvince = "{{ $program->state }}"; // Assuming 'state' is the province code or name
+        var selectedCity = "{{ $program->city }}"; // Assuming 'city' is the city name
+
+        if (selectedProvince) {
+            fetchCities(selectedProvince);
+        }
+
+        provinceSelect.addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
+
+        let competencyCount = document.querySelectorAll('#competencyList .input-group').length;
+        const addCompetencyBtn = document.getElementById('addCompetencyBtn');
+        const competencyList = document.getElementById('competencyList');
+
+        function toggleButtons() {
+            if (competencyCount >= 4) {
+                addCompetencyBtn.classList.add('d-none');
+            } else {
+                addCompetencyBtn.classList.remove('d-none');
+            }
+        }
+
+        addCompetencyBtn.addEventListener('click', function() {
+            if (competencyCount < 4) {
+                competencyCount++;
+                const competencyItem = document.createElement('div');
+                competencyItem.className = 'input-group mb-3';
+                competencyItem.innerHTML = `
+                <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" required>
+                <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+            `;
+                competencyList.appendChild(competencyItem);
+
+                competencyItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    competencyList.removeChild(competencyItem);
+                    competencyCount--;
+                    toggleButtons();
+                });
+
+                competencyItem.querySelector('input').addEventListener('input', toggleButtons);
+
+                toggleButtons();
+            }
+        });
+
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const competencyItem = this.parentElement;
+                competencyList.removeChild(competencyItem);
+                competencyCount--;
+                toggleButtons();
+            });
+        });
+
+        toggleCrowdfund();
+        toggleButtons(); // Initialize the button states
+    });
+
+    function fetchProvinces() {
+        fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                var provinceSelect = document.getElementById('provinceSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.name;
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+
+                // Set the selected province
+                provinceSelect.value = "{{ $program->state }}";
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
+
+    function fetchCities(provinceCode) {
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.name;
+                    option.text = city.name;
+                    citySelect.appendChild(option);
+                });
+
+                // Set the selected city
+                citySelect.value = "{{ $program->city }}";
+            })
+            .catch(error => console.error('Error fetching cities:', error));
+    }
 </script>
+@endsection

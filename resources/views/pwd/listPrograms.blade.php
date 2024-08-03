@@ -5,7 +5,6 @@
 @section('page-content')
 
 <div class="pwd-browse-prog">
-    @include('pwd.show')
     <div class="filter-container">
         <form action="{{ route('pwd-list-program') }}" method="GET" id="filterForm">
             <div class="d-flex justify-content-between mb-3">
@@ -54,61 +53,59 @@
                 </form>
             </div>
         </div>
-
-        <div class="prog-grid">
-            @foreach ($paginatedItems as $ranked)
-            <div class="row prog-card mb-2">
-                <div class="col ">
-                    <a href="{{ route('programs-show', $ranked['program']->id ) }}" class="d-flex prog-texts">
-                        <div class="prog-texts-container">
-                            <div class=" d-flex mb-2">
-                                <div class="prog-img"></div>
-                                <div class="d-flex justify-content-between prog-head">
-                                    <div class="header">
-                                        <h4 class="text-cap">{{$ranked['program']->title}}</h4>
-                                        <p class="sub-text text-cap">{{$ranked['program']->agency->userInfo->name}}</p>
-                                        <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($ranked['program']->city, 'City') ? $ranked['program']->city : $ranked['program']->city . ' City')}}</p>
+        <div class="outer">
+            <div class="prog-grid" id="prog-grid">
+                @foreach ($paginatedItems as $ranked)
+                <div class="row prog-card mb-2">
+                    <div class="col ">
+                        <a href="{{ route('training-details', $ranked['program']->id ) }}" class="d-flex prog-texts">
+                            <div class="prog-texts-container">
+                                <div class=" d-flex mb-2">
+                                    <div class="prog-img"></div>
+                                    <div class="d-flex justify-content-between prog-head">
+                                        <div class="header">
+                                            <h4 class="text-cap">{{$ranked['program']->title}}</h4>
+                                            <p class="sub-text text-cap">{{$ranked['program']->agency->userInfo->name}}</p>
+                                            <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($ranked['program']->city, 'City') ? $ranked['program']->city : $ranked['program']->city . ' City')}}</p>
+                                        </div>
+                                        <div class="text-end date-posted">
+                                            <p class="text-end">{{ $ranked['program']->created_at->diffForHumans() }}</p>
+                                        </div>
                                     </div>
-                                    <div class="text-end date-posted">
-                                        <p class="text-end">{{ $ranked['program']->created_at->diffForHumans() }}</p>
+
+                                </div>
+                                <div class="row prog-desc mb-1">
+                                    <p>{{$ranked['program']->description}}</p>
+                                </div>
+                                <div class="row d-flex">
+                                    <div class="match-info">
+                                        {{$ranked['program']->disability->disability_name}}
+                                    </div>
+                                    <div class="match-info">
+                                        {{$ranked['program']->education->education_name}}
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="row prog-desc mb-1">
-                                <p>{{$ranked['program']->description}}</p>
+                            <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
+                                >
                             </div>
-                            <div class="row d-flex">
-                                <div class="match-info">
-                                    {{$ranked['program']->disability->disability_name}}
-                                </div>
-                                <div class="match-info">
-                                    {{$ranked['program']->education->education_name}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="fs-3 d-flex flex-column align-items-center justify-content-center">
-                            >
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            @endforeach
-            <div class="pagination">
-                {{ $paginatedItems->links() }}
-            </div>
+                @endforeach
+                <div class="pagination">
+                    {{ $paginatedItems->links() }}
+                </div>
 
+            </div>
         </div>
+
     </div>
 </div>
-
-@endsection
 
 <script>
     function submitForm() {
         document.getElementById('filterForm').submit();
-
-
     }
 
     function checkAndSubmit() {
@@ -118,42 +115,5 @@
         }
     }
 
-    function openPopup(event) {
-        event.preventDefault();
-        var container = document.getElementById('popup');
-        var programId = event.currentTarget.getAttribute('data-id');
-
-
-
-        // Make an AJAX request to fetch the program details
-        fetch(`/training-details/${programId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('title').textContent = data.program.title;
-                document.getElementById('agency').textContent = data.program.agency.user_info.name;
-                document.getElementById('city').textContent = data.program.city;
-                document.getElementById('desc').textContent = data.program.description;
-                document.getElementById('start').textContent = data.program.start;
-                document.getElementById('end').textContent = data.program.end;
-                document.getElementById('disability').textContent = data.program.disability.disability_name;
-                document.getElementById('education').textContent = data.program.education.education_name;
-
-                document.getElementById('apply-button').setAttribute('data-program-id', programId);
-
-                var buttonLabel = document.getElementById('button-label');
-                var applyButton = document.getElementById('apply-button');
-                buttonLabel.textContent = data.application_status;
-
-                if (data.has_pending_or_approved) {
-                    applyButton.disabled = true; // Disable the button
-                    alert('You have a pending or approved application for another program. You cannot apply for more at this time.');
-                } else {
-                    applyButton.disabled = data.application_status !== 'Apply'; // Enable or disable based on status
-                }
-            })
-            .catch(error => console.error('Error fetching program details:', error));
-
-        // Display the popup
-        container.style.display = 'flex';
-    }
 </script>
+@endsection

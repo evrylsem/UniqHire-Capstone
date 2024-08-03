@@ -104,8 +104,21 @@ class PwdController extends Controller
 
     public function showDetails($id)
     {
-        $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
+        $program = TrainingProgram::with('agency.userInfo', 'disability', 'education', 'crowdfund')->findOrFail($id);
         $userId = auth()->user()->id;
+        $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
+
+        if ($program->crowdfund) {
+            $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
+            $goal = $program->crowdfund->goal ?? 1; // Default to 1 to avoid division by zero
+            $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
+            $program->crowdfund->progress = $progress;
+        }
+        return view('pwd.show', compact('program', 'reviews'));
+
+
+        // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
+        // $userId = auth()->user()->id;
         
         $application = TrainingApplication::where('user_id', $userId)
             ->where('training_program_id', $id)
@@ -116,13 +129,13 @@ class PwdController extends Controller
         ->whereIn('application_status', ['Pending', 'Approved'])
         ->exists();
 
-        Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
+        // Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
      
-        return response()->json([
-            'program' => $program,
-            'application_status' => $applicationStatus,
-            'has_pending_or_approved' => $hasPendingOrApproved
-        ]);
+        // return response()->json([
+        //     'program' => $program,
+        //     'application_status' => $applicationStatus,
+        //     'has_pending_or_approved' => $hasPendingOrApproved
+        // ]);
     }
 
     public function showCalendar(Request $request)
@@ -152,7 +165,19 @@ class PwdController extends Controller
         return view('pwd.calendar');
     }
 
-    
+    public function application(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'training_program_id' => 'required|exists:training_programs,id',
+            'application_status' => 'required|in:Pending,Approved,Denied',
+        ]);
+
+        TrainingApplication::create($validatedData);
+
+        return back()->with('success', 'Your application is sent successfully!');
+    }
 
     // public function action(Request $request) 
     // {
