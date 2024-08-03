@@ -162,10 +162,8 @@ class PwdController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'training_program_id' => 'required|exists:training_programs,id',
+            'application_status' => 'required|in:Pending,Approved,Denied',
         ]);
-
-        // Set application status to 'Pending' by default
-        $validatedData['application_status'] = 'Pending';
 
         TrainingApplication::create($validatedData);
 

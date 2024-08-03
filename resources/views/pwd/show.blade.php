@@ -21,14 +21,9 @@
                     <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
                 </div>
                 <div class="col prog-btn">
-                    <form action="{{ route('pwd-application') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                        <input type="hidden" name="training_program_id" value="{{ $program->id }}">
-                        <button type="submit" class="submit-btn border-0">
-                            Apply
-                        </button>
-                    </form>
+                    <button type="" class="submit-btn border-0">
+                        Apply
+                    </button>
                 </div>
             </div>
             <div>
