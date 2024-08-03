@@ -23,8 +23,21 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="city" required placeholder="First Name">
-                <label for="floatingInput">City</label>
+                <select type="text" class="form-select" id="provinceSelect" name="state" required placeholder="Province">
+                    <option value="">Select Province</option>
+                </select>
+                <label for="provinceSelect">Province</label>
+                @error('state')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select type="text" class="form-select" id="citySelect" name="city" required placeholder="City">
+                    <option value="">Select City</option>
+                </select>
+                <label for="citySelect">City</label>
                 @error('city')
                 <span class="error-msg">{{ $message }}</span>
                 @enderror
@@ -41,64 +54,76 @@
                 @enderror
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label for="">Start Date: </label>
-                <input type="date" name="start_date" class="date-input">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="">Start Date: </label>
+                    <input type="date" name="start_date" class="date-input">
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="">End Date: </label>
+                    <input type="date" name="end_date" class="date-input">
+                </div>
             </div>
         </div>
-        <div class="col">
-            <div class="mb-3">
-                <label for="">End Date: </label>
-                <input type="date" name="end_date" class="date-input">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-floating mb-3">
-                <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
-                    @foreach ($disabilities as $disability)
-                    @if ($disability->disability_name != 'Not Applicable')
-                    <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
-                    @endif
-                    @endforeach
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
+                        @foreach ($disabilities as $disability)
+                        @if ($disability->disability_name != 'Not Applicable')
+                        <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
+                        @endif
+                        @endforeach
 
-                </select>
-                <label for="floatingSelect">Disability</label>
+                    </select>
+                    <label for="floatingSelect">Disability</label>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="form-floating mb-3">
-                <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
-                    @foreach ($levels as $level)
-                    <option value="{{ $level->id }}">{{ $level->education_name }}</option>
-                    @endforeach
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
+                        @foreach ($levels as $level)
+                        <option value="{{ $level->id }}">{{ $level->education_name }}</option>
+                        @endforeach
 
-                </select>
-                <label for="floatingSelect">Education Level</label>
+                    </select>
+                    <label for="floatingSelect">Education Level</label>
+                </div>
             </div>
         </div>
-    </div>
-    <hr>
-    <div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
-            <label class="form-check-label" for="flexCheckDefault">
-                Host a crowdfunding for this?
-            </label>
+        <hr>
+        <div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Host a crowdfunding for this?
+                </label>
+            </div>
         </div>
-    </div>
-    <div class="row" id="crowdfund-section">
+        <div class="row" id="crowdfund-section">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled>
+                    <label for="floatingInput">Amount Needed</label>
+                    @error('goal')
+                    <span class="error-msg">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <!-- COMPETENCY -->
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled>
-                <label for="floatingInput">Amount Needed</label>
-                @error('goal')
-                <span class="error-msg">{{ $message }}</span>
-                @enderror
+                <div id="competencyListContainer">
+                    <label for="competencyList">Competencies:</label>
+                    <div id="competencyList"></div>
+                    <button type="button" id="addCompetencyBtn" class="btn btn-outline-primary mt-2"><i class="bx bx-plus"></i> Add Competency</button>
+                    <button type="button" id="saveCompetencyBtn" class="btn btn-outline-success mt-2 d-none">Save Competencies</button>
+                    <button type="button" id="editCompetencyBtn" class="btn btn-outline-warning mt-2 d-none">Edit Competencies</button>
+                </div>
             </div>
         </div>
     </div>
@@ -125,5 +150,154 @@
             document.getElementById('amount-needed').disabled = true;
             document.getElementById('amount-needed').required = false;
         }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProvinces();
+
+        document.getElementById('provinceSelect').addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
+
+        let competencyCount = 0;
+        const addCompetencyBtn = document.getElementById('addCompetencyBtn');
+        const saveCompetencyBtn = document.getElementById('saveCompetencyBtn');
+        const editCompetencyBtn = document.getElementById('editCompetencyBtn');
+        const competencyList = document.getElementById('competencyList');
+
+        function toggleButtons() {
+            const hasNonEmptyCompetency = Array.from(document.querySelectorAll('input[name="competencies[]"]'))
+                .some(input => input.value.trim() !== '');
+            if (competencyCount >= 4) {
+                addCompetencyBtn.classList.add('d-none');
+            } else {
+                addCompetencyBtn.classList.remove('d-none');
+            }
+
+            if (hasNonEmptyCompetency) {
+                saveCompetencyBtn.classList.remove('d-none');
+            } else {
+                saveCompetencyBtn.classList.add('d-none');
+            }
+        }
+
+        addCompetencyBtn.addEventListener('click', function() {
+            if (competencyCount < 4) {
+                competencyCount++;
+                const competencyItem = document.createElement('div');
+                competencyItem.className = 'input-group mb-3';
+                competencyItem.innerHTML = `
+                <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" required>
+                <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+            `;
+                competencyList.appendChild(competencyItem);
+
+                competencyItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    competencyList.removeChild(competencyItem);
+                    competencyCount--;
+                    toggleButtons();
+                });
+
+                competencyItem.querySelector('input').addEventListener('input', toggleButtons);
+
+                toggleButtons();
+            }
+        });
+
+        saveCompetencyBtn.addEventListener('click', function() {
+            const competencyInputs = competencyList.querySelectorAll('input[name="competencies[]"]');
+            let hasNonEmptyCompetency = false;
+            competencyInputs.forEach(function(input) {
+                if (input.value.trim() !== '') {
+                    hasNonEmptyCompetency = true;
+                    const competencyText = document.createElement('span');
+                    competencyText.className = 'competency-text';
+                    competencyText.innerText = input.value;
+                    competencyList.appendChild(competencyText);
+                    competencyList.appendChild(document.createElement('br'));
+                    input.parentElement.remove();
+                }
+            });
+
+            // Remove empty competency items
+            const competencyItems = competencyList.querySelectorAll('.input-group');
+            competencyItems.forEach(function(item) {
+                const input = item.querySelector('input');
+                if (!input.value.trim()) {
+                    competencyList.removeChild(item);
+                    competencyCount--;
+                }
+            });
+
+            if (!hasNonEmptyCompetency) {
+                return;
+            }
+
+            saveCompetencyBtn.classList.add('d-none');
+            editCompetencyBtn.classList.remove('d-none');
+            addCompetencyBtn.classList.add('d-none');
+        });
+
+        editCompetencyBtn.addEventListener('click', function() {
+            const competencyTexts = competencyList.querySelectorAll('.competency-text');
+            competencyCount = competencyTexts.length; // Reset competency count
+            competencyTexts.forEach(function(text) {
+                const competencyItem = document.createElement('div');
+                competencyItem.className = 'input-group mb-3';
+                competencyItem.innerHTML = `
+                <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" value="${text.innerText}" required>
+                <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+            `;
+                competencyList.appendChild(competencyItem);
+                text.nextSibling.remove();
+                text.remove();
+
+                competencyItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    competencyList.removeChild(competencyItem);
+                    competencyCount--;
+                    toggleButtons();
+                });
+
+                competencyItem.querySelector('input').addEventListener('input', toggleButtons);
+            });
+            editCompetencyBtn.classList.add('d-none');
+            toggleButtons();
+        });
+
+        toggleButtons(); // Initialize the button states
+    });
+
+    function fetchProvinces() {
+        fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                var provinceSelect = document.getElementById('provinceSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.name;
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
+
+    function fetchCities(provinceCode) {
+        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.name;
+                    option.text = city.name;
+                    citySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching cities:', error));
     }
 </script>

@@ -13,6 +13,7 @@ class TrainingProgram extends Model
         'agency_id',
         'title',
         'description',
+        'state',
         'city',
         'participants',
         'start',
@@ -44,5 +45,10 @@ class TrainingProgram extends Model
     public function feedbacks()
     {
         return $this->hasMany(PwdFeedback::class, 'program_id');
+    }
+
+    public function competencies()
+    {
+        return $this->belongsToMany(Competency::class, 'program_competency');
     }
 }

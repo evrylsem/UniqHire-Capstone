@@ -11,6 +11,7 @@ use App\Models\UserInfo;
 use App\Models\Enrollee;
 use App\Models\PwdFeedback;
 use App\Models\TrainingApplication;
+use App\Models\Competency;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
 use DateTime;
@@ -28,8 +29,8 @@ class AgencyController extends Controller
             ->latest()
             ->with('crowdfund')
             ->get();
-        
-            
+
+
 
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
@@ -52,7 +53,7 @@ class AgencyController extends Controller
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
-        $applications = TrainingApplication::whereHas('program', function($query) use ($userId) {
+        $applications = TrainingApplication::whereHas('program', function ($query) use ($userId) {
             $query->where('agency_id', $userId);
         })->get();
 
@@ -62,7 +63,7 @@ class AgencyController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program','applications', 'reviews'));
+        return view('agency.showProg', compact('program', 'applications', 'reviews'));
     }
 
     public function showAddForm()
@@ -77,49 +78,59 @@ class AgencyController extends Controller
         // Validate the request data
         $request->validate([
             'title' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'description' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
-            'goal' => 'nullable|numeric' 
+            'goal' => 'nullable|numeric',
+            'competencies' => 'array|max:4',
+            'competencies.*' => 'string|distinct',
         ]);
-        
+
         // try {
-            $trainingProgram = TrainingProgram::create([
-                'agency_id' => auth()->id(),
-                'title' => $request->title,
-                'city' => $request->city,
-                'description' => $request->description,
-                'start' => $request->start_date,
-                'end' => $request->end_date,
-                'disability_id' => $request->disability,
-                'education_id' => $request->education,
+        $trainingProgram = TrainingProgram::create([
+            'agency_id' => auth()->id(),
+            'title' => $request->title,
+            'state' => $request->state,
+            'city' => $request->city,
+            'description' => $request->description,
+            'start' => $request->start_date,
+            'end' => $request->end_date,
+            'disability_id' => $request->disability,
+            'education_id' => $request->education,
+        ]);
+
+        if ($request->has('competencies')) {
+            $competencyIds = Competency::whereIn('name', $request->competencies)->pluck('id');
+            $trainingProgram->competencies()->sync($competencyIds);
+        }
+
+
+        //NOTIFY PWD USERS!!!
+        $pwdUsers = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'PWD');
+        })->get();
+
+        foreach ($pwdUsers as $user) {
+            $user->notify(new NewTrainingProgramNotification($trainingProgram));
+        }
+
+        if ($request->has('goal') && $request->goal !== null) {
+            CrowdfundEvent::create([
+                'program_id' => $trainingProgram->id,
+                'goal' => $request->goal,
             ]);
+        }
 
-            //NOTIFY PWD USERS!!!
-            $pwdUsers = User::whereHas('role', function ($query) {
-                $query->where('role_name', 'PWD');
-            })->get();
-
-            foreach ($pwdUsers as $user) {
-                $user->notify(new NewTrainingProgramNotification($trainingProgram));
-            }
-
-            if ($request->has('goal') && $request->goal !== null) {
-                CrowdfundEvent::create([
-                    'program_id' => $trainingProgram->id,
-                    'goal' => $request->goal,
-                ]);
-            }
-
-            return redirect()->route('programs-manage')->with('success', 'Training program created successfully!');
+        return redirect()->route('programs-manage')->with('success', 'Training program created successfully!');
         // } catch (\Exception $e) {
         //     return back()->with('error', 'Failed to create training program. Review form.');
         // }
         // Create a new training program
-        
+
     }
 
     public function deleteProgram($id)
@@ -160,6 +171,7 @@ class AgencyController extends Controller
         if ($program && $program->agency_id == auth()->id()) {
             $request->validate([
                 'title' => 'required|string|max:255',
+                'state' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
@@ -169,6 +181,7 @@ class AgencyController extends Controller
 
             $program->update([
                 'title' => $request->title,
+                'state' => $request->state,
                 'city' => $request->city,
                 'description' => $request->description,
                 'start' => $request->start_date,
@@ -203,24 +216,26 @@ class AgencyController extends Controller
         }
     }
 
-    public function showCalendar(Request $request) {
-        
+    public function showCalendar(Request $request)
+    {
+
         $user = auth()->user()->userInfo->user_id;
         log::info($user);
-        
+
         if ($request->ajax()) {
             $data = TrainingProgram::where('agency_id', $user)
-                                   ->whereDate('start', '>=', $request->start)
-                                   ->whereDate('end', '<=', $request->end)
-                                   ->get(['agency_id', 'title', 'start', 'end']);
-        
+                ->whereDate('start', '>=', $request->start)
+                ->whereDate('end', '<=', $request->end)
+                ->get(['agency_id', 'title', 'start', 'end']);
+
             return response()->json($data);
         }
-        
-        return view('agency.calendar');
-    }   
 
-    public function accept(Request $request) {
+        return view('agency.calendar');
+    }
+
+    public function accept(Request $request)
+    {
         log::info("nakaabot sa accept");
         $validatedData = $request->validate([
             'training_application_id' => 'required|exists:training_applications,training_id',
@@ -237,7 +252,7 @@ class AgencyController extends Controller
         // return back()->with('success', 'Application submitted successfully');
     }
 
-    
+
 
     // public function action(Request $request)
     // {
@@ -276,10 +291,11 @@ class AgencyController extends Controller
     // }
 
     //TEMPORARY LOGIC
-    public function showEnrolleeProfile($id) {
+    public function showEnrolleeProfile($id)
+    {
         $user = User::find($id);
         $enrollees =
-        Enrollee::where('user_id', $id)->get();
+            Enrollee::where('user_id', $id)->get();
         return view('auth.profile', compact('user', 'enrollees'));
     }
 }
