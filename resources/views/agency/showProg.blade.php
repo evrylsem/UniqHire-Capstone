@@ -31,6 +31,7 @@
                                 <div class="modal-body">
                                     <div class="request-grid">
                                         @forelse ($applications as $application)
+                                        <input type="hidden" name="program" value="{{ $program->id }}">
                                         <div class="request-container">
                                             <a href="{{ route('show-profile', $application->user->id) }}">
                                                 <div class="request-owner mb-2">
@@ -45,10 +46,15 @@
                                                 </div>
                                                 <div class="d-flex align-items-center">
                                                     <div class="text-end btn-container">
-                                                        <button type="button" class="submit-btn border-0" id="accept-button" data-application-id="{{ $application->training_id }}">Accept</button>
+                                                        <form action="{{ route('agency-accept') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="program_id" value="{{ $program->id }}">
+                                                            <input type="hidden" name="training_application_id" value="{{ $application->id }}">
+                                                            <!-- <input type="hidden" name="completion_status" value="Ongoing"> -->
+                                                            <button type="submit" class="submit-btn border-0">Accept</button>
+                                                        </form>
                                                         <button type="button" class="deny-btn border-0">Deny</button>
                                                     </div>
-
                                                     >
                                                 </div>
                                             </a>
@@ -75,10 +81,10 @@
                             </form>
                         </div>
                     </div>
-                </div>               
+                </div>
             </div>
             <div>
-                <div class="mb-5">  
+                <div class="mb-5">
                     <div class="col">
                         {{ $program->description }}
                     </div>
@@ -131,7 +137,7 @@
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
                         <ul>
                             @forelse($enrollees as $enrollee)
-                            <li><a href="">{{ $enrollee->application->user->userInfo->name }}</a></li>
+                            <li><a href="{{ route('show-profile', $enrollee->application->user->id) }}">{{ $enrollee->application->user->userInfo->name }}</a></li>
                             @empty
                             <div>No enrollees yet.</div>
                             @endforelse
@@ -242,38 +248,37 @@
                 $('#rating-input').val(rating_data);
                 updateStarRating(rating_data);
             });
-        });     
-
-        $(document).on('click', '#accept-button', function(e) {
-            e.preventDefault();
-            console.log("kaabot ari sa script");
-
-            var $button = $(this);
-            var applicationId = $(this).data('application-id');
-
-            fetch(`/agency/accept`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        training_application_id: applicationId,
-                        completion_status: 'Ongoing'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Accepted successfully.');
-                        $button.closest('.request-container').remove();
-                    } else {
-                        alert('Failed to submit application.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
         });
-     
+
+        // $(document).on('click', '#accept-button', function(e) {
+        //     e.preventDefault();
+        //     console.log("kaabot ari sa script");
+
+        //     var $button = $(this);
+        //     var applicationId = $(this).data('application-id');
+
+        //     fetch(`/agency/accept`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        //             },
+        //             body: JSON.stringify({
+        //                 training_application_id: applicationId,
+        //                 completion_status: 'Ongoing'
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 alert('Accepted successfully.');
+        //                 $button.closest('.request-container').remove();
+        //             } else {
+        //                 alert('Failed to submit application.');
+        //             }
+        //         })
+        //         .catch(error => console.error('Error:', error));
+        // });
     </script>
 
     @endsection

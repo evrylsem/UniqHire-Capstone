@@ -64,7 +64,8 @@
                     Swal.fire({
                         title: "Approved",
                         text: "Processed successfully!",
-                        icon: "success"
+                        icon: "success",
+                        timer: 3000,
                     });
                 }
             });

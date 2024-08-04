@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('training_applications', function (Blueprint $table) {
-            $table->increments('training_id');
+            $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('training_program_id')->constrained('training_programs')->onDelete('cascade');
             $table->enum('application_status', ['Pending', 'Approved', 'Denied'])->default('Pending');

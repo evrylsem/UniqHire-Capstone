@@ -97,7 +97,11 @@
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
                         <ul>
-                            <li><a href="">Kler</a></li>
+                            @forelse($enrollees as $enrollee)
+                            <li><a href="">{{ $enrollee->application->user->userInfo->name }}</a></li>
+                            @empty
+                            <div>No enrollees yet.</div>
+                            @endforelse
                         </ul>
                     </div>
                     @if ($program->crowdfund)
@@ -199,9 +203,6 @@
                 updateStarRating(rating_data);
             });
         });
-
-        
-
     </script>
 
     @endsection
