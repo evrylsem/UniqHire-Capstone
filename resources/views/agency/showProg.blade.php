@@ -88,8 +88,9 @@
                         <a class="nav-link active" data-bs-toggle="tab" href="#requirements" role="tab">Requirements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="" role="tab">Compentencies</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#competencies" role="tab">Compentencies</a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#enrollees" role="tab">Enrollees</a>
                     </li>
@@ -128,18 +129,23 @@
                         </div>
                     </div>
 
+                    <div class="tab-pane competencies" id="competencies" role="tabpanel">
+                        <div>
+                            <h5>Competencies</h5>
+                            <ul>
+                                @forelse ($program->competencies as $competency)
+                                <li>{{ $competency->name }}</li>
+                                @empty
+                                <li>No competencies yet.</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
+
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
                         <ul>
                             <li><a href="">Kler</a></li>
-                        </ul>
-                        <h5>Competencies</h5>
-                        <ul>
-                            @forelse ($program->competencies as $competency)
-                            <li>{{ $competency->name }}</li>
-                            @empty
-                            <li>No competencies yet.</li>
-                            @endforelse
-                        </ul>
+                        </ul>                        
                     </div>
                     @if ($program->crowdfund)
                     <div class="tab-pane" id="sponsors" role="tabpanel">
