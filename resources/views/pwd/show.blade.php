@@ -21,7 +21,7 @@
                     <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
                 </div>
                 <div class="col prog-btn">
-                    <form action="{{ route('pwd-application') }}" method="POST">
+                    <form id="apply-form-{{ $program->id }}" action="{{ route('pwd-application') }}" method="POST">
                         @csrf
                         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                         <input type="hidden" name="training_program_id" value="{{ $program->id }}">
@@ -34,7 +34,7 @@
                             Approved
                         </button>
                         @else
-                        <button type="submit" class="submit-btn border-0">
+                        <button type="submit" class="submit-btn border-0" onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')">
                             Apply
                         </button>
                         @endif
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div>
-                <div class="mb-5">
+                <div class=" mb-5">
                     <div class="col">
                         {{ $program->description }}
                     </div>
@@ -203,6 +203,23 @@
                 updateStarRating(rating_data);
             });
         });
+
+        function confirmApplication(event, formId) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Confirmation",
+                text: "Do you really want to apply for this training program?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
     </script>
 
     @endsection

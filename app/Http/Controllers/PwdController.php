@@ -182,7 +182,7 @@ class PwdController extends Controller
         $validatedData['application_status'] = 'Pending';
         TrainingApplication::create($validatedData);
 
-        return back()->with('confirmation', 'Do you really want to apply for this training program?');
+        return back()->with('success', 'Application sent successfully!');
     }
 
     // public function action(Request $request) 
