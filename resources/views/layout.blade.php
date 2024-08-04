@@ -75,7 +75,7 @@
                         <!-- PWD ROLE ACCESS -->
                         @if (Auth::user()->hasRole('PWD'))
                         <li class="side-item">
-                            <a href="{{route('trainings')}}" class="trainings-drop {{ request()->routeIs('trainings') ? 'active' : '' }}">
+                            <a href="{{route('trainings')}}" class="trainings-drop {{ request()->routeIs('trainings', 'show-details') ? 'active' : '' }}">
                                 <i class='bx bxs-school side-icon'></i>
                                 <span class="side-title">Trainings</span>
                             </a>
@@ -151,7 +151,7 @@
                                     <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
                                     <li class="nav-item"><a href="{{route('home')}}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                                     @if (Auth::user()->hasRole('PWD'))
-                                    <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program', 'programs-show') ? 'active' : '' }}">Browse Training Programs</a></li>
+                                    <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program', 'programs-show', 'training-details') ? 'active' : '' }}">Browse Training Programs</a></li>
                                     <li class="nav-item"><a href="">Find Work</a></li>
                                     @endif
 
