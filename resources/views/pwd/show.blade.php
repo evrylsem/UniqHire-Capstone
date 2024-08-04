@@ -115,7 +115,7 @@
                                 @forelse ($program->competencies as $competency)
                                 <li>{{ $competency->name }}</li>
                                 @empty
-                                <li>No competencies yet.</li>
+                                <div>No competencies yet.</div>
                                 @endforelse
                             </ul>
                         </div>
