@@ -106,10 +106,20 @@ class PwdController extends Controller
     {
         $program = TrainingProgram::with('agency.userInfo', 'disability', 'education', 'crowdfund')->findOrFail($id);
         $userId = auth()->user()->id;
-        $application = TrainingApplication::where('user_id', $userId)
-            ->where('training_program_id', $program->id)
-            ->first();
+        $application = TrainingApplication::where('user_id', $userId)->get();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
+
+        // Collect all end dates from the applications
+        $endDates = $application->map(function ($app) {
+            return $app->program->end;
+        })->toArray();
+
+        $nonConflictingPrograms = TrainingProgram::where(function ($query) use ($endDates) {
+            foreach ($endDates as $endDate) {
+                $query->where('start', '>', $endDate);
+            }
+        })->pluck('id')->toArray();
+
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -117,7 +127,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews', 'application'));
+        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms'));
     }
 
     public function showCalendar(Request $request)
