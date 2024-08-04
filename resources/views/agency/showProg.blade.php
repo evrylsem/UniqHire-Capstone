@@ -50,7 +50,6 @@
                                                             @csrf
                                                             <input type="hidden" name="program_id" value="{{ $program->id }}">
                                                             <input type="hidden" name="training_application_id" value="{{ $application->id }}">
-                                                            <!-- <input type="hidden" name="completion_status" value="Ongoing"> -->
                                                             <button type="submit" class="submit-btn border-0">Accept</button>
                                                         </form>
                                                         <button type="button" class="deny-btn border-0">Deny</button>
@@ -209,46 +208,46 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
-            var rating_data = 0;
-            $(document).on('mouseenter', '.star-light', function() {
-                var rating = $(this).data('rating');
-                reset_background();
-                for (var count = 1; count <= rating; count++) {
-                    $('#star-' + count).addClass('bxs-star').removeClass('bx-star');
-                }
-            });
+        // $(document).ready(function() {
+        //     var rating_data = 0;
+        //     $(document).on('mouseenter', '.star-light', function() {
+        //         var rating = $(this).data('rating');
+        //         reset_background();
+        //         for (var count = 1; count <= rating; count++) {
+        //             $('#star-' + count).addClass('bxs-star').removeClass('bx-star');
+        //         }
+        //     });
 
-            function reset_background() {
-                for (var count = 0; count <= 5; count++) {
-                    $('#star-' + count).addClass('bx-star').removeClass('bxs-star');
-                }
-            }
+        //     function reset_background() {
+        //         for (var count = 0; count <= 5; count++) {
+        //             $('#star-' + count).addClass('bx-star').removeClass('bxs-star');
+        //         }
+        //     }
 
-            function updateStarRating(rating) {
-                $('.star-light').each(function() {
-                    var starRating = $(this).data('rating');
-                    if (starRating <= rating) {
-                        $(this).addClass('bxs-star').removeClass('bx-star');
-                    } else {
-                        $(this).addClass('bx-star').removeClass('bxs-star');
-                    }
-                });
-            }
+        //     function updateStarRating(rating) {
+        //         $('.star-light').each(function() {
+        //             var starRating = $(this).data('rating');
+        //             if (starRating <= rating) {
+        //                 $(this).addClass('bxs-star').removeClass('bx-star');
+        //             } else {
+        //                 $(this).addClass('bx-star').removeClass('bxs-star');
+        //             }
+        //         });
+        //     }
 
-            $(document).on('mouseleave', '.star-light', function() {
-                reset_background();
-                if (rating_data > 0) {
-                    updateStarRating(rating_data);
-                }
-            });
+        //     $(document).on('mouseleave', '.star-light', function() {
+        //         reset_background();
+        //         if (rating_data > 0) {
+        //             updateStarRating(rating_data);
+        //         }
+        //     });
 
-            $(document).on('click', '.star-light', function() {
-                rating_data = $(this).data('rating');
-                $('#rating-input').val(rating_data);
-                updateStarRating(rating_data);
-            });
-        });
+        //     $(document).on('click', '.star-light', function() {
+        //         rating_data = $(this).data('rating');
+        //         $('#rating-input').val(rating_data);
+        //         updateStarRating(rating_data);
+        //     });
+        // });
 
         // $(document).on('click', '#accept-button', function(e) {
         //     e.preventDefault();
