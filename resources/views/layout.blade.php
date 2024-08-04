@@ -80,26 +80,6 @@
                                 <span class="side-title">Trainings</span>
                             </a>
                         </li>
-                        <!-- <div class="submenu" id="trainings-submenu">
-                            <li>
-                                <a href="">
-                                    <i class='bx bx-timer'></i>
-                                    <span class="side-title">On-going</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <i class='bx bx-calendar-check'></i>
-                                    <span class="side-title">Completed</span>
-                                </a>
-                            </li>
-                        </div>
-                        <li class="side-item">
-                            <a href="#">
-                                <i class='bx bx-briefcase-alt-2 side-icon'></i>
-                                <span class="side-title">Job Application</span>
-                            </a>
-                        </li> -->
                         <li class="side-item">
                             <a href="{{ route('pwd-calendar') }}" class="{{ request()->routeIs('pwd-calendar') ? 'active' : '' }}">
                                 <i class='bx bx-calendar side-icon'></i>
@@ -199,9 +179,6 @@
                     </nav>
                 </div>
                 <div class="content-container">
-                    @yield('calendar')
-                </div>
-                <div class="content-container">
                     @yield('page-content')
                 </div>
             </div>
@@ -211,9 +188,6 @@
             </div>
             @endif
         </div>
-
-        @yield('scripts')
-
     </body>
     <script>
         $(document).ready(function() {
