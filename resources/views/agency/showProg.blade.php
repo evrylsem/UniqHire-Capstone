@@ -31,6 +31,7 @@
                                 <div class="modal-body">
                                     <div class="request-grid">
                                         @forelse ($applications as $application)
+                                        <input type="hidden" name="program" value="{{ $program->id }}">
                                         <div class="request-container">
                                             <a href="{{ route('show-profile', $application->user->id) }}">
                                                 <div class="request-owner mb-2">
@@ -45,10 +46,14 @@
                                                 </div>
                                                 <div class="d-flex align-items-center">
                                                     <div class="text-end btn-container">
-                                                        <button type="button" class="submit-btn border-0" id="accept-button" data-application-id="{{ $application->training_id }}">Accept</button>
+                                                        <form action="{{ route('agency-accept') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="program_id" value="{{ $program->id }}">
+                                                            <input type="hidden" name="training_application_id" value="{{ $application->id }}">
+                                                            <button type="submit" class="submit-btn border-0">Accept</button>
+                                                        </form>
                                                         <button type="button" class="deny-btn border-0">Deny</button>
                                                     </div>
-
                                                     >
                                                 </div>
                                             </a>
@@ -68,17 +73,17 @@
                             </form>
                         </div>
                         <div class="">
-                            <form action="{{ route('programs-delete', $program->id) }}" method="POST">
+                            <form id="delete-form-{{ $program->id }}" action="{{ route('programs-delete', $program->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="deny-btn border-0">Delete</button>
+                                <button type="submit" class="deny-btn border-0" onclick="confirmDelete(event, 'delete-form-{{ $program->id }}')">Delete</button>
                             </form>
                         </div>
                     </div>
-                </div>               
+                </div>
             </div>
             <div>
-                <div class="mb-5">  
+                <div class="mb-5">
                     <div class="col">
                         {{ $program->description }}
                     </div>
@@ -128,8 +133,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="tab-pane competencies" id="competencies" role="tabpanel">
+                    <div class="tab-pane" id="competencies" role="tabpanel">
                         <div>
                             <h5>Competencies</h5>
                             <ul>
@@ -143,9 +147,38 @@
                     </div>
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
-                        <ul>
-                            <li><a href="">Kler</a></li>
-                        </ul>                        
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <td class="check"><input class="form-check-input" type="checkbox"></td>
+                                    <td class="name"></td>
+                                    <td class="d-flex justify-content-end btn-container"><button class="submit-btn border-0">Mark as Complete</button></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($enrollees as $enrollee)
+                                <tr>
+                                    <td class="check"><input class="form-check-input" type="checkbox"></td>
+                                    <td class="name">
+                                        <a href="{{ route('show-profile', $enrollee->application->user->id) }}">
+                                            {{ $enrollee->application->user->userInfo->name }}
+                                        </a>
+                                    </td>
+                                    <td class="d-flex justify-content-end btn-container">
+                                        @if ($enrollee->completion_status == 'Ongoing')
+                                        <button class="submit-btn border-0">Completed?</button>
+                                        @else
+                                        <button class="submit-btn disabled border-0" disabled><i class='bx bx-check'></i></button>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="text-center">No enrollees yet.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                     @if ($program->crowdfund)
                     <div class="tab-pane" id="sponsors" role="tabpanel">
@@ -205,77 +238,92 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
-            var rating_data = 0;
-            $(document).on('mouseenter', '.star-light', function() {
-                var rating = $(this).data('rating');
-                reset_background();
-                for (var count = 1; count <= rating; count++) {
-                    $('#star-' + count).addClass('bxs-star').removeClass('bx-star');
+        function confirmDelete(event, formId) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Confirmation",
+                text: "Do you really want to delete this training program?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
                 }
             });
+        }
+        // $(document).ready(function() {
+        //     var rating_data = 0;
+        //     $(document).on('mouseenter', '.star-light', function() {
+        //         var rating = $(this).data('rating');
+        //         reset_background();
+        //         for (var count = 1; count <= rating; count++) {
+        //             $('#star-' + count).addClass('bxs-star').removeClass('bx-star');
+        //         }
+        //     });
 
-            function reset_background() {
-                for (var count = 0; count <= 5; count++) {
-                    $('#star-' + count).addClass('bx-star').removeClass('bxs-star');
-                }
-            }
+        //     function reset_background() {
+        //         for (var count = 0; count <= 5; count++) {
+        //             $('#star-' + count).addClass('bx-star').removeClass('bxs-star');
+        //         }
+        //     }
 
-            function updateStarRating(rating) {
-                $('.star-light').each(function() {
-                    var starRating = $(this).data('rating');
-                    if (starRating <= rating) {
-                        $(this).addClass('bxs-star').removeClass('bx-star');
-                    } else {
-                        $(this).addClass('bx-star').removeClass('bxs-star');
-                    }
-                });
-            }
+        //     function updateStarRating(rating) {
+        //         $('.star-light').each(function() {
+        //             var starRating = $(this).data('rating');
+        //             if (starRating <= rating) {
+        //                 $(this).addClass('bxs-star').removeClass('bx-star');
+        //             } else {
+        //                 $(this).addClass('bx-star').removeClass('bxs-star');
+        //             }
+        //         });
+        //     }
 
-            $(document).on('mouseleave', '.star-light', function() {
-                reset_background();
-                if (rating_data > 0) {
-                    updateStarRating(rating_data);
-                }
-            });
+        //     $(document).on('mouseleave', '.star-light', function() {
+        //         reset_background();
+        //         if (rating_data > 0) {
+        //             updateStarRating(rating_data);
+        //         }
+        //     });
 
-            $(document).on('click', '.star-light', function() {
-                rating_data = $(this).data('rating');
-                $('#rating-input').val(rating_data);
-                updateStarRating(rating_data);
-            });
-        });     
+        //     $(document).on('click', '.star-light', function() {
+        //         rating_data = $(this).data('rating');
+        //         $('#rating-input').val(rating_data);
+        //         updateStarRating(rating_data);
+        //     });
+        // });
 
-        $(document).on('click', '#accept-button', function(e) {
-            e.preventDefault();
-            console.log("kaabot ari sa script");
+        // $(document).on('click', '#accept-button', function(e) {
+        //     e.preventDefault();
+        //     console.log("kaabot ari sa script");
 
-            var $button = $(this);
-            var applicationId = $(this).data('application-id');
+        //     var $button = $(this);
+        //     var applicationId = $(this).data('application-id');
 
-            fetch(`/agency/accept`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        training_application_id: applicationId,
-                        completion_status: 'Ongoing'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Accepted successfully.');
-                        $button.closest('.request-container').remove();
-                    } else {
-                        alert('Failed to submit application.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-     
+        //     fetch(`/agency/accept`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        //             },
+        //             body: JSON.stringify({
+        //                 training_application_id: applicationId,
+        //                 completion_status: 'Ongoing'
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 alert('Accepted successfully.');
+        //                 $button.closest('.request-container').remove();
+        //             } else {
+        //                 alert('Failed to submit application.');
+        //             }
+        //         })
+        //         .catch(error => console.error('Error:', error));
+        // });
     </script>
 
     @endsection

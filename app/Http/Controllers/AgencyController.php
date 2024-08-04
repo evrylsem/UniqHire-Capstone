@@ -52,6 +52,8 @@ class AgencyController extends Controller
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
+        $enrollees = Enrollee::where('program_id', $program->id)->where('completion_status', 'Ongoing')->get();
+        
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; 
@@ -59,7 +61,7 @@ class AgencyController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0;
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program', 'applications', 'reviews'));
+        return view('agency.showProg', compact('program', 'applications', 'reviews', 'enrollees'));
     }
 
     public function showAddForm()
@@ -178,7 +180,7 @@ class AgencyController extends Controller
             'levels' => $levels,
         ]);
 
-        return redirect()->route('programs-manage');
+        // return redirect()->route('programs-manage');
     }
 
     public function updateProgram(Request $request, $id)
@@ -272,26 +274,28 @@ class AgencyController extends Controller
 
         // Validate the incoming request
         $validatedData = $request->validate([
-            'training_application_id' => 'required|exists:training_applications,training_id',
-            'completion_status' => 'required|in:Completed,Ongoing,Not completed',
+            'program_id' => 'required|exists:training_programs,id',
+            'training_application_id' => 'required|exists:training_applications,id',
         ]);
 
+        $programId = $validatedData['program_id'];
         $applicationId = $validatedData['training_application_id'];
-        $completionStatus = $validatedData['completion_status'];
+        $completionStatus = 'Ongoing';
 
         // Find the application by training_id
-        $application = TrainingApplication::where('training_id', $applicationId)->first();
+        $application = TrainingApplication::findOrFail($applicationId);
 
         // Create Enrollee record
         Enrollee::create([
+            'program_id' => $programId,
             'training_application_id' => $applicationId,
             'completion_status' => $completionStatus,
         ]);
 
-        TrainingApplication::where('training_id', $applicationId)
-        ->update(['application_status' => 'Approved']);
+        $application->update(['application_status' => 'Approved']);
 
-        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+        // return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+        return back()->with('success', 'Application is accepted');
     }
 
     public function application(Request $request)
@@ -350,8 +354,7 @@ class AgencyController extends Controller
     public function showEnrolleeProfile($id)
     {
         $user = User::find($id);
-        $enrollees =
-            Enrollee::where('user_id', $id)->get();
-        return view('auth.profile', compact('user', 'enrollees'));
+        // $enrollees = Enrollee::where('user_id', $user)->get();
+        return view('agency.pwdProfile', compact('user'));
     }
 }

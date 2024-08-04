@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('enrollees', function (Blueprint $table) {
-            $table->increments('enrollee_id');
-            $table->unsignedInteger('training_application_id');
-            $table->foreign('training_application_id')->references('training_id')->on('training_applications')->onDelete('cascade');            
+            $table->id();
+            $table->foreignId('program_id')->constrained('training_programs')->onDelete('cascade');
+            $table->foreignId('training_application_id')->constrained('training_applications')->onDelete('cascade');            
             $table->enum('completion_status', ['Completed', 'Ongoing', 'Not completed'])->default('Ongoing');
             $table->timestamps();
         });

@@ -1233,11 +1233,10 @@ table tbody .bx {
 }
 
 .show-prog-container .prog-details .prog-texts .enrollees {
-    padding-left: 3rem;
     width: 100%;
 }
 
-.show-prog-container .prog-details .prog-texts .enrollees ul {
+/* .show-prog-container .prog-details .prog-texts .enrollees ul {
     padding-left: 2rem;
     overflow-y: scroll;
     height: 30rem;
@@ -1245,6 +1244,65 @@ table tbody .bx {
 
 .show-prog-container .prog-details .prog-texts .enrollees li {
     list-style: circle;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+} */
+
+.show-prog-container .table {
+    border-top: 3px solid lightgray;
+}
+
+.show-prog-container .table td input {
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 1.8px solid lightgray;
+}
+
+.show-prog-container .table thead td {
+    background-color: transparent;
+}
+
+.show-prog-container .table .bx {
+    color: var(--bg-color-01);
+}
+
+.show-prog-container .table .submit-btn:hover .bx {
+    color: var(--primary-color);
+}
+
+.show-prog-container .table .submit-btn {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+}
+
+.show-prog-container .table .submit-btn.disabled {
+    background-color: var(--bg-color-02);
+}
+
+.show-prog-container .table .submit-btn.disabled .bx {
+    color: var(--primary-color);
+}
+
+.show-prog-container .table td.check {
+    width: 4rem;
+}
+
+.show-prog-container .table td a:hover {
+    color: var(--primary-color);
+}
+
+.show-prog-container .table td.name {
+    width: 100%;
+}
+
+.show-prog-container .table td.btn-container {
+    width: 15rem;
 }
 
 .show-prog-container .prog-details .prog-texts .modal-btn {
