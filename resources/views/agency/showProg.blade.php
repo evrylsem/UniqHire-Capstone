@@ -17,7 +17,7 @@
                 <div class="header mb-3">
                     <h3 class="text-cap">{{ $program->title }}</h3>
                     <p class="sub-text text-cap">{{ $program->agency->userInfo->name }}</p>
-                    <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
+                    <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{$program->state . ', ' .(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
                 </div>
                 <div class="prog-btn">
                     <button type="button" class="submit-btn modal-btn border-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Enrollee Requests</button>
@@ -96,7 +96,7 @@
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#competencies" role="tab">Compentencies</a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#enrollees" role="tab">Enrollees</a>
                     </li>
@@ -167,14 +167,14 @@
                                     </td>
 
                                     <td class="d-flex justify-content-end btn-container">
-                                        <form action = "{{ route('mark-complete') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" value="{{$enrollee->id}}" name="enrolleeId">
-                                        @if ($enrollee->completion_status == 'Ongoing')
-                                        <button class="submit-btn border-0">Completed?</button>
-                                        @else
-                                        <button class="submit-btn disabled border-0" disabled><i class='bx bx-check'></i></button>
-                                        @endif
+                                        <form action="{{ route('mark-complete') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" value="{{$enrollee->id}}" name="enrolleeId">
+                                            @if ($enrollee->completion_status == 'Ongoing')
+                                            <button class="submit-btn border-0">Completed?</button>
+                                            @else
+                                            <button class="submit-btn disabled border-0" disabled><i class='bx bx-check'></i></button>
+                                            @endif
                                         </form>
                                     </td>
                                 </tr>

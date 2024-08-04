@@ -18,7 +18,7 @@
                 <div class="header mb-3">
                     <h3 class="text-cap">{{ $program->title }}</h3>
                     <p class="sub-text text-cap">{{ $program->agency->userInfo->name }}</p>
-                    <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
+                    <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{$program->state . ', ' . (str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
                 </div>
                 <div class="col prog-btn">
                     <form id="apply-form-{{ $program->id }}" action="{{ route('pwd-application') }}" method="POST">
