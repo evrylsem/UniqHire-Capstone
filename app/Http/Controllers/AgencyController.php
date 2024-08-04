@@ -53,6 +53,7 @@ class AgencyController extends Controller
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
         $enrollees = Enrollee::where('program_id', $program->id)->where('completion_status', 'Ongoing')->get();
+        
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; 

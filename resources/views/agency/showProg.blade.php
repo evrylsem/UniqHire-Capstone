@@ -93,7 +93,7 @@
                         <a class="nav-link active" data-bs-toggle="tab" href="#requirements" role="tab">Requirements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="" role="tab">Compentencies</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#competencies" role="tab">Compentencies</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#enrollees" role="tab">Enrollees</a>
@@ -132,23 +132,52 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane" id="competencies" role="tabpanel">
+                        <div>
+                            <h5>Competencies</h5>
+                            <ul>
+                                @forelse ($program->competencies as $competency)
+                                <li>{{ $competency->name }}</li>
+                                @empty
+                                <li>No competencies yet.</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
-                        <ul>
-                            @forelse($enrollees as $enrollee)
-                            <li><a href="{{ route('show-profile', $enrollee->application->user->id) }}">{{ $enrollee->application->user->userInfo->name }}</a></li>
-                            @empty
-                            <div>No enrollees yet.</div>
-                            @endforelse
-                        </ul>
-                        <h5>Competencies</h5>
-                        <ul>
-                            @forelse ($program->competencies as $competency)
-                            <li>{{ $competency->name }}</li>
-                            @empty
-                            <li>No competencies yet.</li>
-                            @endforelse
-                        </ul>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <td class="check"><input class="form-check-input" type="checkbox"></td>
+                                    <td class="name"></td>
+                                    <td class="d-flex justify-content-end btn-container"><button class="submit-btn border-0">Mark as Complete</button></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($enrollees as $enrollee)
+                                <tr>
+                                    <td class="check"><input class="form-check-input" type="checkbox"></td>
+                                    <td class="name">
+                                        <a href="{{ route('show-profile', $enrollee->application->user->id) }}">
+                                            {{ $enrollee->application->user->userInfo->name }}
+                                        </a>
+                                    </td>
+                                    <td class="d-flex justify-content-end btn-container">
+                                        @if ($enrollee->completion_status == 'Ongoing')
+                                        <button class="submit-btn border-0">Completed?</button>
+                                        @else
+                                        <button class="submit-btn disabled border-0" disabled><i class='bx bx-check'></i></button>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="text-center">No enrollees yet.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                     @if ($program->crowdfund)
                     <div class="tab-pane" id="sponsors" role="tabpanel">
