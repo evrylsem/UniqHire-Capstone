@@ -328,17 +328,19 @@ ul, li {
     justify-content: space-between;
 }
 
-.layout-container .user-index {
-    font-weight: bold;
-    padding-right: 2rem;
-}
-
 .layout-container .logo {
     height: 5rem;
 }
 
 .layout-container .nav-item {
     padding: 2rem;
+}
+
+.layout-container .user-index {
+    font-weight: bold;
+    padding-left: 0;
+    padding-right: 4rem;
+    text-align: left;
 }
 
 /* PAGE CONTAINER */
