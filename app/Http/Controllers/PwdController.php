@@ -25,6 +25,11 @@ class PwdController extends Controller
         $educations = EducationLevel::all();
         $query = TrainingProgram::query();
 
+        $approvedProgramIds = TrainingApplication::where('user_id', auth()->id())
+        ->where('application_status', 'Approved')
+        ->pluck('training_program_id')
+        ->toArray();
+
         // Filtering the programs through searching program title
         if ($request->filled('search')) {
             $query->where("title", "LIKE", "%" . $request->search . "%");
@@ -43,6 +48,8 @@ class PwdController extends Controller
             });
         }
 
+        $query->whereNotIn('id', $approvedProgramIds);
+        
         $filteredPrograms = $query->get();
 
 
@@ -50,6 +57,7 @@ class PwdController extends Controller
 
         foreach ($filteredPrograms as $program) {
             $similarity = $this->calculateSimilarity($user, $program);
+            Log::info("Similarity score for program ID {$program->id}: " . $similarity);
             $rankedPrograms[] = [
                 'program' => $program,
                 'similarity' => $similarity
@@ -77,15 +85,18 @@ class PwdController extends Controller
     private function calculateSimilarity($user, $program)
     {
         $similarityScore = 0;
+        $weights = [
+            'disability' => 0.7,
+            'location' => 0.3
+        ];
 
         // Criteria: disability, location
-
         if ($user->disability_id === $program->disability_id) {
-            $similarityScore += 1;
+            $similarityScore += $weights['disability'];
         }
 
         if ($user->city === $program->city) {
-            $similarityScore += 1;
+            $similarityScore += $weights['location'];
         }
 
         return $similarityScore;
@@ -95,6 +106,9 @@ class PwdController extends Controller
     {
         $program = TrainingProgram::with('agency.userInfo', 'disability', 'education', 'crowdfund')->findOrFail($id);
         $userId = auth()->user()->id;
+        $application = TrainingApplication::where('user_id', $userId)
+            ->where('training_program_id', $program->id)
+            ->first();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
 
         if ($program->crowdfund) {
@@ -103,30 +117,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews'));
-
-
-        // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
-        // $userId = auth()->user()->id; // Get the authenticated user's ID
-        
-        // // Get the application status for the specific program
-        // $application = TrainingApplication::where('user_id', $userId)
-        //     ->where('training_program_id', $id)
-        //     ->first();
-        // $applicationStatus = $application ? $application->application_status : 'Apply';
-
-        //  // Check if the user has any pending or approved applications
-        // $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
-        // ->whereIn('application_status', ['Pending', 'Approved'])
-        // ->exists();
-
-        // Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
-     
-        // return response()->json([
-        //     'program' => $program,
-        //     'application_status' => $applicationStatus,
-        //     'has_pending_or_approved' => $hasPendingOrApproved
-        // ]);
+        return view('pwd.show', compact('program', 'reviews', 'application'));
     }
 
     public function showCalendar(Request $request)
@@ -158,13 +149,12 @@ class PwdController extends Controller
 
     public function application(Request $request)
     {
-
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'training_program_id' => 'required|exists:training_programs,id',
-            'application_status' => 'required|in:Pending,Approved,Denied',
         ]);
 
+        $validatedData['application_status'] = 'Pending';
         TrainingApplication::create($validatedData);
 
         return back()->with('success', 'Your application is sent successfully!');
