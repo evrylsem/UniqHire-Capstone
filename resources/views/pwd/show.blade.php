@@ -25,20 +25,33 @@
                         @csrf
                         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                         <input type="hidden" name="training_program_id" value="{{ $program->id }}">
-                        @if ($application && $application->application_status == 'Pending')
+
+                        @php
+                            // Determine the application status
+                            $applicationStatus = null;
+                            foreach ($application as $app) {
+                                if ($app->training_program_id == $program->id) {
+                                    $applicationStatus = $app->application_status;
+                                    break;
+                                }
+                            }
+                        @endphp
+
+                        @if ($applicationStatus == 'Pending')
                         <button type="submit" class="submit-btn border-0" disabled>
                             Pending
                         </button>
-                        @elseif($application && $application->application_status == 'Approved')
+                        @elseif($applicationStatus == 'Approved')
                         <button type="submit" class="submit-btn border-0" disabled>
                             Approved
                         </button>
                         @else
-                        <button type="submit" class="submit-btn border-0" onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')">
+                        <button type="submit" class="submit-btn border-0" onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')" @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif>
                             Apply
                         </button>
                         @endif
                     </form>
+
                 </div>
             </div>
             <div>

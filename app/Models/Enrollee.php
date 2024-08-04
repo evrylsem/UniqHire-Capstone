@@ -10,6 +10,7 @@ class Enrollee extends Model
     use HasFactory;
 
     protected $fillable = [
+        'pwd_id',
         'program_id',
         'training_application_id',
         'completion_status'     
@@ -21,5 +22,9 @@ class Enrollee extends Model
 
     public function program() {
         return $this->belongsTo(TrainingProgram::class, 'program_id');
+    }
+
+    public function pwd() {
+        return $this->belongsTo(User::class, 'pwd_id');
     }
 }

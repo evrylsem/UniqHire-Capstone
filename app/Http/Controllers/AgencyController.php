@@ -52,7 +52,7 @@ class AgencyController extends Controller
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
-        $enrollees = Enrollee::where('program_id', $program->id)->where('completion_status', 'Ongoing')->get();
+        $enrollees = Enrollee::where('program_id', $program->id)->get();
         
 
         if ($program->crowdfund) {
@@ -274,10 +274,12 @@ class AgencyController extends Controller
 
         // Validate the incoming request
         $validatedData = $request->validate([
+            'pwd_id' => 'required|exists:users,id',
             'program_id' => 'required|exists:training_programs,id',
             'training_application_id' => 'required|exists:training_applications,id',
         ]);
 
+        $pwdId = $validatedData['pwd_id'];
         $programId = $validatedData['program_id'];
         $applicationId = $validatedData['training_application_id'];
         $completionStatus = 'Ongoing';
@@ -287,6 +289,7 @@ class AgencyController extends Controller
 
         // Create Enrollee record
         Enrollee::create([
+            'pwd_id' => $pwdId,
             'program_id' => $programId,
             'training_application_id' => $applicationId,
             'completion_status' => $completionStatus,
@@ -310,6 +313,20 @@ class AgencyController extends Controller
         TrainingApplication::create($validatedData);
 
         return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+    }
+
+    public function markComplete(Request $request) {
+        $validatedData = $request->validate([
+            'enrolleeId' => 'required|exists:enrollees,id'
+        ]);
+
+        $enrolleeId = $validatedData['enrolleeId'];
+        $completionStatus = 'Completed';
+
+        $enrollee = Enrollee::findOrFail($enrolleeId);
+        $enrollee->update(['completion_status' => $completionStatus]);
+
+        return back()->with('success', 'Enrollee completed the training');
     }
 
 

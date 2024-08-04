@@ -188,7 +188,9 @@
             <div class="bio-item exp">
                 <div>
                     <h4 class="mb-3">Certifications</h4>
-                    <p>asaa</p>
+                    @foreach($certifications as $certification)
+                    <p>Certified {{$certification->program->title}}</p>
+                    @endforeach
                 </div>
                 <div>
                     <h4 class="mb-3">Work Experience</h4>
