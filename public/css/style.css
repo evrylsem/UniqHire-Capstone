@@ -27,7 +27,9 @@
     --hover-color: #e4e4e4;
 
     --color-01: rgb(222, 174, 0);
-    --color-light-01: rgba(251, 251, 111, 0.4);
+    --color-01-light: rgba(251, 251, 111, 0.4);
+    --color-02: #ff0000;
+    --color-02-light: rgba(253, 63, 63, 0.4);
 
     /* BOX EFFECTS */
     --side-shadow-01: 0 20px 35px rgba(0, 0, 0, 0.1);
@@ -1237,21 +1239,19 @@ table tbody .bx {
     width: 100%;
 }
 
-/* .show-prog-container .prog-details .prog-texts .enrollees ul {
+.show-prog-container .prog-details .prog-texts #competencies ul {
     padding-left: 2rem;
-    overflow-y: scroll;
-    height: 30rem;
 }
 
-.show-prog-container .prog-details .prog-texts .enrollees li {
+.show-prog-container .prog-details .prog-texts #competencies li {
     list-style: circle;
-    display: flex;
+    /* display: flex;
     justify-content: space-between;
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
     padding: 1rem;
-    margin-bottom: 0.5rem;
-} */
+    margin-bottom: 0.5rem; */
+}
 
 .show-prog-container .table {
     border-top: 3px solid lightgray;
@@ -1309,6 +1309,31 @@ table tbody .bx {
 .show-prog-container .prog-details .prog-texts .modal-btn {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.pending {
+    background-color: var(--color-01-light);
+    color: var(--color-01);
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.approved {
+    width: fit-content;
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.approved .bx {
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.disabled {
+    background-color: var(--color-02-light);
+    color: var(--color-02);
+}
+
+.show-prog-container .prog-details .prog-texts .text-danger {
+    font-style: italic;
+    font-size: 16px;
 }
 
 /* RATING  */

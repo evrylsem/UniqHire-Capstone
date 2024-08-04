@@ -27,28 +27,33 @@
                         <input type="hidden" name="training_program_id" value="{{ $program->id }}">
 
                         @php
-                            // Determine the application status
-                            $applicationStatus = null;
-                            foreach ($application as $app) {
-                                if ($app->training_program_id == $program->id) {
-                                    $applicationStatus = $app->application_status;
-                                    break;
-                                }
-                            }
+                        // Determine the application status
+                        $applicationStatus = null;
+                        foreach ($application as $app) {
+                        if ($app->training_program_id == $program->id) {
+                        $applicationStatus = $app->application_status;
+                        break;
+                        }
+                        }
                         @endphp
 
                         @if ($applicationStatus == 'Pending')
-                        <button type="submit" class="submit-btn border-0" disabled>
+                        <button type="submit" class="submit-btn pending border-0" disabled>
                             Pending
                         </button>
                         @elseif($applicationStatus == 'Approved')
-                        <button type="submit" class="submit-btn border-0" disabled>
-                            Approved
+                        <button type="submit" class="submit-btn approved border-0" disabled>
+                            <i class='bx bx-check'></i>
                         </button>
                         @else
-                        <button type="submit" class="submit-btn border-0" onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')" @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif>
+                        <button type="submit" class="submit-btn border-0 
+                        @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif
+                        " onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')" @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif>
                             Apply
                         </button>
+                        @if (!in_array($program->id, $nonConflictingPrograms))
+                        <div class="text-center text-danger">Conflict to your schedule!</div>
+                        @endif
                         @endif
                     </form>
 
@@ -65,7 +70,7 @@
                         <a class="nav-link active" data-bs-toggle="tab" href="#requirements" role="tab">Requirements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="" role="tab">Compentencies</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#competencies" role="tab">Compentencies</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#enrollees" role="tab">Enrollees</a>
@@ -105,7 +110,15 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="competencies" role="tabpanel">
-
+                        <div>
+                            <ul>
+                                @forelse ($program->competencies as $competency)
+                                <li>{{ $competency->name }}</li>
+                                @empty
+                                <li>No competencies yet.</li>
+                                @endforelse
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
