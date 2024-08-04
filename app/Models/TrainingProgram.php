@@ -51,4 +51,8 @@ class TrainingProgram extends Model
     {
         return $this->belongsToMany(Competency::class, 'program_competency', 'training_program_id', 'competency_id');
     }
+
+    public function enrollees() {
+        return $this->hasMany(Enrollee::class, 'program_id');
+    }
 }

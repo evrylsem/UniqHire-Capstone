@@ -31,6 +31,7 @@
                                 <div class="modal-body">
                                     <div class="request-grid">
                                         @forelse ($applications as $application)
+                                        <input type="hidden" name="program" value="{{ $program->id }}">
                                         <div class="request-container">
                                             <a href="{{ route('show-profile', $application->user->id) }}">
                                                 <div class="request-owner mb-2">
@@ -45,10 +46,14 @@
                                                 </div>
                                                 <div class="d-flex align-items-center">
                                                     <div class="text-end btn-container">
-                                                        <button type="button" class="submit-btn border-0" id="accept-button" data-application-id="{{ $application->training_id }}">Accept</button>
+                                                        <form action="{{ route('agency-accept') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="program_id" value="{{ $program->id }}">
+                                                            <input type="hidden" name="training_application_id" value="{{ $application->id }}">
+                                                            <button type="submit" class="submit-btn border-0">Accept</button>
+                                                        </form>
                                                         <button type="button" class="deny-btn border-0">Deny</button>
                                                     </div>
-
                                                     >
                                                 </div>
                                             </a>
@@ -75,10 +80,10 @@
                             </form>
                         </div>
                     </div>
-                </div>               
+                </div>
             </div>
             <div>
-                <div class="mb-5">  
+                <div class="mb-5">
                     <div class="col">
                         {{ $program->description }}
                     </div>
@@ -130,7 +135,11 @@
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">
                         <ul>
-                            <li><a href="">Kler</a></li>
+                            @forelse($enrollees as $enrollee)
+                            <li><a href="{{ route('show-profile', $enrollee->application->user->id) }}">{{ $enrollee->application->user->userInfo->name }}</a></li>
+                            @empty
+                            <div>No enrollees yet.</div>
+                            @endforelse
                         </ul>
                         <h5>Competencies</h5>
                         <ul>
@@ -199,77 +208,76 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
-            var rating_data = 0;
-            $(document).on('mouseenter', '.star-light', function() {
-                var rating = $(this).data('rating');
-                reset_background();
-                for (var count = 1; count <= rating; count++) {
-                    $('#star-' + count).addClass('bxs-star').removeClass('bx-star');
-                }
-            });
+        // $(document).ready(function() {
+        //     var rating_data = 0;
+        //     $(document).on('mouseenter', '.star-light', function() {
+        //         var rating = $(this).data('rating');
+        //         reset_background();
+        //         for (var count = 1; count <= rating; count++) {
+        //             $('#star-' + count).addClass('bxs-star').removeClass('bx-star');
+        //         }
+        //     });
 
-            function reset_background() {
-                for (var count = 0; count <= 5; count++) {
-                    $('#star-' + count).addClass('bx-star').removeClass('bxs-star');
-                }
-            }
+        //     function reset_background() {
+        //         for (var count = 0; count <= 5; count++) {
+        //             $('#star-' + count).addClass('bx-star').removeClass('bxs-star');
+        //         }
+        //     }
 
-            function updateStarRating(rating) {
-                $('.star-light').each(function() {
-                    var starRating = $(this).data('rating');
-                    if (starRating <= rating) {
-                        $(this).addClass('bxs-star').removeClass('bx-star');
-                    } else {
-                        $(this).addClass('bx-star').removeClass('bxs-star');
-                    }
-                });
-            }
+        //     function updateStarRating(rating) {
+        //         $('.star-light').each(function() {
+        //             var starRating = $(this).data('rating');
+        //             if (starRating <= rating) {
+        //                 $(this).addClass('bxs-star').removeClass('bx-star');
+        //             } else {
+        //                 $(this).addClass('bx-star').removeClass('bxs-star');
+        //             }
+        //         });
+        //     }
 
-            $(document).on('mouseleave', '.star-light', function() {
-                reset_background();
-                if (rating_data > 0) {
-                    updateStarRating(rating_data);
-                }
-            });
+        //     $(document).on('mouseleave', '.star-light', function() {
+        //         reset_background();
+        //         if (rating_data > 0) {
+        //             updateStarRating(rating_data);
+        //         }
+        //     });
 
-            $(document).on('click', '.star-light', function() {
-                rating_data = $(this).data('rating');
-                $('#rating-input').val(rating_data);
-                updateStarRating(rating_data);
-            });
-        });     
+        //     $(document).on('click', '.star-light', function() {
+        //         rating_data = $(this).data('rating');
+        //         $('#rating-input').val(rating_data);
+        //         updateStarRating(rating_data);
+        //     });
+        // });
 
-        $(document).on('click', '#accept-button', function(e) {
-            e.preventDefault();
-            console.log("kaabot ari sa script");
+        // $(document).on('click', '#accept-button', function(e) {
+        //     e.preventDefault();
+        //     console.log("kaabot ari sa script");
 
-            var $button = $(this);
-            var applicationId = $(this).data('application-id');
+        //     var $button = $(this);
+        //     var applicationId = $(this).data('application-id');
 
-            fetch(`/agency/accept`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        training_application_id: applicationId,
-                        completion_status: 'Ongoing'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Accepted successfully.');
-                        $button.closest('.request-container').remove();
-                    } else {
-                        alert('Failed to submit application.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-     
+        //     fetch(`/agency/accept`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        //             },
+        //             body: JSON.stringify({
+        //                 training_application_id: applicationId,
+        //                 completion_status: 'Ongoing'
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 alert('Accepted successfully.');
+        //                 $button.closest('.request-container').remove();
+        //             } else {
+        //                 alert('Failed to submit application.');
+        //             }
+        //         })
+        //         .catch(error => console.error('Error:', error));
+        // });
     </script>
 
     @endsection

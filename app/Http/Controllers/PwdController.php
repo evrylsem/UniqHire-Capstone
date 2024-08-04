@@ -10,6 +10,7 @@ use App\Models\EducationLevel;
 use App\Models\TrainingApplication;
 use App\Http\Requests\StoreUserInfoRequest;
 use App\Http\Requests\UpdateUserInfoRequest;
+use App\Models\Enrollee;
 use App\Models\PwdFeedback;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -110,6 +111,7 @@ class PwdController extends Controller
             ->where('training_program_id', $program->id)
             ->first();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
+        $enrollees = Enrollee::where('training_program_id', $program->id)->where('completion_status', 'Ongoing');
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -117,7 +119,30 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews', 'application'));
+        return view('pwd.show', compact('program', 'reviews', 'application', 'enrollees'));
+
+
+        // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
+        // $userId = auth()->user()->id; // Get the authenticated user's ID
+        
+        // // Get the application status for the specific program
+        // $application = TrainingApplication::where('user_id', $userId)
+        //     ->where('training_program_id', $id)
+        //     ->first();
+        // $applicationStatus = $application ? $application->application_status : 'Apply';
+
+        //  // Check if the user has any pending or approved applications
+        // $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
+        // ->whereIn('application_status', ['Pending', 'Approved'])
+        // ->exists();
+
+        // Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
+     
+        // return response()->json([
+        //     'program' => $program,
+        //     'application_status' => $applicationStatus,
+        //     'has_pending_or_approved' => $hasPendingOrApproved
+        // ]);
     }
 
     public function showCalendar(Request $request)
@@ -157,7 +182,7 @@ class PwdController extends Controller
         $validatedData['application_status'] = 'Pending';
         TrainingApplication::create($validatedData);
 
-        return back()->with('success', 'Your application is sent successfully!');
+        return back()->with('confirmation', 'Do you really want to apply for this training program?');
     }
 
     // public function action(Request $request) 

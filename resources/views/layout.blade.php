@@ -49,6 +49,28 @@
             });
         </script>
         @endif
+        @if (session('confirmation'))
+        <script>
+            Swal.fire({
+                title: "Confirmation",
+                text: "{{session('confirmation')}}",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Approved",
+                        text: "Processed successfully!",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }
+            });
+        </script>
+        @endif
         <div class="layout-container">
             @if (Auth::check())
             <nav class="sidebar">
