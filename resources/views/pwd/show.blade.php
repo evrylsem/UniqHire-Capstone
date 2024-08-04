@@ -29,6 +29,10 @@
                         <button type="submit" class="submit-btn border-0" disabled>
                             Pending
                         </button>
+                        @elseif($application && $application->application_status == 'Approved')
+                        <button type="submit" class="submit-btn border-0" disabled>
+                            Approved
+                        </button>
                         @else
                         <button type="submit" class="submit-btn border-0">
                             Apply
@@ -195,6 +199,9 @@
                 updateStarRating(rating_data);
             });
         });
+
+        
+
     </script>
 
     @endsection

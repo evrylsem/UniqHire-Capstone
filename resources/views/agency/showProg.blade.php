@@ -75,10 +75,10 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>               
             </div>
             <div>
-                <div class="mb-5">
+                <div class="mb-5">  
                     <div class="col">
                         {{ $program->description }}
                     </div>
@@ -242,15 +242,14 @@
                 $('#rating-input').val(rating_data);
                 updateStarRating(rating_data);
             });
-        });
+        });     
 
-        var acceptButton = document.getElementById('accept-button');
-        console.log("kaabot ari sa script nga wala pa giclick");
-
-        acceptButton.addEventListener('click', function(e) {
+        $(document).on('click', '#accept-button', function(e) {
             e.preventDefault();
             console.log("kaabot ari sa script");
-            var applicationId = acceptButton.getAttribute('data-application-id');
+
+            var $button = $(this);
+            var applicationId = $(this).data('application-id');
 
             fetch(`/agency/accept`, {
                     method: 'POST',
@@ -267,12 +266,14 @@
                 .then(data => {
                     if (data.success) {
                         alert('Accepted successfully.');
+                        $button.closest('.request-container').remove();
                     } else {
                         alert('Failed to submit application.');
                     }
                 })
                 .catch(error => console.error('Error:', error));
         });
+     
     </script>
 
     @endsection

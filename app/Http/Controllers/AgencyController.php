@@ -30,8 +30,6 @@ class AgencyController extends Controller
             ->with('crowdfund')
             ->get();
 
-
-
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
             $today = new DateTime();
@@ -57,9 +55,9 @@ class AgencyController extends Controller
         $enrollees = Enrollee::where('training_program_id', $program->id)->where('completion_status', 'Ongoing');
 
         if ($program->crowdfund) {
-            $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
-            $goal = $program->crowdfund->goal ?? 1; // Default to 1 to avoid division by zero
-            $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
+            $raisedAmount = $program->crowdfund->raised_amount ?? 0; 
+            $goal = $program->crowdfund->goal ?? 1; 
+            $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0;
             $program->crowdfund->progress = $progress;
         }
         return view('agency.showProg', compact('program', 'applications', 'reviews', 'enrollees'));
@@ -271,20 +269,44 @@ class AgencyController extends Controller
 
     public function accept(Request $request)
     {
-        log::info("nakaabot sa accept");
+        Log::info("Reached accept method");
+
+        // Validate the incoming request
         $validatedData = $request->validate([
             'training_application_id' => 'required|exists:training_applications,training_id',
             'completion_status' => 'required|in:Completed,Ongoing,Not completed',
         ]);
 
+        $applicationId = $validatedData['training_application_id'];
+        $completionStatus = $validatedData['completion_status'];
+
+        // Find the application by training_id
+        $application = TrainingApplication::where('training_id', $applicationId)->first();
+
+        // Create Enrollee record
         Enrollee::create([
-            'training_application_id' => $validatedData['training_application_id'],
-            'completion_status' => $validatedData['completion_status']
+            'training_application_id' => $applicationId,
+            'completion_status' => $completionStatus,
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+        TrainingApplication::where('training_id', $applicationId)
+        ->update(['application_status' => 'Approved']);
 
-        // return back()->with('success', 'Application submitted successfully');
+        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
+    }
+
+    public function application(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'training_program_id' => 'required|exists:training_programs,id',
+            'application_status' => 'required|in:Pending,Approved,Denied',
+        ]);
+
+        TrainingApplication::create($validatedData);
+
+        return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
 
 
