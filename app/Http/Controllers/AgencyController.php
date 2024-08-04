@@ -149,7 +149,7 @@ class AgencyController extends Controller
                 ->delete();
 
             $program->delete();
-            return redirect()->route('programs-manage')->with('confirmation', 'Are you sure you want to delete this?');
+            return redirect()->route('programs-manage')->with('success', 'Training program deleted successfully');
         } else {
             return redirect()->route('programs-manage')->with('error', 'Failed to delete training program');
         }

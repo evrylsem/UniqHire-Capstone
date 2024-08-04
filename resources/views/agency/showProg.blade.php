@@ -73,10 +73,10 @@
                             </form>
                         </div>
                         <div class="">
-                            <form action="{{ route('programs-delete', $program->id) }}" method="POST">
+                            <form id="delete-form-{{ $program->id }}" action="{{ route('programs-delete', $program->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="deny-btn border-0">Delete</button>
+                                <button type="submit" class="deny-btn border-0" onclick="confirmDelete(event, 'delete-form-{{ $program->id }}')">Delete</button>
                             </form>
                         </div>
                     </div>
@@ -208,6 +208,22 @@
         </div>
     </div>
     <script>
+        function confirmDelete(event, formId) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Confirmation",
+                text: "Do you really want to delete this training program?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
         // $(document).ready(function() {
         //     var rating_data = 0;
         //     $(document).on('mouseenter', '.star-light', function() {
