@@ -54,6 +54,7 @@ class AgencyController extends Controller
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
+        $enrollees = Enrollee::where('training_program_id', $program->id)->where('completion_status', 'Ongoing');
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -61,7 +62,7 @@ class AgencyController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program', 'applications', 'reviews'));
+        return view('agency.showProg', compact('program', 'applications', 'reviews', 'enrollees'));
     }
 
     public function showAddForm()
