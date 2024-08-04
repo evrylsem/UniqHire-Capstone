@@ -1266,12 +1266,6 @@ table tbody .bx {
     background-color: transparent;
 }
 
-/* .show-prog-container .table td.name {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-} */
-
 .show-prog-container .table .bx {
     color: var(--bg-color-01);
 }
