@@ -48,6 +48,7 @@
                                                     <div class="text-end btn-container">
                                                         <form action="{{ route('agency-accept') }}" method="POST">
                                                             @csrf
+                                                            <input type="hidden" name="pwd_id" value="{{ $application->user->id }}">
                                                             <input type="hidden" name="program_id" value="{{ $program->id }}">
                                                             <input type="hidden" name="training_application_id" value="{{ $application->id }}">
                                                             <button type="submit" class="submit-btn border-0">Accept</button>
@@ -164,12 +165,17 @@
                                             {{ $enrollee->application->user->userInfo->name }}
                                         </a>
                                     </td>
+
                                     <td class="d-flex justify-content-end btn-container">
+                                        <form action = "{{ route('mark-complete') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" value="{{$enrollee->id}}" name="enrolleeId">
                                         @if ($enrollee->completion_status == 'Ongoing')
                                         <button class="submit-btn border-0">Completed?</button>
                                         @else
                                         <button class="submit-btn disabled border-0" disabled><i class='bx bx-check'></i></button>
                                         @endif
+                                        </form>
                                     </td>
                                 </tr>
                                 @empty

@@ -663,15 +663,16 @@ table tbody .bx {
 
 .pwd-browse-prog .outer {
     width: 90%;
-    height: 100%;
+    height: 46rem;
     display: flex;
     justify-content: center;
+    overflow-y: scroll;
 }
 
 .pwd-browse-prog .prog-grid {
     /* position: relative; */
     /* top: 4.5rem; */
-    display: grid;
+    /* display: grid; */
     grid-template-columns: repeat(1, 1fr);
     gap: 0.2rem;
 }

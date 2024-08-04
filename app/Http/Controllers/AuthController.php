@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Enrollee;
 use App\Models\Role;
 use App\Models\Disability;
 use App\Models\UserInfo;
@@ -18,7 +19,8 @@ class AuthController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
         $disabilities = Disability::all();
-        return view('auth.profile', compact('disabilities', 'user'));
+        $certifications = Enrollee::where('pwd_id', $id)->where('completion_status', 'Completed')->get();
+        return view('auth.profile', compact('disabilities', 'user', 'certifications'));
     }
 
     public function editProfile(Request $request)

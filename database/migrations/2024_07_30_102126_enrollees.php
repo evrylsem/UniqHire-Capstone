@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('enrollees', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pwd_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('program_id')->constrained('training_programs')->onDelete('cascade');
             $table->foreignId('training_application_id')->constrained('training_applications')->onDelete('cascade');            
             $table->enum('completion_status', ['Completed', 'Ongoing', 'Not completed'])->default('Ongoing');

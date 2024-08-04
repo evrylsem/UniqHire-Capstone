@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/agency/calendar', [AgencyController::class, 'showCalendar'])->middleware('role:Trainer')->name('agency-calendar');
     // Route::post('/agency/action', [AgencyController::class, 'action'])->middleware('role:Trainer')->name('agency-action');
     Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Trainer')->name('agency-accept');    
-
+    Route::post('/agency/mark-complete', [AgencyController::class, 'markComplete'])->middleware('role:Trainer')->name('mark-complete'); 
 
 
     // PWD Middleware
