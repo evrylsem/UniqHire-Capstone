@@ -2,14 +2,12 @@
 
 namespace App\Notifications;
 
-use App\Models\TrainingProgram;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class NewTrainingProgramNotification extends Notification
+class ApplicationAcceptedNotification extends Notification
 {
     use Queueable;
 
@@ -18,7 +16,7 @@ class NewTrainingProgramNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(TrainingProgram $trainingProgram)
+    public function __construct($trainingProgram)
     {
         $this->trainingProgram = $trainingProgram;
     }
@@ -28,7 +26,7 @@ class NewTrainingProgramNotification extends Notification
      *
      * @return array<int, string>
      */
-    public function via($notifiable)
+    public function via(object $notifiable): array
     {
         return ['database', 'mail'];
     }
@@ -36,11 +34,12 @@ class NewTrainingProgramNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail($notifiable)
+    public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('A new training program has been added.')
-            ->action('View Program', url('/training-details/' . $this->trainingProgram->id))
+            ->subject('Application Accepted')
+            ->line('Congratulations! Your application for the training program has been accepted.')
+            ->action('View Program', url('/training-programs/' . $this->trainingProgram->id))
             ->line('Thank you for using our application!');
     }
 
@@ -49,16 +48,12 @@ class NewTrainingProgramNotification extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray($notifiable)
+    public function toArray(object $notifiable): array
     {
         return [
-            'title' => $this->trainingProgram->title,
-            'description' => $this->trainingProgram->description,
-            'start_date' => $this->trainingProgram->start,
-            'end_date' => $this->trainingProgram->end,
-            'training_program_id' => $this->trainingProgram->id,
+            'program_title' => $this->trainingProgram->title,
+            'url' => url('/training-program/' . $this->trainingProgram->id),
             'agency_name' => $this->trainingProgram->agency->userInfo->name,
-            'url' => url('training-details/' . $this->trainingProgram->id),
         ];
     }
 }

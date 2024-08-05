@@ -27,14 +27,14 @@
                         <input type="hidden" name="training_program_id" value="{{ $program->id }}">
 
                         @php
-                            // Determine the application status
-                            $applicationStatus = null;
-                            foreach ($application as $app) {
-                                if ($app->training_program_id == $program->id) {
-                                    $applicationStatus = $app->application_status;
-                                    break;
-                                }
-                            }
+                        // Determine the application status
+                        $applicationStatus = null;
+                        foreach ($application as $app) {
+                        if ($app->training_program_id == $program->id) {
+                        $applicationStatus = $app->application_status;
+                        break;
+                        }
+                        }
                         @endphp
 
                         @if ($applicationStatus == 'Pending')

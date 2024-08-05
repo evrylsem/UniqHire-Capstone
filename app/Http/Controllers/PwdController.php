@@ -8,12 +8,14 @@ use App\Models\TrainingProgram;
 use App\Models\Disability;
 use App\Models\EducationLevel;
 use App\Models\TrainingApplication;
+use App\Models\User;
 use App\Http\Requests\StoreUserInfoRequest;
 use App\Http\Requests\UpdateUserInfoRequest;
 use App\Models\Enrollee;
 use App\Models\PwdFeedback;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Notifications\PwdApplicationNotification;
 
 
 class PwdController extends Controller
@@ -27,9 +29,9 @@ class PwdController extends Controller
         $query = TrainingProgram::query();
 
         $approvedProgramIds = TrainingApplication::where('user_id', auth()->id())
-        ->where('application_status', 'Approved')
-        ->pluck('training_program_id')
-        ->toArray();
+            ->where('application_status', 'Approved')
+            ->pluck('training_program_id')
+            ->toArray();
 
         // Filtering the programs through searching program title
         if ($request->filled('search')) {
@@ -50,7 +52,7 @@ class PwdController extends Controller
         }
 
         $query->whereNotIn('id', $approvedProgramIds);
-        
+
         $filteredPrograms = $query->get();
 
 
@@ -134,7 +136,7 @@ class PwdController extends Controller
 
         // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
         // $userId = auth()->user()->id; // Get the authenticated user's ID
-        
+
         // // Get the application status for the specific program
         // $application = TrainingApplication::where('user_id', $userId)
         //     ->where('training_program_id', $id)
@@ -147,7 +149,7 @@ class PwdController extends Controller
         // ->exists();
 
         // Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
-     
+
         // return response()->json([
         //     'program' => $program,
         //     'application_status' => $applicationStatus,
@@ -190,7 +192,21 @@ class PwdController extends Controller
         ]);
 
         $validatedData['application_status'] = 'Pending';
-        TrainingApplication::create($validatedData);
+        $trainingApplication = TrainingApplication::create($validatedData);
+
+        $trainingProgram = TrainingProgram::findOrFail($validatedData['training_program_id']);
+
+        $trainerUser = User::whereHas('userInfo', function ($query) use ($trainingProgram) {
+            $query->where('user_id', $trainingProgram->agency_id);
+        })->whereHas('role', function ($query) {
+            $query->where('role_name', 'Trainer');
+        })->first();
+
+        if ($trainerUser) {
+            $trainerUser->notify(new PwdApplicationNotification($trainingApplication));
+        } else {
+            Log::error('No agency user found for training program', ['trainingProgram' => $trainingProgram->id]);
+        }
 
         return back()->with('success', 'Application sent successfully!');
     }
@@ -231,12 +247,14 @@ class PwdController extends Controller
     // 	}
     // }
 
-    public function showTrainings() {
+    public function showTrainings()
+    {
         $trainings = TrainingProgram::all(); //temporary since wala pay ongoing ug completed
         return view('pwd.trainings', compact('trainings'));
     }
 
-    public function rateProgram(Request $request) {
+    public function rateProgram(Request $request)
+    {
         $request->validate([
             'program_id' => 'required|exists:training_programs,id',
             'rating' => 'required|integer|between:1,5',
