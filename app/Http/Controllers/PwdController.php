@@ -158,30 +158,27 @@ class PwdController extends Controller
     public function showCalendar(Request $request)
     {
         Log::info("calendar reached in showCalendar!");
-
+    
         $userId = Auth()->user()->id;
-
+    
         if ($request->ajax()) {
             // Get the training programs based on the enrollee's application for the authenticated user
-            $trainingPrograms = TrainingProgram::whereIn('id', function ($query) use ($userId) {
-                $query->select('training_program_id')
-                    ->from('training_applications')
-                    ->whereIn('training_id', function ($query) use ($userId) {
-                        $query->select('training_application_id')
-                            ->from('enrollees')
-                            ->where('user_id', $userId);
-                    });
+            $trainingDates = TrainingProgram::whereIn('id', function ($query) use ($userId) {
+                $query->select('program_id')
+                    ->from('enrollees')
+                    ->where('pwd_id', $userId)
+                    ->where('completion_status', 'Ongoing');
             })
-                ->whereDate('start', '>=', $request->start)
-                ->whereDate('end', '<=', $request->end)
-                ->get(['id', 'title', 'start', 'end']);
-
-            return response()->json($trainingPrograms);
+            ->whereDate('start', '>=', $request->start)
+            ->whereDate('end', '<=', $request->end)
+            ->get(['id', 'title', 'start', 'end']);
+    
+            return response()->json($trainingDates);
         }
-
+    
         return view('pwd.calendar');
     }
-
+    
     public function application(Request $request)
     {
         $validatedData = $request->validate([
