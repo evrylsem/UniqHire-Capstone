@@ -49,28 +49,6 @@
             });
         </script>
         @endif
-        @if (session('confirmation'))
-        <script>
-            Swal.fire({
-                title: "Confirmation",
-                text: "{{session('confirmation')}}",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Confirm"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: "Approved",
-                        text: "Processed successfully!",
-                        icon: "success",
-                        timer: 3000,
-                    });
-                }
-            });
-        </script>
-        @endif
         <div class="layout-container">
             @if (Auth::check())
             <nav class="sidebar">
@@ -97,31 +75,11 @@
                         <!-- PWD ROLE ACCESS -->
                         @if (Auth::user()->hasRole('PWD'))
                         <li class="side-item">
-                            <a href="{{route('trainings')}}" class="trainings-drop {{ request()->routeIs('trainings') ? 'active' : '' }}">
+                            <a href="{{route('trainings')}}" class="trainings-drop {{ request()->routeIs('trainings', 'show-details') ? 'active' : '' }}">
                                 <i class='bx bxs-school side-icon'></i>
                                 <span class="side-title">Trainings</span>
                             </a>
                         </li>
-                        <!-- <div class="submenu" id="trainings-submenu">
-                            <li>
-                                <a href="">
-                                    <i class='bx bx-timer'></i>
-                                    <span class="side-title">On-going</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <i class='bx bx-calendar-check'></i>
-                                    <span class="side-title">Completed</span>
-                                </a>
-                            </li>
-                        </div>
-                        <li class="side-item">
-                            <a href="#">
-                                <i class='bx bx-briefcase-alt-2 side-icon'></i>
-                                <span class="side-title">Job Application</span>
-                            </a>
-                        </li> -->
                         <li class="side-item">
                             <a href="{{ route('pwd-calendar') }}" class="{{ request()->routeIs('pwd-calendar') ? 'active' : '' }}">
                                 <i class='bx bx-calendar side-icon'></i>
@@ -193,7 +151,7 @@
                                     <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
                                     <li class="nav-item"><a href="{{route('home')}}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                                     @if (Auth::user()->hasRole('PWD'))
-                                    <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program', 'programs-show') ? 'active' : '' }}">Browse Training Programs</a></li>
+                                    <li class="nav-item"><a href="{{route('pwd-list-program')}}" class="{{ request()->routeIs('pwd-list-program', 'programs-show', 'training-details') ? 'active' : '' }}">Browse Training Programs</a></li>
                                     <li class="nav-item"><a href="">Find Work</a></li>
                                     @endif
 
@@ -221,9 +179,6 @@
                     </nav>
                 </div>
                 <div class="content-container">
-                    @yield('calendar')
-                </div>
-                <div class="content-container">
                     @yield('page-content')
                 </div>
             </div>
@@ -233,9 +188,6 @@
             </div>
             @endif
         </div>
-
-        @yield('scripts')
-
     </body>
     <script>
         $(document).ready(function() {
