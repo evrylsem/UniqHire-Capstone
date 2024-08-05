@@ -171,13 +171,11 @@ class PwdController extends Controller
                     ->where('pwd_id', $userId)
                     ->where('completion_status', 'Ongoing');
             })
-            ->whereDate('start', '>=', $request->start)
-            ->whereDate('end', '<=', $request->end)
             ->get(['id', 'title', 'start', 'end']);
-    
+            Log::info("TrainingDataes Ni:", $trainingDates->toArray());
             return response()->json($trainingDates);
         }
-    
+        
         return view('pwd.calendar');
     }
     
