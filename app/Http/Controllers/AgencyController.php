@@ -12,6 +12,7 @@ use App\Models\Enrollee;
 use App\Models\PwdFeedback;
 use App\Models\TrainingApplication;
 use App\Models\Competency;
+use App\Notifications\ApplicationAcceptedNotification;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
 use DateTime;
@@ -53,11 +54,11 @@ class AgencyController extends Controller
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
         $enrollees = Enrollee::where('program_id', $program->id)->get();
-        
+
 
         if ($program->crowdfund) {
-            $raisedAmount = $program->crowdfund->raised_amount ?? 0; 
-            $goal = $program->crowdfund->goal ?? 1; 
+            $raisedAmount = $program->crowdfund->raised_amount ?? 0;
+            $goal = $program->crowdfund->goal ?? 1;
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0;
             $program->crowdfund->progress = $progress;
         }
@@ -286,6 +287,14 @@ class AgencyController extends Controller
 
         // Find the application by training_id
         $application = TrainingApplication::findOrFail($applicationId);
+        $application->application_status = 'Approved';
+        $application->save();
+
+        $pwdUser = $application->user;
+        $trainingProgram = $application->program;
+
+        $pwdUser->notify(new ApplicationAcceptedNotification($trainingProgram));
+
 
         // Create Enrollee record
         Enrollee::create([
@@ -315,7 +324,8 @@ class AgencyController extends Controller
         return response()->json(['success' => true, 'message' => 'Application submitted successfully.']);
     }
 
-    public function markComplete(Request $request) {
+    public function markComplete(Request $request)
+    {
         $validatedData = $request->validate([
             'enrolleeId' => 'required|exists:enrollees,id'
         ]);

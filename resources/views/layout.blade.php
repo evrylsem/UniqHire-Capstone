@@ -193,6 +193,7 @@
         $(document).ready(function() {
             function fetchNotifications() {
                 $.get("{{ route('notifications.getNotifications') }}", function(data) {
+                    console.log(data);
                     var notifDropdown = $('#notificationDropdown').next('.dropdown-menu');
                     var badge = $('#notification-badge');
                     notifDropdown.empty(); // Clear existing notifications
@@ -200,25 +201,49 @@
                     if (data.length > 0) {
                         badge.removeClass('d-none').text(data.length);
                         data.forEach(function(notification) {
-                            notifDropdown.append(
-                                '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                            var notificationContent = '';
+                            if (notification.type === 'App\\Notifications\\NewTrainingProgramNotification') {
+                                notificationContent = '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                                    '<span class="notif-owner text-cap">' +
+                                    notification.data.agency_name +
+                                    '</span>' +
+                                    ' has posted a new training' +
+                                    '<div class="notif-content sub-text">' +
+                                    'Entitled ' +
+                                    '<span class="sub-text text-cap">' +
+                                    notification.data.title +
+                                    '</span>' +
+                                    '. Starts on ' +
+                                    '<span class="sub-text">' +
+                                    notification.data.start_date + //Change Format pero if dili makaya kay ayaw nlng sya iapil og display
+                                    '</span>' +
+                                    '. Click to check this out.' +
+                                    '</div>' +
+                                    '</a></li>'
+                            } else if (notification.type === 'App\\Notifications\\PwdApplicationNotification') {
+                                notificationContent = '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                                    'A PWD user has applied for your training program: ' +
+                                    '<span class="sub-text text-cap">' +
+                                    notification.data.title +
+                                    '</span>' +
+                                    '. Click to view application.' +
+                                    '</a></li>';
+                            } else if (notification.type === 'App\\Notifications\\ApplicationAcceptedNotification') {
+                                notificationContent = '<li><a class="dropdown-item" href="' + notification.data.url + '">' +
+                                    'Your application in ' +
+                                    '<span class="notif-owner text-cap">' +
+                                    notification.data.program_title +
+                                    '</span>' +
+                                    '<div class="notif-content sub-text">' +
+                                    ' has been accepted by'
                                 '<span class="notif-owner text-cap">' +
                                 notification.data.agency_name +
-                                '</span>' +
-                                ' has posted a new training' +
-                                '<div class="notif-content sub-text">' +
-                                'Entitled ' +
-                                '<span class="sub-text text-cap">' +
-                                notification.data.title +
-                                '</span>' +
-                                '. Starts on ' +
-                                '<span class="sub-text">' +
-                                notification.data.start_date + //Change Format pero if dili makaya kay ayaw nlng sya iapil og display
-                                '</span>' +
-                                '. Click to check this out.' +
-                                '</div>' +
-                                '</a></li>'
-                            );
+                                    '</span>' +
+                                    '. Click to view details.' +
+                                    '</div>'
+                                '</a></li>';
+                            }
+                            notifDropdown.append(notificationContent);
                         });
                     } else {
                         badge.addClass('d-none');

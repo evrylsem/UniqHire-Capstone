@@ -33,7 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
-    
+    Route::get('/download-certificate/{enrolleeId}', [AuthController::class, 'downloadCertificate'])->name('download-certificate');
+
+
     Route::get('/user/{id}', [AgencyController::class, 'showEnrolleeProfile'])->name('show-profile');
 
 
@@ -54,8 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');
     Route::get('/agency/calendar', [AgencyController::class, 'showCalendar'])->middleware('role:Trainer')->name('agency-calendar');
     // Route::post('/agency/action', [AgencyController::class, 'action'])->middleware('role:Trainer')->name('agency-action');
-    Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Trainer')->name('agency-accept');    
-    Route::post('/agency/mark-complete', [AgencyController::class, 'markComplete'])->middleware('role:Trainer')->name('mark-complete'); 
+    Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Trainer')->name('agency-accept');
+    Route::post('/agency/mark-complete', [AgencyController::class, 'markComplete'])->middleware('role:Trainer')->name('mark-complete');
 
 
     // PWD Middleware

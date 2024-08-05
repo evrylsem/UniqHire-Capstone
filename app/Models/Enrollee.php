@@ -13,18 +13,21 @@ class Enrollee extends Model
         'pwd_id',
         'program_id',
         'training_application_id',
-        'completion_status'     
+        'completion_status'
     ];
 
-    public function application() {
+    public function application()
+    {
         return $this->belongsTo(TrainingApplication::class, 'training_application_id');
     }
 
-    public function program() {
+    public function program()
+    {
         return $this->belongsTo(TrainingProgram::class, 'program_id');
     }
 
-    public function pwd() {
+    public function pwd()
+    {
         return $this->belongsTo(User::class, 'pwd_id');
     }
 }

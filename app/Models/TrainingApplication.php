@@ -12,15 +12,16 @@ class TrainingApplication extends Model
     protected $fillable = [
         'user_id',
         'training_program_id',
-        'application_status'     
+        'application_status'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function program() {
+    public function program()
+    {
         return $this->belongsTo(TrainingProgram::class, 'training_program_id');
     }
-
 }

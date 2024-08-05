@@ -189,7 +189,10 @@
                 <div>
                     <h4 class="mb-3">Certifications</h4>
                     @foreach($certifications as $certification)
-                    <p>Certified {{$certification->program->title}}</p>
+                    <p>
+                        <a href="{{ route('download-certificate', $certification->id) }}" class="text-primary">
+                            Certified {{$certification->program->title}}
+                    </p>
                     @endforeach
                 </div>
                 <div>
