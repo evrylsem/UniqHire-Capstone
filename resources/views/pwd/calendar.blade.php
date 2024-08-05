@@ -2,15 +2,12 @@
 
 @section('page-title', 'Calendar')
 
-@section('calendar')
+@section('page-content')
 
 <div class="calendar-container">
 	<div class="calendar" id="calendar"></div>
 </div>
 
-@endsection
-
-@section('scripts')
 <script>
 	$(document).ready(function() {
 

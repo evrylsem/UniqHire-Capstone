@@ -27,7 +27,9 @@
     --hover-color: #e4e4e4;
 
     --color-01: rgb(222, 174, 0);
-    --color-light-01: rgba(251, 251, 111, 0.4);
+    --color-01-light: rgba(251, 251, 111, 0.4);
+    --color-02: #ff0000;
+    --color-02-light: rgba(253, 63, 63, 0.4);
 
     /* BOX EFFECTS */
     --side-shadow-01: 0 20px 35px rgba(0, 0, 0, 0.1);
@@ -326,17 +328,19 @@ ul, li {
     justify-content: space-between;
 }
 
-.layout-container .user-index {
-    font-weight: bold;
-    padding-right: 2rem;
-}
-
 .layout-container .logo {
     height: 5rem;
 }
 
 .layout-container .nav-item {
     padding: 2rem;
+}
+
+.layout-container .user-index {
+    font-weight: bold;
+    padding-left: 0;
+    padding-right: 4rem;
+    text-align: left;
 }
 
 /* PAGE CONTAINER */
@@ -1237,21 +1241,19 @@ table tbody .bx {
     width: 100%;
 }
 
-/* .show-prog-container .prog-details .prog-texts .enrollees ul {
+.show-prog-container .prog-details .prog-texts #competencies ul {
     padding-left: 2rem;
-    overflow-y: scroll;
-    height: 30rem;
 }
 
-.show-prog-container .prog-details .prog-texts .enrollees li {
+.show-prog-container .prog-details .prog-texts #competencies li {
     list-style: circle;
-    display: flex;
+    /* display: flex;
     justify-content: space-between;
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
     padding: 1rem;
-    margin-bottom: 0.5rem;
-} */
+    margin-bottom: 0.5rem; */
+}
 
 .show-prog-container .table {
     border-top: 3px solid lightgray;
@@ -1309,6 +1311,31 @@ table tbody .bx {
 .show-prog-container .prog-details .prog-texts .modal-btn {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.pending {
+    background-color: var(--color-01-light);
+    color: var(--color-01);
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.approved {
+    width: fit-content;
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.approved .bx {
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.show-prog-container .prog-details .prog-texts .submit-btn.disabled {
+    background-color: var(--color-02-light);
+    color: var(--color-02);
+}
+
+.show-prog-container .prog-details .prog-texts .text-danger {
+    font-style: italic;
+    font-size: 16px;
 }
 
 /* RATING  */
@@ -1658,33 +1685,92 @@ table tbody .bx {
     width: 90%;
 }
 
-.trainings-container .status-btn-default {
+.trainings-container .status-btn-default, .trainings-container .app-status-btn-default {
     background-color: var(--bg-color-01);
 }
 
-.trainings-container .status-btn-active {
+.trainings-container .status-btn-active, .trainings-container .app-status-btn-active {
     background-color: var(--primary-color-light);
 }
+
 
 .trainings-container .table tbody tr {
     height: 2.5rem;
 }
 
 .trainings-container .table tbody tr .status-cell {
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
     /* width: 10rem; */
+    /* margin: 2rem; */
     text-align: center;
 }
 
 .trainings-container .table tbody tr .match-info {
-    margin: 0;
-    padding-top: 0.5rem;
+    /* margin-bottom: 1rem; */
+    /* padding-top: 0.5rem; */
     /* width: 5rem; */
+    margin: 0;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.trainings-container .table tbody tr .match-info.pending {
+    background-color: var(--color-01-light);
+    color: var(--color-01);
+    border-color: var(--color-01);
 }
 
 .trainings-container .table tbody tr td a {
     text-decoration: underline;
     color: var(--primary-color);
+}
+
+.trainings-container .table td.title {
+    width: 25rem;
+}
+
+.trainings-container .counts-container {
+    display: flex;
+    flex-direction: column;
+    /* margin: 1rem; */
+    width: 20%;
+    align-items: center;
+    padding: 1rem;
+    border-left: 1px solid lightgray;
+}
+
+.trainings-container .table-container {
+    width: 100%;
+    padding: 1rem;
+    height: 78vh;
+    overflow-y: scroll;
+}
+
+.trainings-container .table-container .applications {
+    padding-bottom: 2rem;
+    border-bottom: 1px dashed var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+.trainings-container .counts {
+    width: 14rem;
+    height: 10rem;
+    border: 1px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    /* margin-right: 1rem; */
+    box-shadow: var(--side-shadow-02);
+}
+
+.trainings-container  #filterForm label {
+    width: 5rem;
+}
+
+.trainings-container  #filterForm select {
+    width: 10rem;
 }

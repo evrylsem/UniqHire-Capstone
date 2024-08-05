@@ -16,7 +16,7 @@ use App\Models\PwdFeedback;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Notifications\PwdApplicationNotification;
-
+use Illuminate\Support\Facades\Auth;
 
 class PwdController extends Controller
 {
@@ -247,10 +247,22 @@ class PwdController extends Controller
     // 	}
     // }
 
-    public function showTrainings()
+    public function showTrainings(Request $request)
     {
-        $trainings = TrainingProgram::all(); //temporary since wala pay ongoing ug completed
-        return view('pwd.trainings', compact('trainings'));
+        $id = Auth::user()->id;
+        $applications = TrainingApplication::where('user_id', $id)->where('application_status', 'Pending')->get();
+        $trainings = Enrollee::where('pwd_id', $id)->get();
+        $trainingsCount = $trainings->count();
+        $ongoingCount = $trainings->where('completion_status', 'Ongoing')->count();
+        $completedCount = $trainings->where('completion_status', 'Completed')->count();
+        $approvedCount = $applications->where('application_status', 'Approved')->count();
+        $pendingsCount = $applications->where('application_status', 'Pending')->count();
+
+        if ($request->has('status') && $request->status != 'all') {
+            $trainings = $trainings->where('completion_status', ucfirst($request->status));
+        }
+
+        return view('pwd.trainings', compact('applications', 'trainings', 'trainingsCount', 'ongoingCount', 'completedCount', 'approvedCount', 'pendingsCount'));
     }
 
     public function rateProgram(Request $request)

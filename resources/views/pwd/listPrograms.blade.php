@@ -66,7 +66,7 @@
                                         <div class="header">
                                             <h4 class="text-cap">{{$ranked['program']->title}}</h4>
                                             <p class="sub-text text-cap">{{$ranked['program']->agency->userInfo->name}}</p>
-                                            <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($ranked['program']->city, 'City') ? $ranked['program']->city : $ranked['program']->city . ' City')}}</p>
+                                            <p class="sub-text text-cap"><i class='bx bx-map sub-text'></i>{{$ranked['program']->state . ', ' .(str_contains($ranked['program']->city, 'City') ? $ranked['program']->city : $ranked['program']->city . ' City')}}</p>
                                         </div>
                                         <div class="text-end date-posted">
                                             <p class="text-end">{{ $ranked['program']->created_at->diffForHumans() }}</p>
@@ -114,6 +114,5 @@
             document.getElementById('searchForm').submit();
         }
     }
-
 </script>
 @endsection

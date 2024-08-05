@@ -18,7 +18,7 @@
                 <div class="header mb-3">
                     <h3 class="text-cap">{{ $program->title }}</h3>
                     <p class="sub-text text-cap">{{ $program->agency->userInfo->name }}</p>
-                    <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
+                    <p class="sub-text prog-loc text-cap"><i class='bx bx-map sub-text'></i>{{$program->state . ', ' . (str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}</p>
                 </div>
                 <div class="col prog-btn">
                     <form id="apply-form-{{ $program->id }}" action="{{ route('pwd-application') }}" method="POST">
@@ -38,17 +38,22 @@
                         @endphp
 
                         @if ($applicationStatus == 'Pending')
-                        <button type="submit" class="submit-btn border-0" disabled>
+                        <button type="submit" class="submit-btn pending border-0" disabled>
                             Pending
                         </button>
                         @elseif($applicationStatus == 'Approved')
-                        <button type="submit" class="submit-btn border-0" disabled>
-                            Approved
+                        <button type="submit" class="submit-btn approved border-0" disabled>
+                            <i class='bx bx-check'></i>
                         </button>
                         @else
-                        <button type="submit" class="submit-btn border-0" onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')" @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif>
+                        <button type="submit" class="submit-btn border-0 
+                        @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif
+                        " onclick="confirmApplication(event, 'apply-form-{{ $program->id }}')" @if (!in_array($program->id, $nonConflictingPrograms)) disabled @endif>
                             Apply
                         </button>
+                        @if (!in_array($program->id, $nonConflictingPrograms))
+                        <div class="text-center text-danger">Conflict to your schedule!</div>
+                        @endif
                         @endif
                     </form>
 
@@ -65,7 +70,7 @@
                         <a class="nav-link active" data-bs-toggle="tab" href="#requirements" role="tab">Requirements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="" role="tab">Compentencies</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#competencies" role="tab">Compentencies</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#enrollees" role="tab">Enrollees</a>
@@ -105,7 +110,15 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="competencies" role="tabpanel">
-
+                        <div>
+                            <ul>
+                                @forelse ($program->competencies as $competency)
+                                <li>{{ $competency->name }}</li>
+                                @empty
+                                <div>No competencies yet.</div>
+                                @endforelse
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="tab-pane enrollees" id="enrollees" role="tabpanel">

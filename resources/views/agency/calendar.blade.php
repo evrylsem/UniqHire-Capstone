@@ -2,24 +2,12 @@
 
 @section('page-title', 'Calendar')
 
-@section('calendar')
+@section('page-content')
 
 <div class="calendar-container">
 	<div class="calendar" id="calendar"></div>
 </div>
 
-<!-- <div class="container">
-	<br />
-	<h1 class="text-center text-primary"><u>How to Use Fullcalendar in Laravel 8</u></h1>
-	<br />
-
-	<div id="calendar"></div>
-
-</div> -->
-
-@endsection
-
-@section('scripts')
 <script>
 	$(document).ready(function() {
 
