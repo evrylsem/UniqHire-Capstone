@@ -11,6 +11,7 @@ use App\Models\Role;
 use App\Models\Disability;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AuthController extends Controller
 {
@@ -183,5 +184,28 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login-page');
+    }
+
+    public function downloadCertificate($enrolleeId)
+    {
+        $enrollee = Enrollee::find($enrolleeId);
+
+        if (!$enrollee) {
+            abort(404, 'Enrollee not found');
+        }
+
+        $trainingProgram = $enrollee->program;
+        $user = User::find($enrollee->pwd_id);
+
+        if (!$user) {
+            abort(404, 'User not found');
+        }
+
+        $pdf = Pdf::loadView('slugs.certificate', [
+            'user' => $user,
+            'trainingProgram' => $trainingProgram,
+        ]);
+
+        return $pdf->download('certificate-' . $user->id . ' .pdf');
     }
 }
