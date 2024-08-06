@@ -1478,10 +1478,7 @@ table tbody .bx {
 }
 
 .profile-container .profile-info .details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* gap: 6rem; */
-    align-items: center;
+    width: 100%;
 }       
 .profile-container .more-details {
     height: 100vh;
@@ -1504,10 +1501,19 @@ table tbody .bx {
 
 .profile-container .more-details .contact .contact-container {
     padding-left: 1rem;
+    width: 17rem;
 }
 
 .profile-container .more-details .contact .contact-item, .profile-container .more-details .bio .bio-item  {
     margin-bottom: 1.7rem;
+}
+
+.profile-container .more-details .contact .contact-item {
+    overflow-x: hidden;
+}
+
+.profile-container .more-details .contact .contact-item p {
+    word-wrap: break-word;
 }
 
 .profile-container .more-details .bio .bio-item .about, .profile-container .details .age .sub-text {
@@ -1549,6 +1555,10 @@ table tbody .bx {
 
 .profile-container .modal .modal-footer .submit-btn {
     padding: 0.5rem;
+}
+
+.profile-container form {
+    width: 8rem;
 }
 
 /* CALENDAR */

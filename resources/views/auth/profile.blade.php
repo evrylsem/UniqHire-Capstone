@@ -8,26 +8,30 @@
 
         </div>
         <div class="d-flex justify-content-between header">
-            <div class="details">
-                <div>
+            <div class="details row">
+                <div class="col">
                     <p class="text-cap profile-name">{{ $user->userInfo->name }}</p>
                     <p class="text-cap"><i class='bx bx-map sub-text'></i>{{ $user->userInfo->state . ', ' . (str_contains($user->userInfo->city, 'City') ? $user->userInfo->city : $user->userInfo->city . ' City') }}</p>
                 </div>
-                @unless($user->userInfo->disability_id == 1)
-                <div>
+                @if($user->hasRole('PWD'))
+                <div class="col">
                     <p class="text-cap age"><strong>Age:</strong>
-                        @if ($user->userInfo->age != null)
                         {{ $user->userInfo->age }} years old
-                        @else
-                        <span class="sub-text">No data yet</span>
-                        @endif
                     </p>
                     <p class="text-cap"> <strong>Disability:</strong>&nbsp;&nbsp;&nbsp;<span class="disability">{{ $user->userInfo->disability->disability_name }}</span></p>
                 </div>
-                @endunless
+                @elseif($user->hasRole('Training Agency'))
+                <div class="col">
+                    <p class="text-cap age"><strong>Founder:</strong>
+                        {{ $user->userInfo->founder }}
+                    </p>
+                    <p class="text-cap"> <strong>Year Established:</strong>
+                        {{ $user->userInfo->year_established }}
+                    </p>
+                </div>
+                @endif
                 <div></div>
             </div>
-            @if (Auth::id() == $user->id)
             <form action="{{ route('edit-profile') }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -50,14 +54,16 @@
                                         <span class="error-msg">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email" value="{{ $user->email }}" disabled>
-                                        <label for="floatingInput">Email Address</label>
-                                        @error('email')
-                                        <span class="error-msg">{{ $message }}</span>
-                                        @enderror
-                                    </div>
                                     <div class="row">
+                                        <div class="col">
+                                            <div class="form-floating mb-3">
+                                                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email" value="{{ $user->email }}" disabled>
+                                                <label for="floatingInput">Email Address</label>
+                                                @error('email')
+                                                <span class="error-msg">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                         <div class="col">
                                             <div class="form-floating mb-3">
                                                 <input type="text" class="form-control" id="floatingInput" name="contactnumber" placeholder="Contact Number" value="{{ $user->userInfo->contactnumber }}">
@@ -67,7 +73,9 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        @unless($user->userInfo->disability_id == 1)
+                                    </div>
+                                    <div class="row">
+                                        @if($user->hasRole('PWD'))
                                         <div class="col">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" id="floatingInput" name="age" placeholder="Age" value="{{ $user->userInfo->age }}">
@@ -77,13 +85,32 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        @endunless
+                                        @elseif ($user->hasRole('Training Agency'))
+                                        <div class="col">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" name="founder" value="{{ $user->userInfo->founder }}" placeholder="Founder">
+                                                <label for="floatingInput">Founder</label>
+                                                @error('founder')
+                                                <span class="error-msg">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="year-established" name="year_established" value="{{ $user->userInfo->year_established }}" min="1000" max="">
+                                                <label for="year-established">Year Established</label>
+                                                @error('year-established')
+                                                <span class="error-msg">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-floating mb-3">
-                                                <select type="text" class="form-select" id="provinceSelect" name="state" required placeholder="Province">
-                                                    <option value="">{{ $user->userInfo->state }}</option>
+                                                <select type="text" class="form-select" id="provinceSelect" name="state" placeholder="Province">
+                                                    <option value="">Select Province</option>
                                                 </select>
                                                 <label for="provinceSelect">Province</label>
                                                 @error('state')
@@ -93,8 +120,8 @@
                                         </div>
                                         <div class="col">
                                             <div class="form-floating mb-3">
-                                                <select type="text" class="form-select" id="citySelect" name="city" required placeholder="City">
-                                                    <option value="">{{ $user->userInfo->city }}</option>
+                                                <select type="text" class="form-select" id="citySelect" name="city" placeholder="City">
+                                                    <option value="">Select City</option>
                                                 </select>
                                                 <label for="citySelect">City</label>
                                                 @error('city')
@@ -104,41 +131,55 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @unless($user->userInfo->disability_id == 1)
+                                    @if($user->hasRole('PWD'))
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
                                             @foreach ($disabilities as $disability)
-                                            <!-- @if ($disability->disability_name != 'Not Applicable') -->
+                                            @if ($disability->disability_name != 'Not Applicable')
                                             <option value="{{ $disability->id }}" @if ($user->userInfo->disability_id == $disability->id ) selected @endif >{{ $disability->disability_name }}</option>
-                                            <!-- @endif      -->
+                                            @endif
                                             @endforeach
 
                                         </select>
                                         <label for="floatingSelect">Disability</label>
                                     </div>
-                                    @endunless
+                                    @endif
                                     <hr>
                                     <div class="form-floating mb-3">
-                                        <textarea class="form-control" placeholder="About Me" id="floatingTextarea2" name="about" style="height: 200px">{{ $user->userInfo->about }}</textarea>
-                                        <label for="floatingTextarea2">About Me</label>
+                                        <textarea class="form-control" placeholder="About" id="floatingTextarea2" name="about" style="height: 200px">{{ $user->userInfo->about }}</textarea>
+                                        <label for="floatingTextarea2">About</label>
                                         @error('about')
                                         <span class="error-msg">{{ $message }}</span>
                                         @enderror
                                     </div>
-
+                                    @if($user->hasRole('Training Agency'))
+                                    <hr>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" placeholder="About" id="floatingTextarea2" name="awards" style="height: 100px">{{ $user->userInfo->awards }}</textarea>
+                                        <label for="floatingTextarea2">Awards</label>
+                                        @error('awards')
+                                        <span class="error-msg">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" placeholder="About" id="floatingTextarea2" name="affiliations" style="height: 100px">{{ $user->userInfo->awards }}</textarea>
+                                        <label for="floatingTextarea2">Affiliations</label>
+                                        @error('affiliations')
+                                        <span class="error-msg">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="modal-footer">
                                     <button type="reset" class="deny-btn border-0">Clear</button>
                                     <button type="submit" class="border-0 submit-btn">Save Changes</button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
-        @endif
     </div>
     <div class="more-details d-flex">
         <div class="contact border">
@@ -168,13 +209,14 @@
         </div>
         <div class="bio">
             <div class="bio-item">
-                <h4 class="mb-3">About Me</h4>
+                <h4 class="mb-3">About</h4>
                 @if ($user->userInfo->about != null)
-                <p>{{ $user->userInfo->about }}</p>
+                <p>{!! nl2br(e($user->userInfo->about)) !!}</p>
                 @else
                 <p class="about sub-text">No data yet</p>
                 @endif
             </div>
+            @if ($user->hasRole('PWD'))
             <div class="bio-item exp">
                 <div>
                     <h4 class="mb-3">Skills</h4>
@@ -200,6 +242,26 @@
                     <p>asaa</p>
                 </div>
             </div>
+            @elseif($user->hasRole('Training Agency'))
+            <div class="bio-item exp">
+                <div>
+                    <h4 class="mb-3">Awards & Recognitions</h4>
+                    @if ($user->userInfo->awards != null)
+                    <p>{!! nl2br(e($user->userInfo->awards)) !!}</p>
+                    @else
+                    <p class="about sub-text">No data yet</p>
+                    @endif
+                </div>
+                <div>
+                    <h4 class="mb-3">Affiliations</h4>
+                    @if ($user->userInfo->affiliations != null)
+                    <p>{!! nl2br(e($user->userInfo->affiliations)) !!}</p>
+                    @else
+                    <p class="about sub-text">No data yet</p>
+                    @endif
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -217,17 +279,46 @@
         });
     });
 
+    window.onload = function() {
+        var yearEstablishedInput = document.getElementById('year-established');
+        var currentYear = new Date().getFullYear();
+        yearEstablishedInput.max = currentYear;
+
+        // Fetch and populate provinces
+        fetchProvinces().then(() => {
+            var selectedProvince = "{{ $user->userInfo->state }}";
+            var provinceSelect = document.getElementById('provinceSelect');
+            if (selectedProvince) {
+                provinceSelect.value = selectedProvince;
+                fetchCities(selectedProvince).then(() => {
+                    var selectedCity = "{{ $user->userInfo->city }}";
+                    var citySelect = document.getElementById('citySelect');
+                    if (selectedCity) {
+                        citySelect.value = selectedCity;
+                    }
+                });
+            }
+        });
+
+        // Event listener for province change to fetch cities
+        document.getElementById('provinceSelect').addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
+    };
+
 
 
     function fetchProvinces() {
-        fetch('https://psgc.cloud/api/provinces')
+        return fetch('https://psgc.cloud/api/provinces')
             .then(response => response.json())
             .then(data => {
                 var provinceSelect = document.getElementById('provinceSelect');
+                provinceSelect.innerHTML = '<option value="">Select Province</option>';
                 data.sort((a, b) => a.name.localeCompare(b.name));
                 data.forEach(province => {
                     var option = document.createElement('option');
-                    option.value = province.name;
+                    option.value = province.name; // Ensure this matches your database value
                     option.text = province.name;
                     provinceSelect.appendChild(option);
                 });
@@ -236,7 +327,7 @@
     }
 
     function fetchCities(provinceCode) {
-        fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+        return fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
             .then(response => response.json())
             .then(data => {
                 var citySelect = document.getElementById('citySelect');
@@ -244,7 +335,7 @@
                 data.sort((a, b) => a.name.localeCompare(b.name));
                 data.forEach(city => {
                     var option = document.createElement('option');
-                    option.value = city.name;
+                    option.value = city.name; // Ensure this matches your database value
                     option.text = city.name;
                     citySelect.appendChild(option);
                 });

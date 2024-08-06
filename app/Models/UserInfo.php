@@ -11,15 +11,19 @@ class UserInfo extends Model
 
     protected $fillable = [
         'user_id',
+        'disability_id',
+        'educational_id',
         'name',
-        // 'lastname',
         'contactnumber',
         'state',
         'city',
-        'disability_id',
         'pwd_card',
         'age',
-        'about'
+        'about',
+        'founder',
+        'year_established',
+        'affiliations',
+        'awards'
     ];
 
     public function user()
@@ -30,5 +34,10 @@ class UserInfo extends Model
     public function disability()
     {
         return $this->belongsTo(Disability::class);
+    }
+
+    public function education()
+    {
+        return $this->belongsTo(EducationLevel::class);
     }
 }
