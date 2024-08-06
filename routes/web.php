@@ -29,7 +29,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
-    Route::post('/profile', [AuthController::class, 'addExperience'])->name('add-experience');
+    Route::delete('/profile/delete-experiences/{id}', [AuthController::class, 'deleteExperience'])->name('delete-experience');
+    Route::post('/profile/add-experiences', [AuthController::class, 'addExperience'])->name('add-experience');
     Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');

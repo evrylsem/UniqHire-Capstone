@@ -87,6 +87,14 @@ class AuthController extends Controller
         return back()->with('success', 'Work experience successfully added!');
     }
 
+    public function deleteExperience($id)
+    {
+        $experience = Experience::findOrFail($id);
+        $experience->delete();
+
+        return back();
+    }
+
     public function showHomePage()
     {
         $images = [

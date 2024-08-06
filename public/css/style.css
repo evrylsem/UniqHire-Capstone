@@ -1526,6 +1526,36 @@ table tbody .bx {
     color: var(--primary-color);
 }
 
+.profile-container .more-details .bio .bio-item .exp-header {
+    height: 2rem;
+}
+
+.profile-container .more-details .bio .bio-item .exp-header .bx-edit-alt {
+    font-size: 25px;
+}
+
+.profile-container .more-details .bio .bio-item .exp-header h4 {
+    margin: 0;
+}
+
+.profile-container .more-details .bio .bio-item .experiences .match-info {
+    background-color: var(--color-02-light);
+}
+
+.profile-container .more-details .bio .bio-item .experiences .exp-container {
+    width: 100%;
+}
+
+.profile-container .more-details .bio .bio-item .experiences li {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.profile-container .more-details .bio .bio-item .experiences li:hover {
+    background-color: var(--hover-color);
+}
+
 .profile-container .more-details .bio .bio-item .exp-title {
     font-size: 20px;
     margin: 0;
