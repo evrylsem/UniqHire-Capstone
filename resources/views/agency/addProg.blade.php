@@ -117,7 +117,7 @@
             </div>
         </div>
         <!-- COMPETENCY -->
-        <div class="row">
+        <div class="row border-bottom">
             <div class="col">
                 <div class="form-floating mb-3">
                     <div id="competencyListContainer">

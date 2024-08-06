@@ -1418,6 +1418,10 @@ table tbody .bx {
     padding-bottom: 3rem;
 }
 
+.add-form .prog-btn .submit-btn, .edit-form .prog-btn .submit-btn {
+    width: 10rem;
+}
+
 .add-form .add-comp, .edit-form .add-comp {
     padding-top: 0.6rem;
     padding-bottom: 0.6rem;
