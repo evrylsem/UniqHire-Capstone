@@ -49,17 +49,17 @@ Route::middleware('auth')->group(function () {
 
 
     //Trainer Middleware
-    Route::get('/manage-program', [AgencyController::class, 'showPrograms'])->middleware('role:Trainer')->name('programs-manage');
-    Route::get('/add-program', [AgencyController::class, 'showAddForm'])->middleware('role:Trainer')->name('programs-add');
-    Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Trainer');
-    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->middleware('role:Trainer')->name('programs-show');
-    Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Trainer')->name('programs-delete');
-    Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Trainer')->name('programs-edit');
-    Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Trainer');
-    Route::get('/agency/calendar', [AgencyController::class, 'showCalendar'])->middleware('role:Trainer')->name('agency-calendar');
-    // Route::post('/agency/action', [AgencyController::class, 'action'])->middleware('role:Trainer')->name('agency-action');
-    Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Trainer')->name('agency-accept');
-    Route::post('/agency/mark-complete', [AgencyController::class, 'markComplete'])->middleware('role:Trainer')->name('mark-complete');
+    Route::get('/manage-program', [AgencyController::class, 'showPrograms'])->middleware('role:Training Agency')->name('programs-manage');
+    Route::get('/add-program', [AgencyController::class, 'showAddForm'])->middleware('role:Training Agency')->name('programs-add');
+    Route::post('/add-program', [AgencyController::class, 'addProgram'])->middleware('role:Training Agency');
+    Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->middleware('role:Training Agency')->name('programs-show');
+    Route::delete('/delete-program/{id}', [AgencyController::class, 'deleteProgram'])->middleware('role:Training Agency')->name('programs-delete');
+    Route::get('/edit-program/{id}', [AgencyController::class, 'editProgram'])->middleware('role:Training Agency')->name('programs-edit');
+    Route::put('/edit-program/{id}', [AgencyController::class, 'updateProgram'])->middleware('role:Training Agency');
+    Route::get('/agency/calendar', [AgencyController::class, 'showCalendar'])->middleware('role:Training Agency')->name('agency-calendar');
+    // Route::post('/agency/action', [AgencyController::class, 'action'])->middleware('role:Training Agency')->name('agency-action');
+    Route::post('/agency/accept', [AgencyController::class, 'accept'])->middleware('role:Training Agency')->name('agency-accept');
+    Route::post('/agency/mark-complete', [AgencyController::class, 'markComplete'])->middleware('role:Training Agency')->name('mark-complete');
 
 
     // PWD Middleware

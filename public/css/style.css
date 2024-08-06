@@ -667,10 +667,15 @@ table tbody .bx {
 
 .pwd-browse-prog .outer {
     width: 90%;
-    height: 46rem;
+    height: 40rem;
     display: flex;
     justify-content: center;
     overflow-y: scroll;
+}
+
+.pwd-browse-prog .browse-area {
+    width: 90%;
+    margin-left: 12rem;
 }
 
 .pwd-browse-prog .prog-grid {
@@ -963,6 +968,9 @@ table tbody .bx {
 .agency-prog-container .prog-loc {
     font-size: 17px;
     margin-bottom: 0;
+    text-wrap: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 .agency-prog-container .prog-desc-container {
@@ -1035,118 +1043,83 @@ table tbody .bx {
 }
 
 /* TRAINING PROGRAM DETAILS */
-/* .prog-details-container {
-    padding-top: 1rem;
-} */
-
-.show-prog-container {
+.agency-show-prog {
+    width: 100%;
     display: flex;
     justify-content: center;
-    width: 100%;
-    height: 80vh;
     position: absolute;
-    top: 9rem;
-    margin-bottom: 3rem;
-    padding-right: 3rem;
-    padding-left: 7rem;
+    top: 8.5rem;
+    padding-left: 3.5rem;
 }
 
-.show-prog-container .prog-details {
-    /* background-color: var(--bg-color-02); */
-    /* min-width: 47%; */
-    width: 90%;
+.agency-show-prog .outer {
+    width: 80%;
+}
+
+.agency-show-prog .prog-details {
     height: 80vh;
     overflow-y: scroll;
     border: 1px solid lightgray;
     margin-right: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--side-shadow-02);
-}
-
-.show-prog-container .prog-details .fs-3 {
-    position: fixed;
-    background-color: var(--bg-color-01);
-    /* min-width: 42.45%;
-    max-width: 42.45%; */
-    width: 90%;
-    border-top-right-radius: var(--border-radius);
-    border-top-left-radius: var(--border-radius);
-    z-index: 95;
-}
-
-.show-prog-container .enrollee-requests {
-    min-width: 47%;
-    max-height: 100vh;
-    overflow-y: scroll;
-    border: 1px solid lightgray;
-    border-radius: var(--border-radius);
-    box-shadow: var(--side-shadow-02);
-}
-
-.show-prog-container .fs-3 {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    /* border-bottom: 1px solid lightgray; */
-    box-shadow: var(--side-shadow-05);
-}
-
-.show-prog-container .prog-details .prog-texts {
-    position: relative;
-    /* top: 3.5rem; */
-    display: flex;
-    flex-direction: column;
-    padding: 3rem;
-    background-color: var(--bg-color-02);
-    height: fit-content;
-}
-
-.show-prog-container .prog-texts .header {
     width: 100%;
-}
-
-.show-prog-container .prog-details h3 {
-    font-weight: var(--header-extrabold);
-}
-
-.show-prog-container .prog-details p {
-    margin: 0;
+    background-color: var(--bg-color-02);
+    padding: 3.5rem;
 }
 
 
-.show-prog-container .fs-3 {
-    font-weight: 700;
+
+.agency-show-prog .prog-details .header, .agency-show-prog .prog-details .titles ,
+.agency-show-prog .prog-details .prog-btn {
+    width: 100%;
+    overflow-x: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
 }
 
-.show-prog-container .prog-details .prog-btn .submit-btn {
+.agency-show-prog .prog-details .prog-btn {
+    width: 30%;
+    text-align: end;
+}
+
+.agency-show-prog .prog-details .prog-btn .edit-delete {
+    display: flex;
+    justify-content: end;
+}
+
+.agency-show-prog .prog-details .prog-btn .edit-delete button {
+    width: 5rem;
+}
+
+.agency-show-prog .prog-details .prog-btn .submit-btn {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
 
-.show-prog-container .prog-details .prog-btn .submit-btn, .show-prog-container .prog-details .prog-btn .deny-btn  {
+.agency-show-prog .prog-details .prog-btn .submit-btn.edit-btn {
+    background-color: transparent;
+}
+
+.agency-show-prog .prog-details .prog-btn .submit-btn.edit-btn:hover {
+    background-color: var(--primary-color-light);
+}
+
+.agency-show-prog .prog-details h3 {
+    font-weight: var(--header-extrabold);
+}
+
+.agency-show-prog .prog-details p {
+    margin: 0;
+}
+
+.agency-show-prog .prog-btn .submit-btn, .agency-show-prog .prog-details .prog-btn .deny-btn  {
     width: 10rem;
     padding: 0.6rem;
 }
 
-.show-prog-container .prog-details .prog-btn .edit-delete {
-    display: flex;
-    justify-content: end;
-}
-
-.show-prog-container .prog-details .prog-btn .edit-delete button {
-    width: 5rem;
-}
-
-.show-prog-container .prog-details .prog-btn .edit-delete .edit-btn {
-    background-color: transparent;
-    border: none;
-}
-
-.show-prog-container .prog-details .prog-btn .edit-delete .edit-btn:hover {
-    background-color: var(--primary-color-light);
-}
-
-.show-prog-container .prog-details h5, .details-container .body h5 {
+.agency-show-prog .prog-details h5, .details-container .body h5 {
     font-weight: 700;
     margin-bottom: 1.5rem;
 }
@@ -1155,7 +1128,9 @@ table tbody .bx {
     height: 10rem;
 }
 
-.show-prog-container .request-grid {
+/* ENROLLEE REQUESTS */
+
+.agency-show-prog .request-grid {
     display: grid;
     grid-template-columns: repeat(1, 2fr);
     gap: 0.5rem;
@@ -1164,47 +1139,51 @@ table tbody .bx {
     /* height: 100%; */
 }
 
-.show-prog-container .request-grid a {
+.agency-show-prog .request-grid a {
     height: fit-content;
     width: 100%;
     display: flex;
 }
 
-.show-prog-container .request-grid .request-container {
+.agency-show-prog .request-grid .request-container {
     padding: 1rem;
     box-shadow: var(--side-shadow-02);
     border-radius: var(--border-radius);
     padding-right: 1.5rem;
     background-color: var(--bg-color-01);
     border: 1px solid lightgray;
-    
     height: fit-content;
 }
-.show-prog-container .request-grid .request-container:hover {
+
+.agency-show-prog .request-grid .request-container:hover {
     background-color: var(--bg-color-02);
 }
 
-.show-prog-container .request-grid .request-container .request-owner {
+.agency-show-prog .request-grid .request-container .request-owner {
     display: grid;
     grid-template-columns: 5rem auto;
     align-items: center;
     width: 100%;
 }
 
-.show-prog-container .request-grid .request-container .request-owner p {
+.agency-show-prog .request-grid .request-container .owner-name {
+    text-align: start;
+}
+
+.agency-show-prog .request-grid .request-container .request-owner p {
     padding: 0;
     margin: 0;
 }
 
-.show-prog-container .request-grid .request-container .request-owner .fs-5 {
+.agency-show-prog .request-grid .request-container .request-owner .fs-5 {
     font-weight: 700;
 }
 
-.show-prog-container .request-grid .request-container .request-owner .location {
+.agency-show-prog .request-grid .request-container .request-owner .location {
     font-size: 17px;
 }
 
-.show-prog-container .request-grid .request-container .request-pic {
+.agency-show-prog .request-grid .request-container .request-pic {
     width: 4rem;
     height: 4rem;
     background-color: var(--primary-color-light);
@@ -1212,153 +1191,148 @@ table tbody .bx {
     margin-right: 1rem;
 }
 
-.show-prog-container .request-grid .btn-container {
+.agency-show-prog .request-grid .btn-container {
     margin-right: 0.5rem;
 }
 
-.show-prog-container .request-grid .submit-btn {
+.agency-show-prog .request-grid .submit-btn {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     background-color: var(--primary-color-light);
     color: var(--primary-color);
 }
 
-.show-prog-container .request-grid .deny-btn {
+.agency-show-prog .request-grid .deny-btn {
     width: 5rem;
 }
 
-.show-prog-container .prog-details .prog-texts .body {
+.agency-show-prog .prog-details .prog-texts .body {
     height: fit-content;
     width: 100%;
 }
 
-.show-prog-container .prog-details .prog-texts .requirements {
+.agency-show-prog .prog-details .prog-texts .requirements {
     /* border-right: 1px solid lightgray; */
     width: 100%;
 }
 
-.show-prog-container .prog-details .prog-texts .enrollees {
+.agency-show-prog .prog-details .prog-texts .enrollees {
     width: 100%;
 }
 
-.show-prog-container .prog-details .prog-texts #competencies ul {
+.agency-show-prog .prog-details .prog-texts #competencies ul {
     padding-left: 2rem;
 }
 
-.show-prog-container .prog-details .prog-texts #competencies li {
+.agency-show-prog .prog-details .prog-texts #competencies li {
     list-style: circle;
-    /* display: flex;
-    justify-content: space-between;
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-    padding: 1rem;
-    margin-bottom: 0.5rem; */
 }
 
-.show-prog-container .table {
+.agency-show-prog .table {
     border-top: 3px solid lightgray;
 }
 
-.show-prog-container .table td input {
+.agency-show-prog .table td input {
     width: 1.2rem;
     height: 1.2rem;
     border: 1.8px solid lightgray;
 }
 
-.show-prog-container .table thead td {
+.agency-show-prog .table thead td {
     background-color: transparent;
 }
 
-.show-prog-container .table .bx {
+.agency-show-prog .table .bx {
     color: var(--bg-color-01);
 }
 
-.show-prog-container .table .submit-btn:hover .bx {
+.agency-show-prog .table .submit-btn:hover .bx {
     color: var(--primary-color);
 }
 
-.show-prog-container .table .submit-btn {
+.agency-show-prog .table .submit-btn {
     padding-top: 0.4rem;
     padding-bottom: 0.4rem;
     display: flex;
     align-items: center;
 }
 
-.show-prog-container .table .submit-btn.disabled {
+.agency-show-prog .table .completed {
     background-color: var(--bg-color-02);
 }
 
-.show-prog-container .table .submit-btn.disabled .bx {
+.agency-show-prog .table .completed .bx {
     color: var(--primary-color);
 }
 
-.show-prog-container .table td.check {
+.agency-show-prog .table td.check {
     width: 4rem;
 }
 
-.show-prog-container .table td a:hover {
+.agency-show-prog .table td a:hover {
     color: var(--primary-color);
 }
 
-.show-prog-container .table td.name {
+.agency-show-prog .table td.name {
     width: 100%;
 }
 
-.show-prog-container .table td.btn-container {
+.agency-show-prog .table td.btn-container {
     width: 15rem;
 }
 
-.show-prog-container .prog-details .prog-texts .modal-btn {
+.agency-show-prog .prog-details .modal-btn {
     background-color: var(--primary-color-light);
     color: var(--primary-color);
 }
 
-.show-prog-container .prog-details .prog-texts .submit-btn.pending {
+.agency-show-prog .prog-details .submit-btn.pending {
     background-color: var(--color-01-light);
     color: var(--color-01);
 }
 
-.show-prog-container .prog-details .prog-texts .submit-btn.approved {
+.agency-show-prog .prog-details .submit-btn.approved {
     width: fit-content;
 }
 
-.show-prog-container .prog-details .prog-texts .submit-btn.approved .bx {
+.agency-show-prog .prog-details .submit-btn.approved .bx {
     font-size: 30px;
     font-weight: bold;
     color: var(--primary-color);
 }
 
-.show-prog-container .prog-details .prog-texts .submit-btn.disabled {
+.agency-show-prog .prog-details .submit-btn.disabled {
     background-color: var(--color-02-light);
     color: var(--color-02);
 }
 
-.show-prog-container .prog-details .prog-texts .text-danger {
+.agency-show-prog .prog-details .text-danger {
     font-style: italic;
     font-size: 16px;
 }
 
 /* RATING  */
-.show-prog-container .star-rating {
+.agency-show-prog .star-rating {
     cursor: pointer;
     display: flex;
     width: 100%;
     justify-content: center;
 }
 
-.show-prog-container .star-rating .bx {
+.agency-show-prog .star-rating .bx {
     font-size: 40px;
     color: var(--color-01);
 }
 
-.show-prog-container .outer {
+.agency-show-prog .reviews .outer {
     padding: 2rem;
     min-height: fit-content;
     max-height: 40rem;
     overflow-y: scroll;
+    width: 100%;
 }
 
-.show-prog-container .review-grid {
+.agency-show-prog .review-grid {
     /* padding: 2rem; */
     display: grid;
     grid-template-columns: repeat(1, auto);
@@ -1373,71 +1347,93 @@ table tbody .bx {
     overflow-y: scroll;
 } */
 
-.show-prog-container .reviews h3 {
+.agency-show-prog .reviews h3 {
     font-weight: var(--header-extrabold);
 }
 
-.show-prog-container .reviews .header {
+.agency-show-prog .reviews .header {
     background-color: var(--bg-color-01);
     padding: 1rem;
 }
 
-.show-prog-container .reviews .body-review {
+.agency-show-prog .reviews .body-review {
     /* margin: 2rem; */
     width: 100%;
     border-radius: var(--border-radius);
 }
 
-.show-prog-container .reviews .body-review .owner,  .show-prog-container .reviews .body-review .time {
+.agency-show-prog .reviews .body-review .owner,  .agency-show-prog .reviews .body-review .time {
     background-color: var(--bg-color-01);
     padding: 1rem;
 }
 
-.show-prog-container .reviews .body-review .owner {
+.agency-show-prog .reviews .body-review .owner {
     font-weight: var(--header-extrabold);
 }
 
-.show-prog-container .reviews .body-review .content {
+.agency-show-prog .reviews .body-review .content {
     padding: 1rem;
 }
 
-.show-prog-container .reviews .body-review .bx {
+.agency-show-prog .reviews .body-review .bx {
     color: var(--color-01);
 }
 
 /* SHOW PROG TABS */
-.show-prog-container .tab-content {
+.agency-show-prog .tab-content {
     height: 30rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
 }
 
-.show-prog-container .tab-content>.active {
+.agency-show-prog .tab-content>.active {
     height: 100%;
 }
 
-.show-prog-container .prog-details .more-info {
+.agency-show-prog .prog-details .more-info {
     width: 100%;
 }
 
-.show-prog-container .prog-details .nav {
+.agency-show-prog .prog-details .nav {
     border-top: 1px solid lightgray;
 }
 
 
-.show-prog-container .prog-details .nav .nav-item {
+.agency-show-prog .prog-details .nav .nav-item {
     padding-top: 1rem;
     padding-bottom: 2rem;
     
 }
 
-.show-prog-container .prog-details .nav .nav-item a {
+.agency-show-prog .prog-details .nav .nav-item a {
     color: var(--text-color);
 }
 
-.show-prog-container .prog-details .nav .nav-item a.active {
+.agency-show-prog .prog-details .nav .nav-item a.active {
     color: var(--primary-color);
     font-weight: bold;
+}
+
+.add-form, .edit-form {
+    padding-bottom: 3rem;
+}
+
+.add-form .add-comp, .edit-form .add-comp {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    background-color: var(--bg-color-02);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.add-form .add-comp:hover, .edit-form .add-comp:hover {
+    background-color: var(--primary-color-light);
+}
+
+.add-form .add-comp .bx-plus, .edit-form .add-comp .bx-plus {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
 }
 
 /* PROFILE */
@@ -1786,7 +1782,7 @@ table tbody .bx {
     width: 25rem;
 }
 
-.trainings-container .counts-container {
+.trainings-container .counts-container, .agency-show-prog .counts-container {
     display: flex;
     flex-direction: column;
     /* margin: 1rem; */
@@ -1809,7 +1805,7 @@ table tbody .bx {
     margin-bottom: 2rem;
 }
 
-.trainings-container .counts {
+.trainings-container .counts, .agency-show-prog .counts {
     width: 14rem;
     height: 10rem;
     border: 1px solid lightgray;

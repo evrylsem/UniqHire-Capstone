@@ -86,7 +86,9 @@
                 <div class="form-floating mb-3">
                     <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
                         @foreach ($levels as $level)
+                        @if ($level->education_name != 'Not Applicable')
                         <option value="{{ $level->id }}">{{ $level->education_name }}</option>
+                        @endif
                         @endforeach
 
                     </select>
@@ -106,7 +108,7 @@
         <div class="row" id="crowdfund-section">
             <div class="col">
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled>
+                    <input type="text" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled oninput="formatNumber(this)">
                     <label for="floatingInput">Amount Needed</label>
                     @error('goal')
                     <span class="error-msg">{{ $message }}</span>
@@ -115,12 +117,14 @@
             </div>
         </div>
         <!-- COMPETENCY -->
-        <div class="col">
-            <div class="form-floating mb-3">
-                <div id="competencyListContainer">
-                    <label for="competencyList">Competencies:</label>
-                    <div id="competencyList"></div>
-                    <button type="button" id="addCompetencyBtn" class="btn btn-outline-primary mt-2"><i class="bx bx-plus"></i> Add Competency</button>
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <div id="competencyListContainer">
+                        <label for="competencyList">Competencies:</label>
+                        <div id="competencyList"></div>
+                        <button type="button" id="addCompetencyBtn" class="submit-btn border-0 add-comp"><i class="bx bx-plus"></i> Add Competency</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -135,6 +139,13 @@
 @endsection
 
 <script>
+    function formatNumber(input) {
+        let value = input.value.replace(/,/g, '');
+        if (!isNaN(value) && value !== '') {
+            input.value = Number(value).toLocaleString();
+        }
+    }
+
     function toggleCrowdfund() {
         var hostCrowdfund = document.getElementById('host-crowdfund');
         var crowdfundSection = document.getElementById('crowdfund-section');
