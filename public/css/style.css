@@ -1521,6 +1521,21 @@ table tbody .bx {
     font-weight: normal;
 }
 
+.profile-container .more-details .bio .bio-item .about a {
+    text-decoration: underline;
+    color: var(--primary-color);
+}
+
+.profile-container .more-details .bio .bio-item .exp-title {
+    font-size: 20px;
+    margin: 0;
+    font-weight: bolder;
+}
+
+.profile-container .more-details .bio .bio-item .exp-date {
+    font-size: 17px;
+}
+
 .profile-container .more-details .contact .side-icon {
     color: var(--primary-color);
     /* font-weight: bold; */

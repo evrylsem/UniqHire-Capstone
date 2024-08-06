@@ -33,11 +33,15 @@ class UserInfo extends Model
 
     public function disability()
     {
-        return $this->belongsTo(Disability::class);
+        return $this->belongsTo(Disability::class, 'disability_id');
     }
 
     public function education()
     {
-        return $this->belongsTo(EducationLevel::class);
+        return $this->belongsTo(EducationLevel::class, 'educational_id');
+    }
+
+    public function experiences() {
+        return $this->hasMany(Experience::class, 'user_id');
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Enrollee;
 use App\Models\Role;
 use App\Models\Disability;
 use App\Models\EducationLevel;
+use App\Models\Experience;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,9 +21,11 @@ class AuthController extends Controller
     {
         $id = Auth::user()->id;
         $user = User::find($id);
+        $levels = EducationLevel::all();
         $disabilities = Disability::all();
+        $experiences = Experience::where('user_id', $id)->get();
         $certifications = Enrollee::where('pwd_id', $id)->where('completion_status', 'Completed')->get();
-        return view('auth.profile', compact('disabilities', 'user', 'certifications'));
+        return view('auth.profile', compact('levels', 'disabilities', 'user', 'certifications', 'experiences'));
     }
 
     public function editProfile(Request $request)
@@ -65,10 +68,23 @@ class AuthController extends Controller
                 'disability_id' => $request->disability,
             ]);
         }
-
-
-
         return back()->with('success', 'Your profile has been changed successfully!');
+    }
+
+    public function addExperience(Request $request) {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'id' => 'required|exists:user_infos,id'
+        ]);
+
+        Experience::create([
+            'title' => $request->title,
+            'date' => $request->date,
+            'user_id' => $request->id
+        ]);
+
+        return back()->with('success', 'Work experience successfully added!');
     }
 
     public function showHomePage()

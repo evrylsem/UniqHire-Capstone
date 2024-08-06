@@ -85,6 +85,18 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="col">
+                                            <div class="form-floating mb-3">
+                                                <select class="form-select" id="education-level" name="education" aria-label="Floating label select example">
+                                                    @foreach ($levels as $level)
+                                                    @if ($level->id != '1')
+                                                    <option value="{{ $level->id }}" @if ($user->userInfo->educational_id == $level->id ) selected @endif>{{ $level->education_name }}</option>
+                                                    @endif
+                                                    @endforeach
+                                                </select>
+                                                <label for="education-level">Education Level</label>
+                                            </div>
+                                        </div>
                                         @elseif ($user->hasRole('Training Agency'))
                                         <div class="col">
                                             <div class="form-floating mb-3">
@@ -224,159 +236,156 @@
                 </div>
                 <div>
                     <h4 class="mb-3">Education Level</h4>
-                    <p>asaa</p>
+                    <p class="match-info">{{$user->userInfo->education->education_name}}</p>
                 </div>
             </div>
             <div class="bio-item exp">
                 <div>
                     <h4 class="mb-3">Certifications</h4>
-                    @foreach($certifications as $certification)
+                    @forelse($certifications as $certification)
                     <p>
                         <a href="{{ route('download-certificate', $certification->id) }}" class="text-primary">
                             Certified {{$certification->program->title}}
                     </p>
-                    @endforeach
+                    @empty
+                    <p class="about sub-text">No certifications yet. <a href="{{ route('pwd-list-program') }}">Enroll first!</a></p>
+                    @endforelse
                 </div>
                 <div>
-                    <h4 class="mb-3">Work Experience</h4>
-                    <p>asaa</p>
+                    <div class="mb-2 d-flex">
+                        <h4 class="">Work Experience&nbsp;&nbsp;</h4>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="border-0 match-info"><i class='bx bx-plus'></i></button>
+                    </div>
+                    <div>
+                        <form action="{{route('add-experience')}}" method="POST">
+                            @csrf
+                            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Work Experience</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" name="id" value="{{ $user->id }}">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" placeholder="Title" name="title">
+                                                <label for="floatingInput">Title</label>
+                                                @error('title')
+                                                <span class="error-msg">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="">Date: </label>
+                                                <input type="date" name="date" class="date-input">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="reset" class="deny-btn border-0">Clear</button>
+                                                <button type="submit" class="border-0 submit-btn">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <ul>
+                            @forelse($experiences as $experience)
+                            <li>
+                                    <p class="exp-title">{{ $experience->title }}</p>
+                                    <p class="exp-date">{{ \Carbon\Carbon::parse($experience->date)->format('M d, Y') }}</p>
+                            </li>
+                            @empty
+                            <div class="about sub-text">No experiences. Add one.</div>
+                        </ul>
+                        @endforelse
+                    </div>
                 </div>
+                @elseif($user->hasRole('Training Agency'))
+                <div class="bio-item exp">
+                    <div>
+                        <h4 class="mb-3">Awards & Recognitions</h4>
+                        @if ($user->userInfo->awards != null)
+                        <p>{!! nl2br(e($user->userInfo->awards)) !!}</p>
+                        @else
+                        <p class="about sub-text">No data yet</p>
+                        @endif
+                    </div>
+                    <div>
+                        <h4 class="mb-3">Affiliations</h4>
+                        @if ($user->userInfo->affiliations != null)
+                        <p>{!! nl2br(e($user->userInfo->affiliations)) !!}</p>
+                        @else
+                        <p class="about sub-text">No data yet</p>
+                        @endif
+                    </div>
+                </div>
+                @endif
             </div>
-            @elseif($user->hasRole('Training Agency'))
-            <div class="bio-item exp">
-                <div>
-                    <h4 class="mb-3">Awards & Recognitions</h4>
-                    @if ($user->userInfo->awards != null)
-                    <p>{!! nl2br(e($user->userInfo->awards)) !!}</p>
-                    @else
-                    <p class="about sub-text">No data yet</p>
-                    @endif
-                </div>
-                <div>
-                    <h4 class="mb-3">Affiliations</h4>
-                    @if ($user->userInfo->affiliations != null)
-                    <p>{!! nl2br(e($user->userInfo->affiliations)) !!}</p>
-                    @else
-                    <p class="about sub-text">No data yet</p>
-                    @endif
-                </div>
-            </div>
-            @endif
         </div>
+
     </div>
 
-</div>
+    @endsection
 
-@endsection
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchProvinces();
-
-        document.getElementById('provinceSelect').addEventListener('change', function() {
-            var provinceCode = this.value;
-            fetchCities(provinceCode);
-        });
-    });
-
-    window.onload = function() {
-        var yearEstablishedInput = document.getElementById('year-established');
-        var currentYear = new Date().getFullYear();
-        yearEstablishedInput.max = currentYear;
-
-        // Fetch and populate provinces
-        fetchProvinces().then(() => {
-            var selectedProvince = "{{ $user->userInfo->state }}";
-            var provinceSelect = document.getElementById('provinceSelect');
-            if (selectedProvince) {
-                provinceSelect.value = selectedProvince;
-                fetchCities(selectedProvince).then(() => {
-                    var selectedCity = "{{ $user->userInfo->city }}";
-                    var citySelect = document.getElementById('citySelect');
-                    if (selectedCity) {
-                        citySelect.value = selectedCity;
-                    }
-                });
-            }
-        });
-
-        // Event listener for province change to fetch cities
-        document.getElementById('provinceSelect').addEventListener('change', function() {
-            var provinceCode = this.value;
-            fetchCities(provinceCode);
-        });
-    };
-
-
-
-    function fetchProvinces() {
-        return fetch('https://psgc.cloud/api/provinces')
-            .then(response => response.json())
-            .then(data => {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchProvinces().then(() => {
+                var selectedProvince = "{{ $user->userInfo->state }}";
                 var provinceSelect = document.getElementById('provinceSelect');
-                provinceSelect.innerHTML = '<option value="">Select Province</option>';
-                data.sort((a, b) => a.name.localeCompare(b.name));
-                data.forEach(province => {
-                    var option = document.createElement('option');
-                    option.value = province.name; // Ensure this matches your database value
-                    option.text = province.name;
-                    provinceSelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error fetching provinces:', error));
-    }
-
-    function fetchCities(provinceCode) {
-        return fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
-            .then(response => response.json())
-            .then(data => {
-                var citySelect = document.getElementById('citySelect');
-                citySelect.innerHTML = '<option value="">Select City</option>';
-                data.sort((a, b) => a.name.localeCompare(b.name));
-                data.forEach(city => {
-                    var option = document.createElement('option');
-                    option.value = city.name; // Ensure this matches your database value
-                    option.text = city.name;
-                    citySelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error fetching cities:', error));
-    }
-
-    function togglePWDSection() {
-        var roleSelect = document.getElementById('role');
-        var pwdSection = document.getElementById('pwd-section');
-        var disabilitySection = document.getElementById('disability-section');
-        var disabilitySelect = document.getElementById('floatingSelect');
-
-        if (roleSelect.value === '2') {
-            pwdSection.style.display = 'block';
-            disabilitySection.style.display = 'block';
-            for (var i = 0; i < disabilitySelect.options.length; i++) {
-                if (disabilitySelect.options[i].value === '1') {
-                    disabilitySelect.remove(i);
-                    break;
+                if (selectedProvince) {
+                    provinceSelect.value = selectedProvince;
+                    fetchCities(selectedProvince).then(() => {
+                        var selectedCity = "{{ $user->userInfo->city }}";
+                        var citySelect = document.getElementById('citySelect');
+                        if (selectedCity) {
+                            citySelect.value = selectedCity;
+                        }
+                    });
                 }
-                var optionExists = false;
-            }
+            });
 
-        } else {
-            pwdSection.style.display = 'none';
-            disabilitySection.style.display = 'none';
-            for (var i = 0; i < disabilitySelect.options.length; i++) {
-                if (disabilitySelect.options[i].value === '1') {
-                    optionExists = true;
-                    break;
-                }
-            }
-            if (!optionExists) {
-                var notApplicableOption = document.createElement('option');
-                notApplicableOption.value = '1';
-                notApplicableOption.text = 'Not Applicable';
-                disabilitySelect.add(notApplicableOption);
-            }
+            document.getElementById('provinceSelect').addEventListener('change', function() {
+                var provinceCode = this.value;
+                fetchCities(provinceCode);
+            });
 
-            disabilitySelect.value = '1';
+            // Set max year for the year established input
+            var yearEstablishedInput = document.getElementById('year-established');
+            var currentYear = new Date().getFullYear();
+            yearEstablishedInput.max = currentYear;
+        });
+
+        function fetchProvinces() {
+            return fetch('https://psgc.cloud/api/provinces')
+                .then(response => response.json())
+                .then(data => {
+                    var provinceSelect = document.getElementById('provinceSelect');
+                    provinceSelect.innerHTML = '<option value="">Select Province</option>';
+                    data.sort((a, b) => a.name.localeCompare(b.name));
+                    data.forEach(province => {
+                        var option = document.createElement('option');
+                        option.value = province.name; // Ensure this matches your database value
+                        option.text = province.name;
+                        provinceSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching provinces:', error));
         }
-    }
-</script>
+
+        function fetchCities(provinceCode) {
+            return fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+                .then(response => response.json())
+                .then(data => {
+                    var citySelect = document.getElementById('citySelect');
+                    citySelect.innerHTML = '<option value="">Select City</option>';
+                    data.sort((a, b) => a.name.localeCompare(b.name));
+                    data.forEach(city => {
+                        var option = document.createElement('option');
+                        option.value = city.name; // Ensure this matches your database value
+                        option.text = city.name;
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching cities:', error));
+        }
+    </script>
