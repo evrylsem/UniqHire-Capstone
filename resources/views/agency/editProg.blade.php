@@ -108,7 +108,7 @@
     <div class="row" id="crowdfund-section">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" value="{{ $program->crowdfund->goal ?? '' }}" {{ $program->crowdfund ? '' : 'disabled' }}>
+                <input type="text" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" value="{{ $program->crowdfund->goal ?? '' }}" {{ $program->crowdfund ? '' : 'disabled' }} oninput="formatNumber(this)">
                 <label for="floatingInput">Amount Needed</label>
                 @error('goal')
                 <span class="error-msg">{{ $message }}</span>
@@ -116,19 +116,21 @@
             </div>
         </div>
     </div>
-    <div class="col">
-        <div class="form-floating mb-3">
-            <div id="competencyListContainer">
-                <label for="competencyList">Competencies:</label>
-                <div id="competencyList">
-                    @foreach ($program->competencies as $competency)
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" value="{{ $competency->name }}" required>
-                        <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+    <div class="row border-bottom">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <div id="competencyListContainer">
+                    <label for="competencyList">Competencies:</label>
+                    <div id="competencyList">
+                        @foreach ($program->competencies as $competency)
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Enter competency" name="competencies[]" value="{{ $competency->name }}" required>
+                            <button class="btn btn-outline-secondary remove-btn" type="button">Remove</button>
+                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    <button type="button" id="addCompetencyBtn" class="submit-btn add-comp"><i class="bx bx-plus"></i> Add Competency</button>
                 </div>
-                <button type="button" id="addCompetencyBtn" class="btn btn-outline-primary mt-2"><i class="bx bx-plus"></i> Add Competency</button>
             </div>
         </div>
     </div>
@@ -139,6 +141,13 @@
 </form>
 
 <script>
+    function formatNumber(input) {
+        let value = input.value.replace(/,/g, '');
+        if (!isNaN(value) && value !== '') {
+            input.value = Number(value).toLocaleString();
+        }
+    }
+
     function toggleCrowdfund() {
         var hostCrowdfund = document.getElementById('host-crowdfund');
         var crowdfundSection = document.getElementById('crowdfund-section');
@@ -155,6 +164,11 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        var amountNeededInput = document.getElementById('amount-needed');
+        if (amountNeededInput) {
+            formatNumber(amountNeededInput);
+        }
+
         fetchProvinces();
 
         var provinceSelect = document.getElementById('provinceSelect');

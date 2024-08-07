@@ -121,26 +121,74 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col" id="disability-section">
-                        <div class="form-floating mb-3">
-                            <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
-                                @foreach ($disabilities as $disability)
-                                <!-- @if ($disability->disability_name != 'Not Applicable') -->
-                                <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
-                                <!-- @endif      -->
-                                @endforeach
+                </div>
+                <hr>
+                <div id="pwd-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="floatingInput" name="age" placeholder="Age">
+                                <label for="floatingInput">Age</label>
+                                @error('age')
+                                <span class="error-msg">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="education-level" name="education" aria-label="Floating label select example">
+                                    @foreach ($levels as $level)
+                                    @if ($level->id != '1')
+                                    <option value="{{ $level->id }}">{{ $level->education_name }}</option>
+                                    @endif
+                                    @endforeach
+                                </select>
+                                <label for="education-level">Education Level</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="disabilities" name="disability" aria-label="Floating label select example">
+                                    @foreach ($disabilities as $disability)
+                                    @if ($disability->id != '1')
+                                    <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
+                                    @endif
+                                    @endforeach
 
-                            </select>
-                            <label for="floatingSelect">Disability</label>
+                                </select>
+                                <label for="disabilities">Disability</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <span>
+                                PWD Card
+                                <input class="form-control" type="file" id="formFile">
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-4" id="pwd-section">
-                    <div class="col">
-                        <span>
-                            PWD Card
-                            <input class="form-control" type="file" id="formFile">
-                        </span>
+                <div id="agency-section" style="display:none;">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" name="founder" value="{{ old('name') }}" placeholder="Founder">
+                                <label for="floatingInput">Founder</label>
+                                @error('founder')
+                                <span class="error-msg">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="floatingInput" name="year_established" placeholder="Year Established">
+                                <label for="floatingInput">Year Established</label>
+                                @error('year_established')
+                                <span class="error-msg">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mb-3">
@@ -213,37 +261,54 @@
     function togglePWDSection() {
         var roleSelect = document.getElementById('role');
         var pwdSection = document.getElementById('pwd-section');
-        var disabilitySection = document.getElementById('disability-section');
-        var disabilitySelect = document.getElementById('floatingSelect');
+        var disabilitySelect = document.getElementById('disabilities');
+        var agencySection = document.getElementById('agency-section');
+        var educationSelect = document.getElementById('education-level');
 
         if (roleSelect.value === '2') {
             pwdSection.style.display = 'block';
-            disabilitySection.style.display = 'block';
-            for (var i = 0; i < disabilitySelect.options.length; i++) {
-                if (disabilitySelect.options[i].value === '1') {
-                    disabilitySelect.remove(i);
-                    break;
-                }
-                var optionExists = false;
-            }
+            agencySection.style.display = 'none';
 
+            removeOption(disabilitySelect, '1');
+            removeOption(educationSelect, '1');
         } else {
             pwdSection.style.display = 'none';
-            disabilitySection.style.display = 'none';
-            for (var i = 0; i < disabilitySelect.options.length; i++) {
-                if (disabilitySelect.options[i].value === '1') {
-                    optionExists = true;
-                    break;
-                }
-            }
-            if (!optionExists) {
-                var notApplicableOption = document.createElement('option');
-                notApplicableOption.value = '1';
-                notApplicableOption.text = 'Not Applicable';
-                disabilitySelect.add(notApplicableOption);
-            }
-
+            addNotApplicableOption(disabilitySelect);
+            addNotApplicableOption(educationSelect);
             disabilitySelect.value = '1';
+            educationSelect.value = '1';
+        }
+
+        if (roleSelect.value === '3') {
+            agencySection.style.display = 'block';
+        } else {
+            agencySection.style.display = 'none';
+        }
+    }
+
+    function removeOption(selectElement, value) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value === value) {
+                selectElement.remove(i);
+                break;
+            }
+        }
+    }
+
+    function addNotApplicableOption(selectElement) {
+        var optionExists = false;
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value === '1') {
+                optionExists = true;
+                break;
+            }
+        }
+
+        if (!optionExists) {
+            var notApplicableOption = document.createElement('option');
+            notApplicableOption.value = '1';
+            notApplicableOption.text = 'Not Applicable';
+            selectElement.add(notApplicableOption);
         }
     }
 </script>

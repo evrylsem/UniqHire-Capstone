@@ -59,7 +59,6 @@
                             <i class='bx bx-menu side-icon'></i>
                         </span>
                         <div class="logo-name">
-                            <!-- <span>UniqHire</span> -->
                         </div>
                     </div>
                 </header>
@@ -120,7 +119,7 @@
                         <!-- <li><a href="#"><i class='bx bx-briefcase-alt-2 side-icon'></i><span class="side-title">Employers</span></a></li> -->
                         @endif
                         <!-- TRAINER ROLE ACCESS -->
-                        @if (Auth::user()->hasRole('Trainer'))
+                        @if (Auth::user()->hasRole('Training Agency'))
                         <li class="side-item">
                             <a href="{{route('programs-manage')}}" class="{{ request()->routeIs('programs-manage', 'programs-add', 'programs-edit', 'programs-show') ? 'active' : '' }}">
                                 <i class='bx bxs-school side-icon'></i>

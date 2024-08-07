@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Enrollee;
 use App\Models\Role;
 use App\Models\Disability;
+use App\Models\EducationLevel;
+use App\Models\Experience;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -19,9 +21,11 @@ class AuthController extends Controller
     {
         $id = Auth::user()->id;
         $user = User::find($id);
+        $levels = EducationLevel::all();
         $disabilities = Disability::all();
+        $experiences = Experience::where('user_id', $id)->get();
         $certifications = Enrollee::where('pwd_id', $id)->where('completion_status', 'Completed')->get();
-        return view('auth.profile', compact('disabilities', 'user', 'certifications'));
+        return view('auth.profile', compact('levels', 'disabilities', 'user', 'certifications', 'experiences'));
     }
 
     public function editProfile(Request $request)
@@ -32,18 +36,26 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'contactnumber' => 'required|string|max:255',
             'age' => 'nullable|integer|min:1|max:99',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'about' => 'nullable|string'
+            'city' => 'string|max:255',
+            'state' => 'string|max:255',
+            'founder' => 'nullable|string|max:255',
+            'year_established' => 'nullable|integer|min:1000|max:3000',
+            'about' => 'nullable|string',
+            'awards' => 'nullable|string',
+            'affiliations' => 'nullable|string'
         ]);
 
-        if ($user->userInfo->disability_id == 1) {
+        if ($user->hasRole('Training Agency')) {
             $user->userInfo->update([
                 'name' => $request->name,
                 'contactnumber' => $request->contactnumber,
                 'city' => $request->city,
                 'state' => $request->state,
                 'about' => $request->about,
+                'founder' => $request->founder,
+                'year_established' => $request->year_established,
+                'awards' => $request->awards,
+                'affiliations' => $request->affiliations,
             ]);
         } else {
             $user->userInfo->update([
@@ -56,10 +68,31 @@ class AuthController extends Controller
                 'disability_id' => $request->disability,
             ]);
         }
+        return back()->with('success', 'Your profile has been changed successfully!');
+    }
 
+    public function addExperience(Request $request) {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'id' => 'required|exists:user_infos,id'
+        ]);
 
+        Experience::create([
+            'title' => $request->title,
+            'date' => $request->date,
+            'user_id' => $request->id
+        ]);
 
-        return redirect()->route('profile');
+        return back()->with('success', 'Work experience successfully added!');
+    }
+
+    public function deleteExperience($id)
+    {
+        $experience = Experience::findOrFail($id);
+        $experience->delete();
+
+        return back();
     }
 
     public function showHomePage()
@@ -127,7 +160,8 @@ class AuthController extends Controller
     {
         $roles = Role::all();
         $disabilities = Disability::all();
-        return view('auth.register', compact('roles', 'disabilities'));
+        $levels = EducationLevel::all();
+        return view('auth.register', compact('roles', 'disabilities', 'levels'));
     }
 
     public function register(Request $request)
@@ -139,16 +173,18 @@ class AuthController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            // 'lastname' => 'nullable|string|max:255',
-            // 'email' => 'required|string|email|unique:users,email|max:255',
-            'contactnumber' => 'required|string|max:255',
             'password' => 'required|string|min:4|max:255|confirmed',
+            // 'disability' => 'required|string|exists:disabilities,id',
+            // 'education' => 'required|string|exists:education_level,name',
+            'name' => 'required|string|max:255',
+            'contactnumber' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
-            // 'disability' => 'required|string|exists:disabilities,id',
             'pwd_card' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            // 'role' => 'required|string|exists:roles,role_name',
+            'age' => 'nullable|integer|min:1|max:99',
+            'founder' => 'nullable|string|max:255',
+            'year_established' => 'nullable|integer|min:1000|max:3000',
+            // 'role' => 'required|string|exists:roles,id',
         ]);
 
 
@@ -163,13 +199,16 @@ class AuthController extends Controller
 
         UserInfo::create([
             'user_id' => $user->id,
+            'disability_id' => $request->disability,
+            'educational_id' => $request->education,
             'name' => $request->name,
-            // 'lastname' => $request->lastname,
             'contactnumber' => $request->contactnumber,
             'state' => $request->state,
             'city' => $request->city,
-            'disability_id' => $request->disability,
             'pwd_card' => null,
+            'age' => $request->age ?? 0,
+            'founder' => $request->founder ?? '',
+            'year_established' => $request->year_established ?? 0,
         ]);
 
         // return redirect()->route('login-page');

@@ -29,18 +29,23 @@ class DatabaseSeeder extends Seeder
         //ROLES
         $admin = Role::create(['role_name' => 'Admin']);
         $pwd = Role::create(['role_name' => 'PWD']);
-        $trainer = Role::create(['role_name' => 'Trainer']);
+        $trainer = Role::create(['role_name' => 'Training Agency']);
         $employer = Role::create(['role_name' => 'Employer']);
         $sponsor = Role::create(['role_name' => 'Sponsor']);
 
         //DISABILITIES
         $none = Disability::create(['disability_name' => 'Not Applicable']);
-        $arm = Disability::create(['disability_name' => 'Arm Amputee']);
-        $leg = Disability::create(['disability_name' => 'Leg Amputee']);
+        $rightarm = Disability::create(['disability_name' => 'Right Arm Amputee']);
+        $leftarm = Disability::create(['disability_name' => 'Left Arm Amputee']);
+        $botharm = Disability::create(['disability_name' => "Bilateral Amputee (both arms)"]);
+        $rightleg = Disability::create(['disability_name' => 'Right Leg Amputee']);
+        $leftleg = Disability::create(['disability_name' => 'Left Leg Amputee']);
+        $bothleg = Disability::create(['disability_name' => "Bilateral Amputee (both legs)"]);
         $hear = Disability::create(['disability_name' => 'Hearing Impaired']);
         $speech = Disability::create(['disability_name' => 'Speech Impairment']);
         $visual = Disability::create(['disability_name' => 'Visually Impaired']);
 
+        $not_applicable = EducationLevel::create(['education_name' => 'Not Applicable']);
         $hsgrad = EducationLevel::create(['education_name' => 'High School Graduate']);
         $somecoll = EducationLevel::create(['education_name' => 'Some College']);
         $bachdegree = EducationLevel::create(['education_name' => "Bachelor's Degree"]);
@@ -55,17 +60,16 @@ class DatabaseSeeder extends Seeder
 
         UserInfo::create([
             'name' => 'Evryl Claire',
-            // 'lastname' => 'Claire',
             'contactnumber' => '09123456789',
             'state' => 'cebu',
             'city' => 'bulacao',
-            'disability_id' => $arm->id, // Assign a disability ID here
+            'disability_id' => $rightarm->id,
+            'educational_id' => $not_applicable->id,
             'user_id' => $adminuser->id,
         ]);
 
 
         $adminuser->role()->attach($admin);
-        // $user->disabilities()->attach($arm);
 
         $pwduser = User::create([
             'email' => 'pwd@example.com',
@@ -75,11 +79,11 @@ class DatabaseSeeder extends Seeder
 
         UserInfo::create([
             'name' => 'Juan Dela Cruz',
-            // 'lastname' => 'Dela Cruz',
             'contactnumber' => '09123456789',
             'state' => 'cebu',
             'city' => 'bulacao',
-            'disability_id' => $arm->id, // Assign a disability ID here
+            'disability_id' => $leftarm->id,
+            'educational_id' => $bachdegree->id, // Assign a disability ID here
             'user_id' => $pwduser->id,
         ]);
 
@@ -93,29 +97,27 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'name' => 'Bilat Way Hugas',
-            // 'lastname' => 'Way Hugas',
+            'name' => 'BrightFuture Training',
             'contactnumber' => '09123456789',
-            'city' => 'cebu',
-            'state' => 'bulacao',
+            'city' => 'Cebu City',
+            'state' => 'Cebu',
             'disability_id' => $none->id, // Assign a disability ID here
+            'educational_id' => $not_applicable->id,
             'user_id' => $traineruser1->id,
         ]);
 
         TrainingProgram::create([
             'id' => '001',
             'agency_id' => $traineruser1->id,
-            'title' => 'Luto gamit tiil program',
-            'description' => 'Wa kay kamot? Wa nay problema kay sa programa namo makat on mog luto gamit tiil',
+            'title' => 'EmpowerTech Skills Development Program',
+            'description' => 'The EmpowerTech Skills Development Program is a comprehensive training initiative aimed at enhancing the technical and vocational skills of people with disabilities. The program focuses on providing hands-on experience and practical knowledge to enable participants to thrive in the digital economy.',
             'state' => 'Cebu',
             'city' => 'Cebu City',
             'participants' => 30,
             'start' => date("Y-m-d"),
             'end' => date("Y-m-d"),
-            'disability_id' => $leg->id,
+            'disability_id' => $bothleg->id,
             'education_id' => $hsgrad->id,
-            'created_at' => date("Y-m-d"),
-            'updated_at' => date("Y-m-d"),
         ]);
 
         $traineruser1->role()->attach($trainer);
@@ -127,29 +129,27 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserInfo::create([
-            'name' => 'Ungart',
-            // 'lastname' => 'Way Hugas',
+            'name' => 'Aspire Training Solutions',
             'contactnumber' => '09123456789',
             'city' => 'Talisay City',
             'state' => 'Cebu',
             'disability_id' => $none->id, // Assign a disability ID here
+            'educational_id' => $not_applicable->id,
             'user_id' => $traineruser2->id,
         ]);
 
         TrainingProgram::create([
             'id' => '002',
             'agency_id' => $traineruser2->id,
-            'title' => 'Tudloan masabaan ang amang',
-            'description' => 'Di makatabi? No problem kay sa program namo diha raka kitag amang nga saba',
+            'title' => 'InclusiveTech Career Advancement Program',
+            'description' => 'The InclusiveTech Career Advancement Program is designed to equip people with disabilities with advanced skills in technology and professional development. This program focuses on bridging the skills gap and providing participants with the knowledge and confidence to pursue high-demand careers in the tech industry.',
             'state' => 'Cebu',
             'city' => 'Talisay City',
             'participants' => 30,
             'start' => date("Y-m-d"),
             'end' => date("Y-m-d"),
-            'disability_id' => $arm->id,
-            'education_id' => $hsgrad->id,
-            'created_at' => date("Y-m-d"),
-            'updated_at' => date("Y-m-d"),
+            'disability_id' => $hear->id,
+            'education_id' => $somecoll->id,
         ]);
 
         $traineruser2->role()->attach($trainer);

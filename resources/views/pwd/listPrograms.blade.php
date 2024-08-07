@@ -42,7 +42,7 @@
             </div>
         </form>
     </div>
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-center browse-area">
         <div class="mb-4 searchbar-container">
             <div class="col d-flex justify-content-center">
                 <form role="search" action="{{ route('pwd-list-program') }}" method="GET" id="searchForm">

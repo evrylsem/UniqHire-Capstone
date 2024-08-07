@@ -16,7 +16,6 @@
                 <td class="table-head">Email</td>
                 <td class="table-head">Contact Number</td>
                 <td class="table-head">Location</td>
-                <!-- <td class="table-head">Disability</td> -->
                 <td class="table-head" colspan="2">--</td>
             </tr>
         </thead>
@@ -28,7 +27,6 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->userInfo->contactnumber }}</td>
                 <td>{{ $user->userInfo->state. ' ' .$user->userInfo->city }}</td>
-                <!-- <td>{{ $user->userInfo->disability->disability_name }}</td> -->
                 <td colspan="2"><i class='bx bx-trash' id="trash-btn"></i></td>
             </tr>
             @empty
