@@ -18,13 +18,17 @@ return new class extends Migration
             $table->text('description');
             $table->string('state');
             $table->string('city');
-            $table->integer('participants')->nullable();
+            $table->integer('participants')->default(0);
             $table->date('start');
             $table->date('end');
-            
+
             //requirements
             $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
             $table->foreignId('education_id')->constrained('education_levels')->onDelete('cascade');
+
+            $table->integer('start_age')->default(0);
+            $table->integer('end_age')->default(0);
+            $table->foreignId('skill_id')->constrained('skills')->onDelete('cascade');
             // $table->foreignId('worktype_id')->constrained('work_types')->onDelete('cascade');
             // $table->foreignId('worksetup_id')->constrained('work_setups')->onDelete('cascade');
             $table->timestamps();

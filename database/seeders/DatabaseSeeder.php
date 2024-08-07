@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AllUser;
 use App\Models\Disability;
 use App\Models\EducationLevel;
+use App\Models\Skill;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -50,6 +51,12 @@ class DatabaseSeeder extends Seeder
         $somecoll = EducationLevel::create(['education_name' => 'Some College']);
         $bachdegree = EducationLevel::create(['education_name' => "Bachelor's Degree"]);
         $vocational = EducationLevel::create(['education_name' => 'Vocational']);
+
+        $programming = Skill::create(['title' => 'Programming']);
+        $communication = Skill::create(['title' => 'Communication']);
+        $graphic = Skill::create(['title' => 'Graphic Design']);
+        $data_analysis = Skill::create(['title' => 'Data Analysis']);
+        $carpentry = Skill::create(['title' => 'Carpentry']);
 
 
         $adminuser = User::create([
@@ -118,6 +125,7 @@ class DatabaseSeeder extends Seeder
             'end' => date("Y-m-d"),
             'disability_id' => $bothleg->id,
             'education_id' => $hsgrad->id,
+            'skill_id' => $programming->id,
         ]);
 
         $traineruser1->role()->attach($trainer);
@@ -150,6 +158,7 @@ class DatabaseSeeder extends Seeder
             'end' => date("Y-m-d"),
             'disability_id' => $hear->id,
             'education_id' => $somecoll->id,
+            'skill_id' => $carpentry->id,
         ]);
 
         $traineruser2->role()->attach($trainer);

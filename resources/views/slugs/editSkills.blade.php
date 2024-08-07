@@ -10,27 +10,28 @@
     </div>
 </div>
 <div>
-    <form action="{{route('add-experience')}}" method="POST">
+    <form action="{{route('add-skill')}}" method="POST">
         @csrf
         <div class="modal fade" id="skillModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Work Experience</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Skill</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="id" value="{{ $user->id }}">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="Title" name="title">
-                            <label for="floatingInput">Title</label>
-                            @error('title')
+                            <select class="form-select" id="skillSelect" name="skill" aria-label="Floating label select example" required>
+                                <option value="" selected disabled>Select a skill</option>
+                                @foreach($skills as $skill)
+                                <option value="{{ $skill->id }}">{{ $skill->title }}</option>
+                                @endforeach
+                            </select>
+                            <label for="skillSelect">Skill</label>
+                            @error('skill')
                             <span class="error-msg">{{ $message }}</span>
                             @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="">Date: </label>
-                            <input type="date" name="date" class="date-input">
                         </div>
                         <div class="modal-footer">
                             <button type="reset" class="deny-btn border-0">Clear</button>
@@ -41,14 +42,14 @@
             </div>
         </div>
     </form>
-    <!-- <ul class="experiences">
-        @forelse($experiences as $experience)
+    <ul class="skills">
+        @forelse($skilluser as $skill)
         <li class="mb-1">
             <div class="d-flex">
-                <div class="exp-container">
-                    <p class="exp-title">{{ $experience->title }}</p>
+                <div class="skill-container">
+                    <p class="skill-title">{{ $skill->skill->title }}</p>
                 </div>
-                <form action="{{ route('delete-experience', $experience->id) }}" method="POST" class="d-flex justify-content-end">
+                <form action="{{ route('delete-skill', $skill->id) }}" method="POST" class="d-flex justify-content-end">
                     @csrf
                     @method('DELETE')
                     <button class="border-0 match-info skill-delete-btn delete-btn" style="display: none;"><i class='bx bx-x'></i></button>
@@ -56,9 +57,9 @@
             </div>
         </li>
         @empty
-        <div class="about sub-text">No experiences. Add one.</div>
+        <div class="about sub-text">No Skills. Add one.</div>
         @endforelse
-    </ul> -->
+    </ul>
 </div>
 
 <script>

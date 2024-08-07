@@ -54,77 +54,118 @@
                 @enderror
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="mb-3">
-                    <label for="">Start Date: </label>
-                    <input type="date" name="start_date" class="date-input">
-                </div>
-            </div>
-            <div class="col">
-                <div class="mb-3">
-                    <label for="">End Date: </label>
-                    <input type="date" name="end_date" class="date-input">
-                </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="startAge" name="start_age" required placeholder="Input Age">
+                <label for="floatingInput">Start Age</label>
+                @error('age')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
-                        @foreach ($disabilities as $disability)
-                        @if ($disability->disability_name != 'Not Applicable')
-                        <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
-                        @endif
-                        @endforeach
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="endAge" name="end_age" required placeholder="Input Age">
+                <label for="floatingInput">End Age</label>
+                @error('age')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="participants" name="participants" required placeholder="Input Participants" oninput="formatNumber(this)">
+                <label for="floatingInput">Number of Participants</label>
+                @error('participants')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select class="form-select" id="floatingSelect" name="skills" aria-label="Floating label select example">
+                    @foreach ($skills as $skill)
+                    <option value="{{ $skill->id }}">{{ $skill->title }}</option>
+                    @endforeach
+                </select>
+                <label for="floatingSelect">Select Skill</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label for="">Start Date: </label>
+                <input type="date" name="start_date" class="date-input">
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="">End Date: </label>
+                <input type="date" name="end_date" class="date-input">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select class="form-select" id="floatingSelect" name="disability" aria-label="Floating label select example">
+                    @foreach ($disabilities as $disability)
+                    @if ($disability->disability_name != 'Not Applicable')
+                    <option value="{{ $disability->id }}">{{ $disability->disability_name }}</option>
+                    @endif
+                    @endforeach
 
-                    </select>
-                    <label for="floatingSelect">Disability</label>
-                </div>
+                </select>
+                <label for="floatingSelect">Disability</label>
             </div>
-            <div class="col">
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
-                        @foreach ($levels as $level)
-                        @if ($level->education_name != 'Not Applicable')
-                        <option value="{{ $level->id }}">{{ $level->education_name }}</option>
-                        @endif
-                        @endforeach
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select class="form-select" id="floatingSelect" name="education" aria-label="Floating label select example">
+                    @foreach ($levels as $level)
+                    @if ($level->education_name != 'Not Applicable')
+                    <option value="{{ $level->id }}">{{ $level->education_name }}</option>
+                    @endif
+                    @endforeach
 
-                    </select>
-                    <label for="floatingSelect">Education Level</label>
-                </div>
+                </select>
+                <label for="floatingSelect">Education Level</label>
             </div>
         </div>
-        <hr>
-        <div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Host a crowdfunding for this?
-                </label>
+    </div>
+    <hr>
+    <div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="host-crowdfund" onchange="toggleCrowdfund()">
+            <label class="form-check-label" for="flexCheckDefault">
+                Host a crowdfunding for this?
+            </label>
+        </div>
+    </div>
+    <div class="row" id="crowdfund-section">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled oninput="formatNumber(this)">
+                <label for="floatingInput">Amount Needed</label>
+                @error('goal')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
             </div>
         </div>
-        <div class="row" id="crowdfund-section">
-            <div class="col">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="amount-needed" name="goal" required placeholder="Amount Needed" disabled oninput="formatNumber(this)">
-                    <label for="floatingInput">Amount Needed</label>
-                    @error('goal')
-                    <span class="error-msg">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <!-- COMPETENCY -->
-        <div class="row border-bottom">
-            <div class="col">
-                <div class="form-floating mb-3">
-                    <div id="competencyListContainer">
-                        <label for="competencyList">Competencies:</label>
-                        <div id="competencyList"></div>
-                        <button type="button" id="addCompetencyBtn" class="submit-btn border-0 add-comp"><i class="bx bx-plus"></i> Add Competency</button>
-                    </div>
+    </div>
+    <!-- COMPETENCY -->
+    <div class="row border-bottom">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <div id="competencyListContainer">
+                    <label for="competencyList">Competencies:</label>
+                    <div id="competencyList"></div>
+                    <button type="button" id="addCompetencyBtn" class="submit-btn border-0 add-comp"><i class="bx bx-plus"></i> Add Competency</button>
                 </div>
             </div>
         </div>

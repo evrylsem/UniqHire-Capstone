@@ -41,7 +41,13 @@ class UserInfo extends Model
         return $this->belongsTo(EducationLevel::class, 'educational_id');
     }
 
-    public function experiences() {
+    public function experiences()
+    {
         return $this->hasMany(Experience::class, 'user_id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(SkillUser::class, 'user_id');
     }
 }

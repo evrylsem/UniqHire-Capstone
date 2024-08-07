@@ -26,14 +26,20 @@ Route::get('/logout', [AuthController::class, 'logout']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+Route::get('/', [AuthController::class, 'showLanding']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
     Route::delete('/profile/delete-experiences/{id}', [AuthController::class, 'deleteExperience'])->name('delete-experience');
     Route::post('/profile/add-experiences', [AuthController::class, 'addExperience'])->name('add-experience');
+    Route::delete('/profile/delete-skill/{id}', [AuthController::class, 'deleteSkill'])->name('delete-skill');
+    Route::post('/profile/add-skill', [AuthController::class, 'addSkill'])->name('add-skill');
     Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
+
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
     Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
     Route::get('/download-certificate/{enrolleeId}', [AuthController::class, 'downloadCertificate'])->name('download-certificate');
 
@@ -72,5 +78,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/training-programs', [PwdController::class, 'showTrainings'])->middleware('role:PWD')->name('trainings');
     Route::get('/training-program/{id}', [PwdController::class, 'showDetails'])->middleware('role:PWD')->name('show-details');
     Route::post('/training-program/rate', [PwdController::class, 'rateProgram'])->middleware('role:PWD')->name('rate-program');
-    
 });
