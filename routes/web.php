@@ -30,8 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
     Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
+
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
     Route::get('/show-program/{id}', [AgencyController::class, 'showProgramDetails'])->name('programs-show');
     Route::get('/download-certificate/{enrolleeId}', [AuthController::class, 'downloadCertificate'])->name('download-certificate');
 
