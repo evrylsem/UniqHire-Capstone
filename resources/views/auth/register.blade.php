@@ -73,7 +73,7 @@
                     </div>
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" name="contactnumber" value="{{ old('contactnumber') }}" required placeholder="Contact Number">
+                            <input type="text" class="form-control" id="floatingInput" name="contactnumber" value="{{ old('contactnumber') }}" required placeholder="Contact Number" pattern="\d{11}" minlength="11" maxlength="11">
                             <label for="floatingInput">Contact Number</label>
                             @error('contactnumber')
                             <span class="error-msg">{{ $message }}</span>
