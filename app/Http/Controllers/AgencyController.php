@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Notification;
 
 class AgencyController extends Controller
 {
+    private function convertToNumber($number)
+    {
+        return (float) str_replace(',', '', $number);
+    }
+
     public function showPrograms()
     {
         $userId = auth()->id();
@@ -52,9 +57,14 @@ class AgencyController extends Controller
         $program = TrainingProgram::findOrFail($id);
         $userId = auth()->id();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
-        $applications = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
+        $applications = TrainingApplication::where('training_program_id', $program->id)->get();
+        $requests = TrainingApplication::where('training_program_id', $program->id)->where('application_status', 'Pending')->get();
         $enrollees = Enrollee::where('program_id', $program->id)->get();
 
+        $pendingsCount = $applications->where('application_status', 'Pending')->count();
+        $ongoingCount = $enrollees->where('completion_status', 'Ongoing')->count();
+        $completedCount = $enrollees->where('completion_status', 'Completed')->count();
+        $enrolleesCount = $enrollees->count();
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0;
@@ -62,7 +72,7 @@ class AgencyController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0;
             $program->crowdfund->progress = $progress;
         }
-        return view('agency.showProg', compact('program', 'applications', 'reviews', 'enrollees'));
+        return view('agency.showProg', compact('program', 'applications', 'reviews', 'enrollees', 'pendingsCount', 'ongoingCount', 'completedCount', 'enrolleesCount', 'requests'));
     }
 
     public function showAddForm()
@@ -84,7 +94,7 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
-            'goal' => 'nullable|numeric',
+            'goal' => 'nullable|string',
             'competencies' => 'array|max:4',
             'competencies.*' => 'string|distinct',
         ]);
@@ -126,9 +136,10 @@ class AgencyController extends Controller
         }
 
         if ($request->has('goal') && $request->goal !== null) {
+            $goal = $this->convertToNumber($request->goal);
             CrowdfundEvent::create([
                 'program_id' => $trainingProgram->id,
-                'goal' => $request->goal,
+                'goal' => $goal,
             ]);
         }
 
@@ -196,7 +207,7 @@ class AgencyController extends Controller
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date',
-                'goal' => 'nullable|numeric',
+                'goal' => 'nullable|string',
                 'competencies' => 'array|max:4',
                 'competencies.*' => 'string|distinct',
             ]);
@@ -227,15 +238,16 @@ class AgencyController extends Controller
 
             if ($request->has('goal') && $request->goal !== null) {
                 $crowdfundEvent = $program->crowdfund;
+                $goal = $this->convertToNumber($request->goal);
 
                 if ($crowdfundEvent) {
                     $crowdfundEvent->update([
-                        'goal' => $request->goal,
+                        'goal' => $goal,
                     ]);
                 } else {
                     CrowdfundEvent::create([
                         'program_id' => $program->id,
-                        'goal' => $request->goal,
+                        'goal' => $goal,
                     ]);
                 }
             } else {

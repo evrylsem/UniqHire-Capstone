@@ -14,14 +14,19 @@ return new class extends Migration
         Schema::create('user_infos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
+            $table->foreignId('educational_id')->constrained('disabilities')->onDelete('cascade');
             $table->string('name');
             $table->string('contactnumber');
             $table->string('state');
             $table->string('city');
-            $table->foreignId('disability_id')->constrained('disabilities')->onDelete('cascade');
             $table->string('pwd_card')->nullable();
+            $table->integer('age')->default(0);
             $table->text('about')->nullable();
-            $table->integer('age')->nullable();
+            $table->string('founder')->default('');
+            $table->integer('year_established')->default(0);
+            $table->text('affiliations')->nullable();
+            $table->text('awards')->nullable();
             $table->timestamps();
         });
     }

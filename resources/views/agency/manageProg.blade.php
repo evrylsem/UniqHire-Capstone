@@ -12,7 +12,7 @@
             <a href="{{ route('programs-show', $program->id) }}" class="prog-texts">
                 <h3 class="text-cap">{{ $program->title }}</h3>
                 <p class="sub-text prog-loc text-cap">
-                    <i class='bx bx-map sub-text prog-loc'></i>{{(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}
+                    <i class='bx bx-map sub-text prog-loc'></i>{{$program->state . ', ' .(str_contains($program->city, 'City') ? $program->city : $program->city . ' City')}}
                 </p>
                 <div class="prog-desc-container">
                     <p class="prog-desc mt-3">
@@ -23,7 +23,7 @@
                 <div class="crowdfund-progress mb-3">
 
                     <p class="sub-text">
-                        Goal Amount: &nbsp;&nbsp;<span>{{$program->crowdfund->goal . ' PHP'}}</span>
+                        Goal Amount: &nbsp;&nbsp;<span>{{number_format($program->crowdfund->goal, 0, '.', ',') . ' PHP'}}</span>
                     </p>
                     <p class="sub-text">
                         Crowdfunding Progress:

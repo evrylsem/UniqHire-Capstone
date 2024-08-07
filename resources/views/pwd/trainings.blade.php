@@ -15,11 +15,6 @@
                 <div class="text-start header-texts fs-4 back-link-container border-bottom mb-3">
                     Applications.
                 </div>
-                <!-- <div class="mb-3">
-                    <button id="app-status-all" class="match-info app-status-btn-default app-status-btn-active" onclick="applicationStatusFilter('app-status-all')">Show All</button>
-                    <button id="app-status-pending" class="match-info app-status-btn-default" onclick="applicationStatusFilter('app-status-pending')">Pending</button>
-                    <button id="app-status-approved" class="match-info app-status-btn-default" onclick="applicationStatusFilter('app-status-approved')">Approved</button>
-                </div> -->
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -46,7 +41,6 @@
                                 ">{{$application->application_status}}</p>
                             </td>
                             <td class="text-cap"><a href="{{ route('show-details', $application->program->id) }}">Show Details</a></td>
-                            <!-- <td></td> -->
                         </tr>
                         @empty
                         <tr>
