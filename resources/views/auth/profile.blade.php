@@ -176,9 +176,17 @@
                     data.sort((a, b) => a.name.localeCompare(b.name));
                     data.forEach(city => {
                         var option = document.createElement('option');
-                        option.value = city.name; // Ensure this matches your database value
-                        option.text = city.name;
+                        option.value = city.name.trim(); // Ensure this matches your database value
+                        option.text = city.name.trim();
                         citySelect.appendChild(option);
+                    });
+
+                    var userCity = "{{ $user->userInfo->city }}".trim().toLowerCase();
+
+                    Array.from(citySelect.options).forEach(option => {
+                        if (option.value.trim().toLowerCase() === userCity) {
+                            option.selected = true;
+                        }
                     });
                 })
                 .catch(error => console.error('Error fetching cities:', error));

@@ -9,6 +9,7 @@ use App\Models\Disability;
 use App\Models\EducationLevel;
 use App\Models\TrainingApplication;
 use App\Models\User;
+use App\Models\SkillUser;
 use App\Http\Requests\StoreUserInfoRequest;
 use App\Http\Requests\UpdateUserInfoRequest;
 use App\Models\Enrollee;
@@ -82,16 +83,25 @@ class PwdController extends Controller
 
         // $viewName = $request->input('view', 'pwd.listPrograms');
 
-        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations'));
+        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations', 'similarity'));
     }
 
     private function calculateSimilarity($user, $program)
     {
         $similarityScore = 0;
         $weights = [
-            'disability' => 0.7,
-            'location' => 0.3
+            'disability' => 50,
+            'location' => 20,
+            'age' => 5,
+            'educ' => 10,
+            'skills' => 10,
+            'rating' => 5
         ];
+
+        $userSkills = SkillUser::where('user_id', $user->id)->get();
+        $totalRating = PwdFeedback::where('program_id', $program->id)->sum('rating');
+        $ratingCount = PwdFeedback::where('program_id', $program->id)->count();
+        $averageRating = $ratingCount > 0 ? $totalRating / $ratingCount : 0;
 
         // Criteria: disability, location
         if ($user->disability_id === $program->disability_id) {
@@ -100,6 +110,24 @@ class PwdController extends Controller
 
         if ($user->city === $program->city) {
             $similarityScore += $weights['location'];
+        }
+
+        if($user->age >= $program->start_age && $user->age <= $program->end_age){
+            $similarityScore += $weights['age'];
+        }
+
+        if($user->educational_id === $program->education_id){
+            $similarityScore += $weights['educ'];
+        }
+
+        foreach($userSkills as $userSkill){
+            if ($userSkill->skill_id === $program->skill_id){
+                $similarityScore += $weights['skills'];
+            }
+        }
+
+        if($averageRating){
+            $similarityScore += $averageRating;
         }
 
         return $similarityScore;
