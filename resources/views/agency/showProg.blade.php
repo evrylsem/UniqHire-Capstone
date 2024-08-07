@@ -65,12 +65,23 @@
                     <div class="requirements">
                         <div class="d-flex justify-content-start mb-5">
                             <div class="more-info">
-                                <h5>Start Date</h5>
-                                <p>{{ \Carbon\Carbon::parse($program->start)->format('M d, Y') }}</p>
+                                <h5>Duration</h5>
+                                <p>{{ \Carbon\Carbon::parse($program->start)->format('M d, Y') . ' to ' . \Carbon\Carbon::parse($program->end)->format('M d, Y') }}</p>
                             </div>
                             <div class="more-info">
-                                <h5>End Date</h5>
-                                <p>{{ \Carbon\Carbon::parse($program->end)->format('M d, Y') }}</p>
+                                <h5>Participants</h5>
+                                <p>{{ $program->participants . ' Persons' }}</p>
+                            </div>
+                        </div>
+                        <!-- AGE -->
+                        <div class="d-flex justify-content-start mb-5">
+                            <div class="more-info">
+                                <h5>Age</h5>
+                                <p class="match-info">{{ $program->start_age . ' - ' . $program->end_age . ' Years Old' }}</p>
+                            </div>
+                            <div class="more-info">
+                                <h5>Skills Acquired</h5>
+                                <span class="match-info">{{ $program->skill->title }}</span>
                             </div>
                         </div>
                         <div class="d-flex justify-content-start more-info">

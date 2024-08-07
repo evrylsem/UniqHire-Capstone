@@ -12,6 +12,7 @@ use App\Models\Enrollee;
 use App\Models\PwdFeedback;
 use App\Models\TrainingApplication;
 use App\Models\Competency;
+use App\Models\Skill;
 use App\Notifications\ApplicationAcceptedNotification;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
@@ -79,7 +80,8 @@ class AgencyController extends Controller
     {
         $disabilities = Disability::all();
         $levels = EducationLevel::all();
-        return view('agency.addProg', compact('disabilities', 'levels'));
+        $skills = Skill::all();
+        return view('agency.addProg', compact('disabilities', 'levels', 'skills'));
     }
 
     public function addProgram(Request $request)
@@ -92,12 +94,19 @@ class AgencyController extends Controller
             'description' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
+            'start_age' => 'integer|min:1|max:99',
+            'end_age' => 'integer|min:1|max:99',
+            'participants' => ['required', 'regex:/^\d+$/', 'max:255'],
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
             'goal' => 'nullable|string',
             'competencies' => 'array|max:4',
             'competencies.*' => 'string|distinct',
         ]);
+
+        $participants = $this->convertToNumber($request->participants);
+
+
 
         // try {
         $trainingProgram = TrainingProgram::create([
@@ -110,6 +119,10 @@ class AgencyController extends Controller
             'end' => $request->end_date,
             'disability_id' => $request->disability,
             'education_id' => $request->education,
+            'skill_id' => $request->skills,
+            'start_age' => $request->start_age,
+            'end_age' => $request->end_age,
+            'participants' => $participants,
         ]);
 
         if ($request->has('competencies')) {
@@ -183,6 +196,7 @@ class AgencyController extends Controller
         // Fetch disabilities and education levels
         $disabilities = Disability::all();
         $levels = EducationLevel::all();
+        $skills = Skill::all();
 
         // Return the view with all required data
         return view('agency.editProg', [
@@ -190,6 +204,7 @@ class AgencyController extends Controller
             'provinces' => $provinces,
             'disabilities' => $disabilities,
             'levels' => $levels,
+            'skill_id' => $skills,
         ]);
 
         // return redirect()->route('programs-manage');
@@ -210,6 +225,7 @@ class AgencyController extends Controller
                 'goal' => 'nullable|string',
                 'competencies' => 'array|max:4',
                 'competencies.*' => 'string|distinct',
+                'skills' => 'required|exists:skills,id',
             ]);
 
             $program->update([
@@ -221,6 +237,7 @@ class AgencyController extends Controller
                 'end' => $request->end_date,
                 'disability_id' => $request->disability,
                 'education_id' => $request->education,
+                'skill_id' => $request->skills,
             ]);
 
             if ($request->has('competencies')) {

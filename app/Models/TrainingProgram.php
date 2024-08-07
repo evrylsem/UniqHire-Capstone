@@ -19,7 +19,10 @@ class TrainingProgram extends Model
         'start',
         'end',
         'disability_id',
-        'education_id'
+        'education_id',
+        'start_age',
+        'end_age',
+        'skill_id',
     ];
 
     public function agency()
@@ -55,5 +58,10 @@ class TrainingProgram extends Model
     public function enrollees()
     {
         return $this->hasMany(Enrollee::class, 'program_id');
+    }
+
+    public function skill()
+    {
+        return $this->belongsTo(Skill::class, 'skill_id');
     }
 }

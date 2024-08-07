@@ -11,7 +11,9 @@ use App\Models\Role;
 use App\Models\Disability;
 use App\Models\EducationLevel;
 use App\Models\Experience;
+use App\Models\Skill;
 use App\Models\UserInfo;
+use App\Models\SkillUser;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -23,9 +25,11 @@ class AuthController extends Controller
         $user = User::find($id);
         $levels = EducationLevel::all();
         $disabilities = Disability::all();
+        $skills = Skill::all();
+        $skilluser = SkillUser::where('user_id', $id)->get();
         $experiences = Experience::where('user_id', $id)->get();
         $certifications = Enrollee::where('pwd_id', $id)->where('completion_status', 'Completed')->get();
-        return view('auth.profile', compact('levels', 'disabilities', 'user', 'certifications', 'experiences'));
+        return view('auth.profile', compact('levels', 'disabilities', 'user', 'certifications', 'skills', 'skilluser', 'experiences'));
     }
 
     public function editProfile(Request $request)
@@ -38,6 +42,7 @@ class AuthController extends Controller
             'age' => 'nullable|integer|min:1|max:99',
             'city' => 'string|max:255',
             'state' => 'string|max:255',
+            'age' => 'integer|between:0,99',
             'founder' => 'nullable|string|max:255',
             'year_established' => 'nullable|integer|min:1000|max:3000',
             'about' => 'nullable|string',
@@ -71,7 +76,8 @@ class AuthController extends Controller
         return back()->with('success', 'Your profile has been changed successfully!');
     }
 
-    public function addExperience(Request $request) {
+    public function addExperience(Request $request)
+    {
         $request->validate([
             'title' => 'required|string|max:255',
             'date' => 'required|date',
@@ -91,6 +97,30 @@ class AuthController extends Controller
     {
         $experience = Experience::findOrFail($id);
         $experience->delete();
+
+        return back();
+    }
+
+    public function addSkill(Request $request)
+    {
+        $user = Auth::user()->id;
+
+        $request->validate([
+            'skill' => 'required|exists:skills,id',
+        ]);
+
+        SkillUser::create([
+            'user_id' => $user,
+            'skill_id' => $request->skill,
+        ]);
+
+        return back()->with('success', 'Skill successfully added!');
+    }
+
+    public function deleteSkill($id)
+    {
+        $skill = Skill::findOrFail($id);
+        $skill->delete();
 
         return back();
     }
@@ -120,6 +150,33 @@ class AuthController extends Controller
         })->count();
 
         return view('homepage', compact('images', 'pwdCount', 'trainerCount', 'employerCount', 'sponsorCount'));
+    }
+
+    public function showLanding()
+    {
+        $images = [
+            'images/18.png',
+            'images/19.png',
+            'images/20.png',
+            'images/21.png',
+        ];
+        $pwdCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'PWD');
+        })->count();
+
+        $trainerCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Training Agency');
+        })->count();
+
+        $employerCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Employer');
+        })->count();
+
+        $sponsorCount = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'Sponsor');
+        })->count();
+
+        return view('landing', compact('images', 'pwdCount', 'trainerCount', 'employerCount', 'sponsorCount'));
     }
 
     public function showForgotPass()
