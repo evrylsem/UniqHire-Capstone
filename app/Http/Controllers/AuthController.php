@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Enrollee;
 use App\Models\Role;
@@ -47,7 +48,7 @@ class AuthController extends Controller
             'year_established' => 'nullable|integer|min:1000|max:3000',
             'about' => 'nullable|string',
             'awards' => 'nullable|string',
-            'affiliations' => 'nullable|string'
+            'affiliations' => 'nullable|string',
         ]);
 
         if ($user->hasRole('Training Agency')) {
@@ -71,6 +72,7 @@ class AuthController extends Controller
                 'state' => $request->state,
                 'about' => $request->about,
                 'disability_id' => $request->disability,
+                'educational_id' => $request->education
             ]);
         }
         return back()->with('success', 'Your profile has been changed successfully!');
@@ -304,4 +306,29 @@ class AuthController extends Controller
 
         return $pdf->download('certificate-' . $user->id . ' .pdf');
     }
+
+
+    public function addPicture(Request $request) {
+        $user = UserInfo::where('user_id', Auth::user()->id)->firstOrFail();
+
+        $request->validate([
+            'profilePic' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('profilePic')) {
+            $file = $request->file('profilePic');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'profile_photos/' . $fileName;
+
+            // Save the file to the specified disk
+            Storage::disk('profile_photos')->put($fileName, file_get_contents($file));
+
+            // Update the user's profile_path
+            $user->profile_path = $filePath;
+            $user->save();
+        }
+
+        return back()->with('success', 'Profile picture updated successfully.');
+    }
+
 }

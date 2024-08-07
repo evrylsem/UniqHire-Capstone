@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('year_established')->default(0);
             $table->text('affiliations')->nullable();
             $table->text('awards')->nullable();
+            $table->string('profile_path')->nullable();
             $table->timestamps();
         });
     }
