@@ -199,13 +199,7 @@ class AgencyController extends Controller
         $skills = Skill::all();
 
         // Return the view with all required data
-        return view('agency.editProg', [
-            'program' => $program,
-            'provinces' => $provinces,
-            'disabilities' => $disabilities,
-            'levels' => $levels,
-            'skill_id' => $skills,
-        ]);
+        return view('agency.editProg', compact('program', 'provinces', 'disabilities', 'levels', 'skills' ));
 
         // return redirect()->route('programs-manage');
     }
@@ -226,6 +220,8 @@ class AgencyController extends Controller
                 'competencies' => 'array|max:4',
                 'competencies.*' => 'string|distinct',
                 'skills' => 'required|exists:skills,id',
+                'start_age' => 'integer|min:1|max:99',
+                'end_age' => 'integer|min:1|max:99',
             ]);
 
             $program->update([
@@ -238,6 +234,9 @@ class AgencyController extends Controller
                 'disability_id' => $request->disability,
                 'education_id' => $request->education,
                 'skill_id' => $request->skills,
+                'start_age' => $request->start_age,
+                'end_age' => $request->end_age,
+
             ]);
 
             if ($request->has('competencies')) {

@@ -11,9 +11,10 @@
             <div class="sub-caption mb-4">
                 <p>Welcome to Uniqhire, where every ability finds opportunity! Creating bridges to people with disabilities, fostering inclusivity and celebrating diverse talents. Join us in building a world where everyone thrives!</p>
             </div>
-            <div class="">
-                <button type="button" class="btn-outline">Explore</button>
-            </div>
+                <div class="">
+                    <a href="{{route('login-page')}}" class="btn-outline">Explore</a>
+                </div>
+            </form>
         </div>
         <div class="col">
             <div id="carouselExample" class="carousel slide carousel-container">

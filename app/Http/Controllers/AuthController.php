@@ -138,7 +138,7 @@ class AuthController extends Controller
         })->count();
 
         $trainerCount = User::whereHas('role', function ($query) {
-            $query->where('role_name', 'Trainer');
+            $query->where('role_name', 'Training Agency');
         })->count();
 
         $employerCount = User::whereHas('role', function ($query) {
@@ -234,7 +234,7 @@ class AuthController extends Controller
             // 'disability' => 'required|string|exists:disabilities,id',
             // 'education' => 'required|string|exists:education_level,name',
             'name' => 'required|string|max:255',
-            'contactnumber' => 'required|string|max:255',
+            'contactnumber' => 'required|string|max:11|min:11',
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'pwd_card' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',

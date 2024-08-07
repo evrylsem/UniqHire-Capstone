@@ -56,6 +56,47 @@
                 <span class="error-msg">{{ $message }}</span>
                 @enderror
             </div>
+        </div>        
+    </div>
+    <div class="row">
+     <div class="col">
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="startAge" name="start_age" value="{{ $program->start_age }}" required placeholder="Input Age">
+                <label for="floatingInput">Start Age</label>
+                @error('age')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="endAge" name="end_age" value="{{ $program->end_age }}" required placeholder="Input Age">
+                <label for="floatingInput">End Age</label>
+                @error('age')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="participants" name="participants" value="{{ $program->participants }}" required placeholder="Input Participants" oninput="formatNumber(this)">
+                <label for="floatingInput">Number of Participants</label>
+                @error('participants')
+                <span class="error-msg">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-floating mb-3">
+                <select class="form-select" id="floatingSelect" name="skills" aria-label="Floating label select example">
+                    @foreach ($skills as $skill)
+                    <option value="{{ $skill->id }}" {{ $program->skill_id == $skill->id ? 'selected' : '' }}>{{ $skill->title }}</option>
+                    @endforeach
+                </select>
+                <label for="floatingSelect">Select Skill</label>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -248,11 +289,13 @@
 
                 // Set the selected province
                 provinceSelect.value = "{{ $program->state }}";
+                console.log(provinceSelect.value);
             })
             .catch(error => console.error('Error fetching provinces:', error));
     }
 
     function fetchCities(provinceCode) {
+        
         fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
             .then(response => response.json())
             .then(data => {
@@ -261,13 +304,20 @@
                 data.sort((a, b) => a.name.localeCompare(b.name));
                 data.forEach(city => {
                     var option = document.createElement('option');
-                    option.value = city.name;
-                    option.text = city.name;
-                    citySelect.appendChild(option);
+                    option.value = city.name.trim();
+                    option.text = city.name.trim();
+                    citySelect.appendChild(option);                    
                 });
 
-                // Set the selected city
-                citySelect.value = "{{ $program->city }}";
+                // Normalize both the program city and the options
+            var programCity = "{{ $program->city }}".trim().toLowerCase();
+
+            Array.from(citySelect.options).forEach(option => {
+                if (option.value.trim().toLowerCase() === programCity) {
+                    option.selected = true;
+                }
+            });
+
             })
             .catch(error => console.error('Error fetching cities:', error));
     }
