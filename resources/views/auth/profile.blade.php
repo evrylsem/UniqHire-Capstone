@@ -4,8 +4,9 @@
 @section('page-content')
 <div class="profile-container container">
     <div class="profile-info mb-4">
-        <div class="profile-pic">
+    <div class="profile-pic" style="background-image: url('{{ asset($user->userInfo->profile_path) }}')">
 
+            @include("slugs.addProfile")
         </div>
         <div class="d-flex justify-content-between header">
             <div class="details row">

@@ -139,6 +139,7 @@ class PwdController extends Controller
         $userId = auth()->user()->id;
         $application = TrainingApplication::where('user_id', $userId)->get();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
+        $status = Enrollee::where('pwd_id', $userId)->get();
 
         // Collect all end dates from the applications
         $endDates = $application->map(function ($app) {
@@ -159,7 +160,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees'));
+        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status'));
 
 
         // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
