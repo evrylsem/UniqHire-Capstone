@@ -9,7 +9,7 @@
             <div class="row mb-5">
                 <div class="col-3"></div>
                 <div class="col">
-                    <img src="../images/logo.png" alt="UniqHire Logo" class="logo-big">
+                    <a href="{{route('landing')}}"><img src="../images/logo.png" alt="UniqHire Logo" class="logo-big"></a>
                 </div>
                 <div class="col-3"></div>
             </div>
@@ -25,14 +25,14 @@
                     <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email">
                     <label for="floatingInput">Email Address</label>
                     @error('email')
-                        <span class="error-msg">{{ $message }}</span>
+                    <span class="error-msg">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-floating mb-2">
                     <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
                     <label for="floatingPassword">Password</label>
                     @error('password')
-                        <span class="error-msg">{{ $message }}</span>
+                    <span class="error-msg">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="row mb-4">
@@ -48,7 +48,7 @@
                         <a href="{{ route('forgot-password') }}" class="link-underline link-underline-opacity-0 accent-text">Forget Password?</a>
                     </div>
                 </div>
-                <div class=""> 
+                <div class="">
                     <button type="submit" class="bg-text fs-5 border-0 bold-texts submit-btn">Sign In</button>
                 </div>
             </form>

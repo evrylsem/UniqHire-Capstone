@@ -1,7 +1,43 @@
 @extends('layout')
 
-@section('page-title', 'Home')
+@section('page-title', 'Welcome to UniqHire')
 @section('auth-content')
+<style>
+    .home-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .home-container .navbar {
+        padding-left: 0;
+    }
+
+    .nav-item .submit-btn {
+        padding: 0.5rem;
+        width: 7rem;
+        margin-right: 4rem;
+    }
+</style>
+<div class="home-container content-container">
+    <nav class="navbar border-bottom">
+        <div class="navbar-container">
+            <div>
+                <ul class="d-flex align-items-center">
+                    <li class="logo-container"><a href="#"><img class="logo" src="{{ asset('images/logo.png') }}" alt=""></a></li>
+                    <li class="nav-item"><a href="{{route('landing')}}" class="{{ request()->routeIs('landing') ? 'active' : '' }}">Home</a></li>
+
+                </ul>
+            </div>
+            <div>
+                <ul class="d-flex align-items-center">
+                    <li class="nav-item user-index">
+                        <form action="{{route('login-page')}}" method="get"><button class="submit-btn border-0" type="submit">Login</button></form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
 <div class="home-container">
     <div class="row home-top border-bottom">
         <div class="col-5 home-captions">
@@ -11,9 +47,9 @@
             <div class="sub-caption mb-4">
                 <p>Welcome to Uniqhire, where every ability finds opportunity! Creating bridges to people with disabilities, fostering inclusivity and celebrating diverse talents. Join us in building a world where everyone thrives!</p>
             </div>
-                <div class="">
-                    <a href="{{route('login-page')}}" class="btn-outline">Explore</a>
-                </div>
+            <div class="">
+                <a href="{{route('login-page')}}" class="btn-outline">Explore</a>
+            </div>
             </form>
         </div>
         <div class="col">

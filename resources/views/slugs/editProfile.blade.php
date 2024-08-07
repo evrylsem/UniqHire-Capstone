@@ -1,4 +1,4 @@
-<form action="{{ route('edit-profile') }}" method="POST">
+<form action="{{ route('edit-profile') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div>
@@ -12,6 +12,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="text-danger">
+                            @if (!empty($user->userInfo->profile_path))
+                            Current file: {{ basename($user->userInfo->profile_path) }}
+                            @endif
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="file" name="profile_picture" class="form-control" id="choose-file" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick="clearFileInput('choose-file')">Remove</button>
+                        </div>
 
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Name" value="{{ $user->userInfo->name }}">
@@ -44,7 +53,7 @@
                             @if($user->hasRole('PWD'))
                             <div class="col">
                                 <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="floatingInput" name="age" placeholder="Age" value="{{ $user->userInfo->age }}">
+                                    <input type="number" class="form-control" id="floatingInput" name="age" placeholder="Age" value="{{ $user->userInfo->age}}">
                                     <label for="floatingInput">Age</label>
                                     @error('age')
                                     <span class="error-msg">{{ $message }}</span>

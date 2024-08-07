@@ -81,9 +81,11 @@ class PwdController extends Controller
         $paginatedItems = new LengthAwarePaginator($currentItems, count($rankedPrograms), $perPage);
         $paginatedItems->setPath($request->url());
 
-        // $viewName = $request->input('view', 'pwd.listPrograms');
+        $disabilityCounts = Disability::withCount('program')->get()->keyBy('id');
+        $educationCounts = EducationLevel::withCount('program')->get()->keyBy('id');
+        
 
-        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations', 'similarity'));
+        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations','disabilityCounts', 'educationCounts'));
     }
 
     private function calculateSimilarity($user, $program)

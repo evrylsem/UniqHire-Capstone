@@ -13,6 +13,6 @@ class EducationLevel extends Model
     ];
 
     public function program() {
-        return $this->hasMany(EducationLevel::class);
+        return $this->hasMany(TrainingProgram::class, 'education_id');
     }
 }
