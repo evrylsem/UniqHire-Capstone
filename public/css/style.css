@@ -1550,6 +1550,8 @@ table tbody .bx {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     border-left: 3px solid var(--primary-color);
+    display: flex;
+    align-items: center;
 }
 
 .profile-container .more-details .bio .bio-item .experiences li:hover {
