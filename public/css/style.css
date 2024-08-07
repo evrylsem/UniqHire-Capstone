@@ -1456,11 +1456,14 @@ table tbody .bx {
 }
 
 .profile-container .profile-pic {
-    background-color: var(--primary-color-light);
+    /* background-color: var(--primary-color-light); */
     width: 10rem;
     height: 10rem;
     border-radius: 100%;
     margin-right: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .profile-container .profile-name {

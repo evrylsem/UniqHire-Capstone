@@ -68,8 +68,8 @@ class DatabaseSeeder extends Seeder
         UserInfo::create([
             'name' => 'Evryl Claire',
             'contactnumber' => '09123456789',
-            'state' => 'cebu',
-            'city' => 'bulacao',
+            'state' => 'Cebu',
+            'city' => 'City Of Talisay',
             'disability_id' => $rightarm->id,
             'educational_id' => $not_applicable->id,
             'user_id' => $adminuser->id,
@@ -87,8 +87,8 @@ class DatabaseSeeder extends Seeder
         UserInfo::create([
             'name' => 'Juan Dela Cruz',
             'contactnumber' => '09123456789',
-            'state' => 'cebu',
-            'city' => 'bulacao',
+            'state' => 'Cebu',
+            'city' => 'City Of Talisay',
             'disability_id' => $leftarm->id,
             'educational_id' => $bachdegree->id, // Assign a disability ID here
             'user_id' => $pwduser->id,
@@ -106,7 +106,7 @@ class DatabaseSeeder extends Seeder
         UserInfo::create([
             'name' => 'BrightFuture Training',
             'contactnumber' => '09123456789',
-            'city' => 'Cebu City',
+            'city' => 'City Of Cebu',
             'state' => 'Cebu',
             'disability_id' => $none->id, // Assign a disability ID here
             'educational_id' => $not_applicable->id,
@@ -119,7 +119,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'EmpowerTech Skills Development Program',
             'description' => 'The EmpowerTech Skills Development Program is a comprehensive training initiative aimed at enhancing the technical and vocational skills of people with disabilities. The program focuses on providing hands-on experience and practical knowledge to enable participants to thrive in the digital economy.',
             'state' => 'Cebu',
-            'city' => 'Cebu City',
+            'city' => 'City Of Cebu',
             'participants' => 30,
             'start' => date("Y-m-d"),
             'end' => date("Y-m-d"),
@@ -139,7 +139,7 @@ class DatabaseSeeder extends Seeder
         UserInfo::create([
             'name' => 'Aspire Training Solutions',
             'contactnumber' => '09123456789',
-            'city' => 'Talisay City',
+            'city' => 'City Of Talisay',
             'state' => 'Cebu',
             'disability_id' => $none->id, // Assign a disability ID here
             'educational_id' => $not_applicable->id,
@@ -152,7 +152,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'InclusiveTech Career Advancement Program',
             'description' => 'The InclusiveTech Career Advancement Program is designed to equip people with disabilities with advanced skills in technology and professional development. This program focuses on bridging the skills gap and providing participants with the knowledge and confidence to pursue high-demand careers in the tech industry.',
             'state' => 'Cebu',
-            'city' => 'Talisay City',
+            'city' => 'City Of Talisay',
             'participants' => 30,
             'start' => date("Y-m-d"),
             'end' => date("Y-m-d"),

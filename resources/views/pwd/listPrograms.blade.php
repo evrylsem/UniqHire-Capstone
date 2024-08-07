@@ -57,7 +57,7 @@
             <div class="prog-grid" id="prog-grid">
                 @foreach ($paginatedItems as $ranked)
                 <div class="row prog-card mb-2">
-                    <input type="hidden" name="" value="{{$ranked['similarity']}}" id="">
+                    <input type="text" name="" value="{{$ranked['similarity']}}" id="">
                     <div class="col ">
                         <a href="{{ route('training-details', $ranked['program']->id ) }}" class="d-flex prog-texts">
                             <div class="prog-texts-container">

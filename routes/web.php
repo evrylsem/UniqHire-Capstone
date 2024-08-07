@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/delete-skill/{id}', [AuthController::class, 'deleteSkill'])->name('delete-skill');
     Route::post('/profile/add-skill', [AuthController::class, 'addSkill'])->name('add-skill');
     Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
+    Route::post('/profile/add-pic', [AuthController::class, 'addPicture'])->name('add-pic');
 
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
