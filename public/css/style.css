@@ -1626,10 +1626,16 @@ table tbody .bx {
     font-size: 20px;
     margin: 0;
     font-weight: bolder;
+    word-break: break-all;
 }
 
 .profile-container .more-details .bio .bio-item .exp-date {
     font-size: 17px;
+}
+
+.profile-container .more-details .bio .bio-item .certify {
+    color: var(--primary-color);
+    text-decoration: underline;
 }
 
 .profile-container .more-details .contact .side-icon {

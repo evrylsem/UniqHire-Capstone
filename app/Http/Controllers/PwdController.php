@@ -142,6 +142,10 @@ class PwdController extends Controller
         $application = TrainingApplication::where('user_id', $userId)->get();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $status = Enrollee::where('pwd_id', $userId)->get();
+        $isCompletedProgram = Enrollee::where('program_id', $program->id)
+        ->where('pwd_id', $userId)
+        ->where('completion_status', 'Completed')
+        ->exists();
 
         // Collect all end dates from the applications
         $endDates = $application->map(function ($app) {
@@ -162,30 +166,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status'));
-
-
-        // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
-        // $userId = auth()->user()->id; // Get the authenticated user's ID
-
-        // // Get the application status for the specific program
-        // $application = TrainingApplication::where('user_id', $userId)
-        //     ->where('training_program_id', $id)
-        //     ->first();
-        // $applicationStatus = $application ? $application->application_status : 'Apply';
-
-        //  // Check if the user has any pending or approved applications
-        // $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
-        // ->whereIn('application_status', ['Pending', 'Approved'])
-        // ->exists();
-
-        // Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
-
-        // return response()->json([
-        //     'program' => $program,
-        //     'application_status' => $applicationStatus,
-        //     'has_pending_or_approved' => $hasPendingOrApproved
-        // ]);
+        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status', 'isCompletedProgram'));
     }
 
     public function showCalendar(Request $request)
@@ -209,69 +190,6 @@ class PwdController extends Controller
         
         return view('pwd.calendar');
     }
-    
-    public function application(Request $request)
-    {
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'training_program_id' => 'required|exists:training_programs,id',
-        ]);
-
-        $validatedData['application_status'] = 'Pending';
-        $trainingApplication = TrainingApplication::create($validatedData);
-
-        $trainingProgram = TrainingProgram::findOrFail($validatedData['training_program_id']);
-
-        $trainerUser = User::whereHas('userInfo', function ($query) use ($trainingProgram) {
-            $query->where('user_id', $trainingProgram->agency_id);
-        })->whereHas('role', function ($query) {
-            $query->where('role_name', 'Trainer');
-        })->first();
-
-        if ($trainerUser) {
-            $trainerUser->notify(new PwdApplicationNotification($trainingApplication));
-        } else {
-            Log::error('No agency user found for training program', ['trainingProgram' => $trainingProgram->id]);
-        }
-
-        return back()->with('success', 'Application sent successfully!');
-    }
-
-    // public function action(Request $request) 
-    // {
-    //     log::info("calendar reach in action!");
-    //     if($request->ajax())
-    // 	{
-    // 		if($request->type == 'add')
-    // 		{
-    // 			$event = TrainingProgram::create([
-    // 				'title'		=>	$request->title,
-    // 				'start'		=>	$request->start,
-    // 				'end'		=>	$request->end
-    // 			]);
-
-    // 			return response()->json($event);
-    // 		}
-
-    // 		if($request->type == 'update')
-    // 		{
-    // 			$event = TrainingProgram::find($request->id)->update([
-    // 				'title'		=>	$request->title,
-    // 				'start'		=>	$request->start,
-    // 				'end'		=>	$request->end
-    // 			]);
-
-    // 			return response()->json($event);
-    // 		}
-
-    // 		if($request->type == 'delete')
-    // 		{
-    // 			$event = TrainingProgram::find($request->id)->delete();
-
-    // 			return response()->json($event);
-    // 		}
-    // 	}
-    // }
 
     public function showTrainings(Request $request)
     {
@@ -296,7 +214,7 @@ class PwdController extends Controller
         $request->validate([
             'program_id' => 'required|exists:training_programs,id',
             'rating' => 'required|integer|between:1,5',
-            'content' => 'string|max:1000',
+            'content' => 'nullable|string|max:1000',
         ]);
 
         try {

@@ -106,8 +106,9 @@
                     <h4 class="mb-3">Certifications</h4>
                     @forelse($certifications as $certification)
                     <p>
-                        <a href="{{ route('download-certificate', $certification->id) }}" class="text-primary">
-                            Certified {{$certification->program->title}}
+                        <a href="{{ route('download-certificate', $certification->id) }}" class="certify">
+                            Certified in {{$certification->program->title}} <i class='bx bx-download'></i>
+                        </a>
                     </p>
                     @empty
                     <p class="about sub-text">No certifications yet. <a href="{{ route('pwd-list-program') }}">Enroll first!</a></p>

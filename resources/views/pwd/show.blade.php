@@ -84,7 +84,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="requirements" role="tabpanel">
-                <div class="requirements">
+                    <div class="requirements">
                         <div class="d-flex justify-content-start mb-5">
                             <div class="more-info">
                                 <h5>Duration</h5>
@@ -173,9 +173,9 @@
                     <div class="border reviews">
                         <div class="header border-bottom d-flex justify-content-between align-items-center">
                             <h3>Reviews</h3>
-                 
+                            @if ($isCompletedProgram)
                             @include('slugs.feedback')
-
+                            @endif
                         </div>
                         <div class="outer">
                             <div class="review-grid">

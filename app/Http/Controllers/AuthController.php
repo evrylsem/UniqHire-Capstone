@@ -146,10 +146,10 @@ class AuthController extends Controller
 
     public function deleteSkill($id)
     {
-        $skill = Skill::findOrFail($id);
+        $skill = SkillUser::findOrFail($id);
         $skill->delete();
 
-        return back();
+        return back()->with('success', 'Skill deleted successfully!');
     }
 
     public function showHomePage()
@@ -327,9 +327,9 @@ class AuthController extends Controller
         $pdf = Pdf::loadView('slugs.certificate', [
             'user' => $user,
             'trainingProgram' => $trainingProgram,
-        ]);
+        ])->setPaper('a4', 'landscape');
 
-        return $pdf->download('certificate-' . $user->id . ' .pdf');
+        return $pdf->download('certificate-' . $user->userInfo->name . ' .pdf');
     }
 
 

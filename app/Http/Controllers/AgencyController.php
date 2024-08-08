@@ -96,7 +96,7 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             'start_age' => 'integer|min:1|max:99',
             'end_age' => 'integer|min:1|max:99',
-            'participants' => ['required', 'regex:/^\d+$/', 'max:255'],
+            'participants' => 'required|max:255',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
             'goal' => 'nullable|string',

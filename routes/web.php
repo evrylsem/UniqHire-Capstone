@@ -25,7 +25,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
 Route::get('/', [AuthController::class, 'showLanding'])->name('landing');
 
 Route::middleware('auth')->group(function () {
