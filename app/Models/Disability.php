@@ -16,4 +16,9 @@ class Disability extends Model
     public function userInfo() {
         return $this->hasMany(UserInfo::class);
     }
+
+    public function program()
+    {
+        return $this->hasMany(TrainingProgram::class, 'disability_id');
+    }
 }

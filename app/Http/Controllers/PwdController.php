@@ -81,9 +81,11 @@ class PwdController extends Controller
         $paginatedItems = new LengthAwarePaginator($currentItems, count($rankedPrograms), $perPage);
         $paginatedItems->setPath($request->url());
 
-        // $viewName = $request->input('view', 'pwd.listPrograms');
+        $disabilityCounts = Disability::withCount('program')->get()->keyBy('id');
+        $educationCounts = EducationLevel::withCount('program')->get()->keyBy('id');
+        
 
-        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations', 'similarity'));
+        return view('pwd.listPrograms', compact('paginatedItems', 'disabilities', 'educations','disabilityCounts', 'educationCounts'));
     }
 
     private function calculateSimilarity($user, $program)
@@ -140,6 +142,15 @@ class PwdController extends Controller
         $application = TrainingApplication::where('user_id', $userId)->get();
         $reviews = PwdFeedback::where('program_id', $id)->with('pwd')->latest()->get();
         $status = Enrollee::where('pwd_id', $userId)->get();
+        $isCompletedProgram = Enrollee::where('program_id', $program->id)
+        ->where('pwd_id', $userId)
+        ->where('completion_status', 'Completed')
+        ->exists();
+
+        $enrolleeCount = Enrollee::where('program_id', $program->id)
+            ->count();
+
+        $slots = $program->participants - $enrolleeCount;
 
         // Collect all end dates from the applications
         $endDates = $application->map(function ($app) {
@@ -152,7 +163,7 @@ class PwdController extends Controller
             }
         })->pluck('id')->toArray();
 
-        $enrollees = Enrollee::where('training_program_id', $program->id)->where('completion_status', 'Ongoing');
+        $enrollees = Enrollee::where('program_id', $program->id)->get();
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -160,30 +171,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status'));
-
-
-        // $program = TrainingProgram::with('agency.userInfo', 'disability', 'education')->findOrFail($id);
-        // $userId = auth()->user()->id; // Get the authenticated user's ID
-
-        // // Get the application status for the specific program
-        // $application = TrainingApplication::where('user_id', $userId)
-        //     ->where('training_program_id', $id)
-        //     ->first();
-        // $applicationStatus = $application ? $application->application_status : 'Apply';
-
-        //  // Check if the user has any pending or approved applications
-        // $hasPendingOrApproved = TrainingApplication::where('user_id', $userId)
-        // ->whereIn('application_status', ['Pending', 'Approved'])
-        // ->exists();
-
-        // Log::info('User ID ' . $userId . ' has pending or approved applications: ' . ($hasPendingOrApproved ? 'true' : 'false'));
-
-        // return response()->json([
-        //     'program' => $program,
-        //     'application_status' => $applicationStatus,
-        //     'has_pending_or_approved' => $hasPendingOrApproved
-        // ]);
+        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status', 'isCompletedProgram', 'slots'));
     }
 
     public function showCalendar(Request $request)
@@ -207,7 +195,48 @@ class PwdController extends Controller
         
         return view('pwd.calendar');
     }
-    
+
+    public function showTrainings(Request $request)
+    {
+        $id = Auth::user()->id;
+        $applications = TrainingApplication::where('user_id', $id)->where('application_status', 'Pending')->get();
+        $trainings = Enrollee::where('pwd_id', $id)->get();
+        $trainingsCount = $trainings->count();
+        $ongoingCount = $trainings->where('completion_status', 'Ongoing')->count();
+        $completedCount = $trainings->where('completion_status', 'Completed')->count();
+        $approvedCount = $applications->where('application_status', 'Approved')->count();
+        $pendingsCount = $applications->where('application_status', 'Pending')->count();
+
+        if ($request->has('status') && $request->status != 'all') {
+            $trainings = $trainings->where('completion_status', ucfirst($request->status));
+        }
+
+        return view('pwd.trainings', compact('applications', 'trainings', 'trainingsCount', 'ongoingCount', 'completedCount', 'approvedCount', 'pendingsCount'));
+    }
+
+    public function rateProgram(Request $request)
+    {
+        $request->validate([
+            'program_id' => 'required|exists:training_programs,id',
+            'rating' => 'required|integer|between:1,5',
+            'content' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            PwdFeedback::create([
+                'program_id' => $request->program_id,
+                'pwd_id' => $request->user()->id,
+                'rating' => $request->rating,
+                'content' => $request->content,
+            ]);
+            // return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
+            return back()->with('success', 'Thank you for leaving us a review!');
+        } catch (\Exception $e) {
+            // return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
+            return back()->with('error', 'An error occurred while submitting your feedback. Please try again later.');
+        }
+    }
+
     public function application(Request $request)
     {
         $validatedData = $request->validate([
@@ -233,82 +262,5 @@ class PwdController extends Controller
         }
 
         return back()->with('success', 'Application sent successfully!');
-    }
-
-    // public function action(Request $request) 
-    // {
-    //     log::info("calendar reach in action!");
-    //     if($request->ajax())
-    // 	{
-    // 		if($request->type == 'add')
-    // 		{
-    // 			$event = TrainingProgram::create([
-    // 				'title'		=>	$request->title,
-    // 				'start'		=>	$request->start,
-    // 				'end'		=>	$request->end
-    // 			]);
-
-    // 			return response()->json($event);
-    // 		}
-
-    // 		if($request->type == 'update')
-    // 		{
-    // 			$event = TrainingProgram::find($request->id)->update([
-    // 				'title'		=>	$request->title,
-    // 				'start'		=>	$request->start,
-    // 				'end'		=>	$request->end
-    // 			]);
-
-    // 			return response()->json($event);
-    // 		}
-
-    // 		if($request->type == 'delete')
-    // 		{
-    // 			$event = TrainingProgram::find($request->id)->delete();
-
-    // 			return response()->json($event);
-    // 		}
-    // 	}
-    // }
-
-    public function showTrainings(Request $request)
-    {
-        $id = Auth::user()->id;
-        $applications = TrainingApplication::where('user_id', $id)->where('application_status', 'Pending')->get();
-        $trainings = Enrollee::where('pwd_id', $id)->get();
-        $trainingsCount = $trainings->count();
-        $ongoingCount = $trainings->where('completion_status', 'Ongoing')->count();
-        $completedCount = $trainings->where('completion_status', 'Completed')->count();
-        $approvedCount = $applications->where('application_status', 'Approved')->count();
-        $pendingsCount = $applications->where('application_status', 'Pending')->count();
-
-        if ($request->has('status') && $request->status != 'all') {
-            $trainings = $trainings->where('completion_status', ucfirst($request->status));
-        }
-
-        return view('pwd.trainings', compact('applications', 'trainings', 'trainingsCount', 'ongoingCount', 'completedCount', 'approvedCount', 'pendingsCount'));
-    }
-
-    public function rateProgram(Request $request)
-    {
-        $request->validate([
-            'program_id' => 'required|exists:training_programs,id',
-            'rating' => 'required|integer|between:1,5',
-            'content' => 'string|max:1000',
-        ]);
-
-        try {
-            PwdFeedback::create([
-                'program_id' => $request->program_id,
-                'pwd_id' => $request->user()->id,
-                'rating' => $request->rating,
-                'content' => $request->content,
-            ]);
-            // return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
-            return back()->with('success', 'Thank you for leaving us a review!');
-        } catch (\Exception $e) {
-            // return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
-            return back()->with('error', 'An error occurred while submitting your feedback. Please try again later.');
-        }
     }
 }

@@ -42,18 +42,20 @@
             </div>
         </div>
     </form>
-    <ul class="skills">
+    <ul class="experiences">
         @forelse($skilluser as $skill)
         <li class="mb-1">
             <div class="d-flex">
-                <div class="skill-container">
-                    <p class="skill-title">{{ $skill->skill->title }}</p>
+                <div class="d-flex">
+                    <div class="exp-container">
+                        <p class="skill-title">{{ $skill->skill->title }}</p>
+                    </div>
+                    <form action="{{ route('delete-skill', $skill->id) }}" method="POST" class="d-flex justify-content-end">
+                        @csrf
+                        @method('DELETE')
+                        <button class="border-0 match-info skill-delete-btn delete-btn" style="display: none;"><i class='bx bx-x'></i></button>
+                    </form>
                 </div>
-                <form action="{{ route('delete-skill', $skill->id) }}" method="POST" class="d-flex justify-content-end">
-                    @csrf
-                    @method('DELETE')
-                    <button class="border-0 match-info skill-delete-btn delete-btn" style="display: none;"><i class='bx bx-x'></i></button>
-                </form>
             </div>
         </li>
         @empty

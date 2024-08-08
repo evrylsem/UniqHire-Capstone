@@ -70,7 +70,7 @@
                             </div>
                             <div class="more-info">
                                 <h5>Participants</h5>
-                                <p>{{ $program->participants . ' Persons' }}</p>
+                                <p>{{ number_format($program->participants) . ' Persons' }}</p>
                             </div>
                         </div>
                         <!-- AGE -->

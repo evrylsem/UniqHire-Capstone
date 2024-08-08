@@ -13,6 +13,8 @@ use App\Models\PwdFeedback;
 use App\Models\TrainingApplication;
 use App\Models\Competency;
 use App\Models\Skill;
+use App\Models\SkillUser;
+use App\Models\Experience;
 use App\Notifications\ApplicationAcceptedNotification;
 use App\Notifications\NewTrainingProgramNotification;
 use Illuminate\Http\Request;
@@ -37,11 +39,18 @@ class AgencyController extends Controller
             ->with('crowdfund')
             ->get();
 
+        
+
         foreach ($programs as $program) {
             $endDate = new DateTime($program->end);
             $today = new DateTime();
             $interval = $today->diff($endDate);
             $program->remainingDays = $interval->days;
+
+            $program->enrolleeCount = Enrollee::where('program_id', $program->id)
+            ->count();
+
+            $program->slots = $program->participants - $program->enrolleeCount;
 
             if ($program->crowdfund) {
                 $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -96,7 +105,7 @@ class AgencyController extends Controller
             'end_date' => 'required|date',
             'start_age' => 'integer|min:1|max:99',
             'end_age' => 'integer|min:1|max:99',
-            'participants' => ['required', 'regex:/^\d+$/', 'max:255'],
+            'participants' => 'required|max:255',
             // 'disability' => 'required|exists:disabilities,id',
             // 'education' => 'required|exists:education_levels,id',
             'goal' => 'nullable|string',
@@ -409,7 +418,10 @@ class AgencyController extends Controller
     public function showEnrolleeProfile($id)
     {
         $user = User::find($id);
+        $skilluser = SkillUser::where('user_id', $id)->get();
+        $certifications = Enrollee::where('pwd_id', $id)->where('completion_status', 'Completed')->get();
+        $experiences = Experience::where('user_id', $id)->get();
         // $enrollees = Enrollee::where('user_id', $user)->get();
-        return view('agency.pwdProfile', compact('user'));
+        return view('agency.pwdProfile', compact('user', 'certifications', 'skilluser', 'experiences'));
     }
 }

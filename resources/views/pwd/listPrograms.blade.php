@@ -16,11 +16,11 @@
                     <p>Disabilities</p>
                 </span>
                 @foreach($disabilities as $disability)
-                @if($disability->disability_name !== "Not Applicable")
+                @if($disability->id !== 1)
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="{{$disability->disability_name}}" id="flexCheckDefault{{$loop->index}}" name="disability[]" onchange="submitForm()" {{ in_array($disability->disability_name, request()->input('disability', [])) ? 'checked' : '' }}>
                     <label class="form-check-label" for="flexCheckDefault{{$loop->index}}">
-                        {{$disability->disability_name}}
+                        {{$disability->disability_name}} &nbsp;<span class="count sub-text">({{ $disabilityCounts[$disability->id]->program_count }})</span>
 
                     </label>
                 </div>
@@ -32,12 +32,14 @@
                     <p>Education Level</p>
                 </span>
                 @foreach($educations as $education)
+                @if($education->id !== 1)
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="{{$education->education_name}}" id="flexCheckChecked{{$loop->index}}" name="education[]" onchange="submitForm()" {{ in_array($education->education_name, request()->input('education', [])) ? 'checked' : '' }}>
                     <label class="form-check-label" for="flexCheckChecked{{$loop->index}}">
-                        {{$education->education_name}}
+                        {{$education->education_name}} &nbsp;<span class="count sub-text">({{ $educationCounts[$education->id]->program_count }})</span>
                     </label>
                 </div>
+                @endif
                 @endforeach
             </div>
         </form>
@@ -57,12 +59,18 @@
             <div class="prog-grid" id="prog-grid">
                 @foreach ($paginatedItems as $ranked)
                 <div class="row prog-card mb-2">
-                    <input type="text" name="" value="{{$ranked['similarity']}}" id="">
+                    <input type="hidden" name="" value="{{$ranked['similarity']}}" id="">
                     <div class="col ">
                         <a href="{{ route('training-details', $ranked['program']->id ) }}" class="d-flex prog-texts">
                             <div class="prog-texts-container">
                                 <div class=" d-flex mb-2">
-                                    <div class="prog-img"></div>
+                                    <div class="prog-img" @if (!empty($ranked['program']->agency->userInfo->profile_path)) style=" background-image: url({{ asset($ranked['program']->agency->userInfo->profile_path) }}); background-repeat: no-repeat; background-size: cover; " @endif>
+
+                                        @if (empty($ranked['program']->agency->userInfo->profile_path))
+                                        <span>{{ strtoupper(substr($ranked['program']->agency->userInfo->name, 0, 1)) }}</span>
+                                        @endif
+
+                                    </div>
                                     <div class="d-flex justify-content-between prog-head">
                                         <div class="header">
                                             <h4 class="text-cap">{{$ranked['program']->title}}</h4>
@@ -79,11 +87,14 @@
                                     <p>{{$ranked['program']->description}}</p>
                                 </div>
                                 <div class="row d-flex">
-                                    <div class="match-info">
+                                    <div class="match-info @if (Auth::user()->userInfo->disability->id != $ranked['program']->disability->id) notmatch-info @endif ">
                                         {{$ranked['program']->disability->disability_name}}
                                     </div>
-                                    <div class="match-info">
+                                    <div class="match-info @if (Auth::user()->userInfo->education->id != $ranked['program']->education->id) notmatch-info @endif">
                                         {{$ranked['program']->education->education_name}}
+                                    </div>
+                                    <div class="match-info @if (Auth::user()->userInfo->age < $ranked['program']->start_age || Auth::user()->userInfo->age > $ranked['program']->end_age) notmatch-info @endif">
+                                        {{$ranked['program']->start_age . ' - ' . $ranked['program']->end_age}}
                                     </div>
                                 </div>
                             </div>

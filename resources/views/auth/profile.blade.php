@@ -4,9 +4,16 @@
 @section('page-content')
 <div class="profile-container container">
     <div class="profile-info mb-4">
-    <div class="profile-pic" style="background-image: url('{{ asset($user->userInfo->profile_path) }}')">
+        <div class="profile-pic" @if (!empty($user->userInfo->profile_path)) style=" background-image: url({{ asset($user->userInfo->profile_path) }}); background-repeat: no-repeat; background-size: cover; " @endif>
+            @if (!empty($user->userInfo->profile_path))
+            <form action="{{route('remove-pic')}}" method="POST" class="d-flex justify-content-center">
+                @csrf
+                <button type="submit" class="deny-btn border-0"><i class='bx bx-trash'></i></button>
+            </form>
+            @else
+            <span>{{ strtoupper(substr($user->userInfo->name, 0, 1)) }}</span>
+            @endif
 
-            @include("slugs.addProfile")
         </div>
         <div class="d-flex justify-content-between header">
             <div class="details row">
@@ -17,17 +24,30 @@
                 @if($user->hasRole('PWD'))
                 <div class="col">
                     <p class="text-cap age"><strong>Age:</strong>
+                        @if ($user->userInfo->age != 0)
                         {{ $user->userInfo->age }} years old
+                        @else
+                        <span class="about sub-text">No data yet</span>
+                        @endif
+
                     </p>
-                    <p class="text-cap"> <strong>Disability:</strong>&nbsp;&nbsp;&nbsp;<span class="disability">{{ $user->userInfo->disability->disability_name }}</span></p>
+                    <p class="text-cap"> <strong>Disability:</strong>&nbsp;&nbsp;&nbsp;<span class="match-info">{{ $user->userInfo->disability->disability_name }}</span></p>
                 </div>
                 @elseif($user->hasRole('Training Agency'))
                 <div class="col">
                     <p class="text-cap age"><strong>Founder:</strong>
+                        @if ($user->userInfo->founder != null)
                         {{ $user->userInfo->founder }}
+                        @else
+                        <span class="about sub-text">No data yet</span>
+                        @endif
                     </p>
-                    <p class="text-cap"> <strong>Year Established:</strong>
+                    <p class="text-cap age"> <strong>Year Established:</strong>
+                        @if ($user->userInfo->year_established != 0)
                         {{ $user->userInfo->year_established }}
+                        @else
+                        <span class="about sub-text">No data yet</span>
+                        @endif
                     </p>
                 </div>
                 @endif
@@ -50,15 +70,15 @@
                 </div>
                 <div class="contact-item">
                     <span class="d-flex align-items-center sub-text"><i class='bx bxl-facebook  side-icon'></i> Facebook</span>
-                    <p><a href="">{{ $user->email }}</a></p>
+                    <p><a href="">{{ 'facebook.com/' . strtolower(substr($user->userInfo->name, 0, 5)) }}</a></p>
                 </div>
                 <div class="contact-item">
                     <span class="d-flex align-items-center sub-text"><i class='bx bxl-instagram side-icon'></i> Instagram</span>
-                    <p><a href="">{{ $user->email }}</a></p>
+                    <p><a href="">{{ 'instagram.com/' . strtolower(substr($user->userInfo->name, 0, 5)) }}</a></p>
                 </div>
                 <div class="contact-item ">
                     <span class="d-flex align-items-center sub-text"><i class='bx bx-globe side-icon'></i> Website</span>
-                    <p><a href="">{{ $user->email }}</a></p>
+                    <p><a href="">{{ 'website.com/' . strtolower(substr($user->userInfo->name, 0, 5)) }}</a></p>
                 </div>
             </div>
         </div>
@@ -86,8 +106,9 @@
                     <h4 class="mb-3">Certifications</h4>
                     @forelse($certifications as $certification)
                     <p>
-                        <a href="{{ route('download-certificate', $certification->id) }}" class="text-primary">
-                            Certified {{$certification->program->title}}
+                        <a href="{{ route('download-certificate', $certification->id) }}" class="certify">
+                            Certified in {{$certification->program->title}} <i class='bx bx-download'></i>
+                        </a>
                     </p>
                     @empty
                     <p class="about sub-text">No certifications yet. <a href="{{ route('pwd-list-program') }}">Enroll first!</a></p>
@@ -120,77 +141,81 @@
         </div>
 
     </div>
+</div>
+@endsection
 
-    @endsection
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchProvinces().then(() => {
-                var selectedProvince = "{{ $user->userInfo->state }}";
-                var provinceSelect = document.getElementById('provinceSelect');
-                if (selectedProvince) {
-                    provinceSelect.value = selectedProvince;
-                    fetchCities(selectedProvince).then(() => {
-                        var selectedCity = "{{ $user->userInfo->city }}";
-                        var citySelect = document.getElementById('citySelect');
-                        if (selectedCity) {
-                            citySelect.value = selectedCity;
-                        }
-                    });
-                }
-            });
-
-            document.getElementById('provinceSelect').addEventListener('change', function() {
-                var provinceCode = this.value;
-                fetchCities(provinceCode);
-            });
-
-            // Set max year for the year established input
-            var yearEstablishedInput = document.getElementById('year-established');
-            var currentYear = new Date().getFullYear();
-            yearEstablishedInput.max = currentYear;
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProvinces().then(() => {
+            var selectedProvince = "{{ $user->userInfo->state }}";
+            var provinceSelect = document.getElementById('provinceSelect');
+            if (selectedProvince) {
+                provinceSelect.value = selectedProvince;
+                fetchCities(selectedProvince).then(() => {
+                    var selectedCity = "{{ $user->userInfo->city }}";
+                    var citySelect = document.getElementById('citySelect');
+                    if (selectedCity) {
+                        citySelect.value = selectedCity;
+                    }
+                });
+            }
         });
 
-        function fetchProvinces() {
-            return fetch('https://psgc.cloud/api/provinces')
-                .then(response => response.json())
-                .then(data => {
-                    var provinceSelect = document.getElementById('provinceSelect');
-                    provinceSelect.innerHTML = '<option value="">Select Province</option>';
-                    data.sort((a, b) => a.name.localeCompare(b.name));
-                    data.forEach(province => {
-                        var option = document.createElement('option');
-                        option.value = province.name; // Ensure this matches your database value
-                        option.text = province.name;
-                        provinceSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching provinces:', error));
-        }
+        document.getElementById('provinceSelect').addEventListener('change', function() {
+            var provinceCode = this.value;
+            fetchCities(provinceCode);
+        });
 
-        function fetchCities(provinceCode) {
-            return fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
-                .then(response => response.json())
-                .then(data => {
-                    var citySelect = document.getElementById('citySelect');
-                    citySelect.innerHTML = '<option value="">Select City</option>';
-                    data.sort((a, b) => a.name.localeCompare(b.name));
-                    data.forEach(city => {
-                        var option = document.createElement('option');
-                        option.value = city.name.trim(); // Ensure this matches your database value
-                        option.text = city.name.trim();
-                        citySelect.appendChild(option);
-                    });
+        // Set max year for the year established input
+        var yearEstablishedInput = document.getElementById('year-established');
+        var currentYear = new Date().getFullYear();
+        yearEstablishedInput.max = currentYear;
+    });
 
-                    var userCity = "{{ $user->userInfo->city }}".trim().toLowerCase();
+    function fetchProvinces() {
+        return fetch('https://psgc.cloud/api/provinces')
+            .then(response => response.json())
+            .then(data => {
+                var provinceSelect = document.getElementById('provinceSelect');
+                provinceSelect.innerHTML = '<option value="">Select Province</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    var option = document.createElement('option');
+                    option.value = province.name; // Ensure this matches your database value
+                    option.text = province.name;
+                    provinceSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching provinces:', error));
+    }
 
-                    Array.from(citySelect.options).forEach(option => {
-                        if (option.value.trim().toLowerCase() === userCity) {
-                            option.selected = true;
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching cities:', error));
-        }
+    function fetchCities(provinceCode) {
+        return fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
+            .then(response => response.json())
+            .then(data => {
+                var citySelect = document.getElementById('citySelect');
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(city => {
+                    var option = document.createElement('option');
+                    option.value = city.name.trim();
+                    option.text = city.name.trim();
+                    citySelect.appendChild(option);
+                });
 
-    </script>
+                var userCity = "{{ $user->userInfo->city }}".trim().toLowerCase();
+
+                Array.from(citySelect.options).forEach(option => {
+                    if (option.value.trim().toLowerCase() === userCity) {
+                        option.selected = true;
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching cities:', error));
+    }
+
+    function clearFileInput(id) {
+        var input = document.getElementById(id);
+        input.value = '';
+    }
+</script>

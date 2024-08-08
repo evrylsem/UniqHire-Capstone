@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="title" required placeholder="First Name">
+                <input type="text" class="form-control" id="floatingInput" name="title" value="{{old('title')}}" required placeholder="First Name">
                 <label for="floatingInput">Title</label>
                 @error('title')
                 <span class="error-msg">{{ $message }}</span>
@@ -47,7 +47,7 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <textarea class="form-control" placeholder="Description" id="floatingTextarea2" name="description" style="height: 200px"></textarea>
+                <textarea class="form-control" placeholder="Description" id="floatingTextarea2" name="description" style="height: 200px">{{old('description')}}</textarea>
                 <label for="floatingTextarea2">Description</label>
                 @error('description')
                 <span class="error-msg">{{ $message }}</span>
@@ -58,7 +58,7 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="startAge" name="start_age" required placeholder="Input Age">
+                <input type="number" class="form-control" id="startAge" name="start_age" value="{{old('start_age')}}" required placeholder="Input Age">
                 <label for="floatingInput">Start Age</label>
                 @error('age')
                 <span class="error-msg">{{ $message }}</span>
@@ -67,7 +67,7 @@
         </div>
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="endAge" name="end_age" required placeholder="Input Age">
+                <input type="number" class="form-control" id="endAge" name="end_age" value="{{old('end_age')}}" required placeholder="Input Age">
                 <label for="floatingInput">End Age</label>
                 @error('age')
                 <span class="error-msg">{{ $message }}</span>
@@ -78,7 +78,7 @@
     <div class="row">
         <div class="col">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="participants" name="participants" required placeholder="Input Participants" oninput="formatNumber(this)">
+                <input type="text" class="form-control" id="participants" name="participants" value="{{old('participants')}}" required placeholder="Input Participants" oninput="formatNumber(this)">
                 <label for="floatingInput">Number of Participants</label>
                 @error('participants')
                 <span class="error-msg">{{ $message }}</span>

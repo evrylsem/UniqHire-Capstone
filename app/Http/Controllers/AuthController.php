@@ -37,19 +37,31 @@ class AuthController extends Controller
     {
         $id = Auth::user()->id;
         $user = User::find($id);
+        $userInfo = UserInfo::where('user_id', $id)->firstOrFail();
         $request->validate([
             'name' => 'required|string|max:255',
             'contactnumber' => 'required|string|max:255',
             'age' => 'nullable|integer|min:1|max:99',
             'city' => 'string|max:255',
             'state' => 'string|max:255',
-            'age' => 'integer|between:0,99',
             'founder' => 'nullable|string|max:255',
             'year_established' => 'nullable|integer|min:1000|max:3000',
             'about' => 'nullable|string',
             'awards' => 'nullable|string',
             'affiliations' => 'nullable|string',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'profile_photos/' . $fileName;
+
+            Storage::disk('profile_photos')->put($fileName, file_get_contents($file));
+
+            $userInfo->profile_path = 'storage/' . $filePath;
+            $userInfo->save();
+        }
 
         if ($user->hasRole('Training Agency')) {
             $user->userInfo->update([
@@ -76,6 +88,19 @@ class AuthController extends Controller
             ]);
         }
         return back()->with('success', 'Your profile has been changed successfully!');
+    }
+
+    public function removePicture(Request $request)
+    {
+        $user = auth()->user(); // Assuming user is authenticated
+        if (!empty($user->userInfo->profile_path)) {
+            Storage::disk('profile_photos')->delete(str_replace('storage/', '', $user->userInfo->profile_path));
+        }
+
+        $user->userInfo->profile_path = null;
+        $user->userInfo->save();
+
+        return redirect()->back()->with('success', 'Profile picture removed successfully.');
     }
 
     public function addExperience(Request $request)
@@ -121,10 +146,10 @@ class AuthController extends Controller
 
     public function deleteSkill($id)
     {
-        $skill = Skill::findOrFail($id);
+        $skill = SkillUser::findOrFail($id);
         $skill->delete();
 
-        return back();
+        return back()->with('success', 'Skill deleted successfully!');
     }
 
     public function showHomePage()
@@ -302,9 +327,9 @@ class AuthController extends Controller
         $pdf = Pdf::loadView('slugs.certificate', [
             'user' => $user,
             'trainingProgram' => $trainingProgram,
-        ]);
+        ])->setPaper('a4', 'landscape');
 
-        return $pdf->download('certificate-' . $user->id . ' .pdf');
+        return $pdf->download('certificate-' . $user->userInfo->name . ' .pdf');
     }
 
 

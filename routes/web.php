@@ -25,8 +25,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-Route::get('/', [AuthController::class, 'showLanding']);
+Route::get('/', [AuthController::class, 'showLanding'])->name('landing');
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [AuthController::class, 'showHomePage'])->name('home');
@@ -36,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/delete-skill/{id}', [AuthController::class, 'deleteSkill'])->name('delete-skill');
     Route::post('/profile/add-skill', [AuthController::class, 'addSkill'])->name('add-skill');
     Route::put('/profile', [AuthController::class, 'editProfile'])->name('edit-profile');
-    Route::post('/profile/add-pic', [AuthController::class, 'addPicture'])->name('add-pic');
+    Route::post('/profile/remove-pic', [AuthController::class, 'removePicture'])->name('remove-pic');
 
     Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.getNotifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');

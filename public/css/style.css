@@ -30,6 +30,7 @@
     --color-01-light: rgba(251, 251, 111, 0.4);
     --color-02: #ff0000;
     --color-02-light: rgba(253, 63, 63, 0.4);
+    --color-03-light: #37373759;
 
     /* BOX EFFECTS */
     --side-shadow-01: 0 20px 35px rgba(0, 0, 0, 0.1);
@@ -173,6 +174,30 @@ ul, li {
 
 .text-cap {
     text-transform: var(--text-capitalized);
+}
+
+.match-info {
+    background-color: var(--primary-color-light);
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 0.5rem;
+}
+
+.notmatch-info {
+    background-color: transparent;
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 0.5rem;
 }
 
 /* SIDEBAR */
@@ -595,7 +620,7 @@ table tbody .bx {
 
 .pwd-browse-prog .filter-container {
     position: fixed;
-    width: 17rem;
+    width: 18rem;
     /* margin-left: 3rem; */
     /* background-color: #04b000; */
     border: 1px solid lightgray;
@@ -607,6 +632,12 @@ table tbody .bx {
     left: 8rem;
     top: 8rem;
     z-index: 98;
+    overflow-y: scroll;
+}
+
+.pwd-browse-prog .filter-container .count {
+    font-weight: normal;
+    color: var(--primary-color);
 }
 
 .pwd-browse-prog .filter-container i {
@@ -616,6 +647,10 @@ table tbody .bx {
 .pwd-browse-prog .filter-container span p {
     font-size: 22px;
     font-weight: bold;
+}
+
+.pwd-browse-prog .filter-container .form-check {
+    width: 13rem;
 }
 
 .pwd-browse-prog .empty-space {
@@ -695,14 +730,21 @@ table tbody .bx {
 }
 
 .pwd-browse-prog .prog-card .prog-img {
-    width: 5rem;
+    width: 5.5rem;
     height: 5rem;
-    /* background-image: url('../images/23.png');
-    background-repeat: no-repeat; 
-    background-size: cover; */
     background-color: var(--primary-color-light);
     margin-right: 1rem;
     border-radius: var(--border-radius);
+    border: 3px solid var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pwd-browse-prog .prog-card .prog-img span {
+    font-size: 2rem;
+    font-weight: var(--header-extrabold);
+    color: var(--primary-color);
 }
 
 .pwd-browse-prog .prog-card .prog-desc {
@@ -724,18 +766,6 @@ table tbody .bx {
 
 .pwd-browse-prog .prog-card .prog-texts {
     padding: 1rem;
-}
-
-.pwd-browse-prog .prog-card .match-info, .profile-container .profile-info .details .disability, .show-prog-container .prog-details .more-info .match-info, .popup .details-container .match-info, .match-info {
-    background-color: var(--primary-color-light);
-    width: fit-content;
-    padding: 0.5rem;
-    border-radius: 1rem;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    font-weight: bold;
-    font-size: 15px;
-    margin-right: 0.5rem;
 }
 
 .pwd-browse-prog .prog-card:hover, .agency-prog-container .prog-card:hover {
@@ -995,7 +1025,7 @@ table tbody .bx {
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
-    width: 7rem;
+    width: fit-content;
 }
 
 .agency-prog-container .prog-card .prog-details p, .agency-prog-container .prog-card .prog-details i {
@@ -1443,7 +1473,7 @@ table tbody .bx {
 /* PROFILE */
 .profile-container, .agency-prog-container, .edit-form, .add-form {
     position: absolute;
-    top: 8rem;
+    top: 9rem;
     margin-bottom: 3rem;
     /* padding-left: 7rem; */
     /* display: flex;
@@ -1455,8 +1485,13 @@ table tbody .bx {
     align-items: center;
 }
 
+.profile-container .back-btn {
+    position: fixed;
+    left: 20rem;
+}
+
 .profile-container .profile-pic {
-    /* background-color: var(--primary-color-light); */
+    background-color: var(--primary-color-light);
     width: 10rem;
     height: 10rem;
     border-radius: 100%;
@@ -1464,6 +1499,37 @@ table tbody .bx {
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 3px solid var(--primary-color)
+}
+
+.profile-container .profile-pic form {
+    width: 10rem;
+    height: 10rem;
+}
+
+.profile-container .profile-pic span {
+    font-size: 4rem;
+    font-weight: var(--header-extrabold);
+    color: var(--primary-color);
+}
+
+.profile-container .profile-pic .deny-btn {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+}
+
+.profile-container .profile-pic .deny-btn:hover {
+    background-color: var(--color-03-light);
+}
+
+.profile-container .profile-pic .deny-btn .bx {
+    font-size: 35px;
+    color: transparent;
+}
+
+.profile-container .profile-pic .deny-btn:hover .bx {
+    color: var(--bg-color-02);
 }
 
 .profile-container .profile-name {
@@ -1553,6 +1619,8 @@ table tbody .bx {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     border-left: 3px solid var(--primary-color);
+    display: flex;
+    align-items: center;
 }
 
 .profile-container .more-details .bio .bio-item .experiences li:hover {
@@ -1563,10 +1631,16 @@ table tbody .bx {
     font-size: 20px;
     margin: 0;
     font-weight: bolder;
+    word-break: break-all;
 }
 
 .profile-container .more-details .bio .bio-item .exp-date {
     font-size: 17px;
+}
+
+.profile-container .more-details .bio .bio-item .certify {
+    color: var(--primary-color);
+    text-decoration: underline;
 }
 
 .profile-container .more-details .contact .side-icon {

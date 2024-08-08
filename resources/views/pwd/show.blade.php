@@ -84,7 +84,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="requirements" role="tabpanel">
-                <div class="requirements">
+                    <div class="requirements">
                         <div class="d-flex justify-content-start mb-5">
                             <div class="more-info">
                                 <h5>Duration</h5>
@@ -92,7 +92,7 @@
                             </div>
                             <div class="more-info">
                                 <h5>Participants</h5>
-                                <p>{{ $program->participants . ' Persons' }}</p>
+                                <p>{{ number_format($program->participants) . ' Persons' }}&nbsp;&nbsp; <span class="sub-text">({{$slots}} slots)</span></p>
                             </div>
                         </div>
                         <!-- AGE -->
@@ -136,7 +136,6 @@
                         <tbody>
                             @forelse ($enrollees as $enrollee)
                             <tr>
-                                <td class="check"><input class="form-check-input" type="checkbox"></td>
                                 <td class="name">
                                     <a href="{{ route('show-profile', $enrollee->application->user->id) }}">
                                         {{ $enrollee->application->user->userInfo->name }}
@@ -173,9 +172,9 @@
                     <div class="border reviews">
                         <div class="header border-bottom d-flex justify-content-between align-items-center">
                             <h3>Reviews</h3>
-                 
+                            @if ($isCompletedProgram)
                             @include('slugs.feedback')
-
+                            @endif
                         </div>
                         <div class="outer">
                             <div class="review-grid">
