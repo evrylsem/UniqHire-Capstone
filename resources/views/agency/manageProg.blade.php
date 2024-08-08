@@ -39,7 +39,7 @@
                 @endif
                 <div class="d-flex prog-details">
                     <p class="sub-text">
-                        <i class='bx bx-group sub-text'></i> Number Participants
+                        <i class='bx bx-group sub-text'></i> {{ number_format($program->slots) }} Slots
                     </p>
                     <span class="sub-text period">•</span>
                     <p class="sub-text"><i class='bx bx-calendar sub-text'></i> {{ $program->remainingDays }} days to go</p>

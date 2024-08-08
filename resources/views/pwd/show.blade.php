@@ -92,7 +92,7 @@
                             </div>
                             <div class="more-info">
                                 <h5>Participants</h5>
-                                <p>{{ $program->participants . ' Persons' }}</p>
+                                <p>{{ number_format($program->participants) . ' Persons' }}&nbsp;&nbsp; <span class="sub-text">({{$slots}} slots)</span></p>
                             </div>
                         </div>
                         <!-- AGE -->
@@ -136,7 +136,6 @@
                         <tbody>
                             @forelse ($enrollees as $enrollee)
                             <tr>
-                                <td class="check"><input class="form-check-input" type="checkbox"></td>
                                 <td class="name">
                                     <a href="{{ route('show-profile', $enrollee->application->user->id) }}">
                                         {{ $enrollee->application->user->userInfo->name }}

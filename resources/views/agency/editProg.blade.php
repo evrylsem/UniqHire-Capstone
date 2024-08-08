@@ -56,10 +56,10 @@
                 <span class="error-msg">{{ $message }}</span>
                 @enderror
             </div>
-        </div>        
+        </div>
     </div>
     <div class="row">
-     <div class="col">
+        <div class="col">
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="startAge" name="start_age" value="{{ $program->start_age }}" required placeholder="Input Age">
                 <label for="floatingInput">Start Age</label>
@@ -206,8 +206,12 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         var amountNeededInput = document.getElementById('amount-needed');
+        var participantsInput = document.getElementById('participants');
         if (amountNeededInput) {
             formatNumber(amountNeededInput);
+        }
+        if (participantsInput) {
+            formatNumber(participantsInput);
         }
 
         fetchProvinces();
@@ -295,7 +299,7 @@
     }
 
     function fetchCities(provinceCode) {
-        
+
         fetch(`https://psgc.cloud/api/provinces/${provinceCode}/cities-municipalities`)
             .then(response => response.json())
             .then(data => {
@@ -306,17 +310,17 @@
                     var option = document.createElement('option');
                     option.value = city.name.trim();
                     option.text = city.name.trim();
-                    citySelect.appendChild(option);                    
+                    citySelect.appendChild(option);
                 });
 
                 // Normalize both the program city and the options
-            var programCity = "{{ $program->city }}".trim().toLowerCase();
+                var programCity = "{{ $program->city }}".trim().toLowerCase();
 
-            Array.from(citySelect.options).forEach(option => {
-                if (option.value.trim().toLowerCase() === programCity) {
-                    option.selected = true;
-                }
-            });
+                Array.from(citySelect.options).forEach(option => {
+                    if (option.value.trim().toLowerCase() === programCity) {
+                        option.selected = true;
+                    }
+                });
 
             })
             .catch(error => console.error('Error fetching cities:', error));

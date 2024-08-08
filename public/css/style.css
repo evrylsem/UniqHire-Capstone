@@ -1025,7 +1025,7 @@ table tbody .bx {
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
-    width: 7rem;
+    width: fit-content;
 }
 
 .agency-prog-container .prog-card .prog-details p, .agency-prog-container .prog-card .prog-details i {
@@ -1483,6 +1483,11 @@ table tbody .bx {
 .profile-container .profile-info {
     display: flex;
     align-items: center;
+}
+
+.profile-container .back-btn {
+    position: fixed;
+    left: 20rem;
 }
 
 .profile-container .profile-pic {

@@ -147,6 +147,11 @@ class PwdController extends Controller
         ->where('completion_status', 'Completed')
         ->exists();
 
+        $enrolleeCount = Enrollee::where('program_id', $program->id)
+            ->count();
+
+        $slots = $program->participants - $enrolleeCount;
+
         // Collect all end dates from the applications
         $endDates = $application->map(function ($app) {
             return $app->program->end;
@@ -158,7 +163,7 @@ class PwdController extends Controller
             }
         })->pluck('id')->toArray();
 
-        $enrollees = Enrollee::where('training_program_id', $program->id)->where('completion_status', 'Ongoing');
+        $enrollees = Enrollee::where('program_id', $program->id)->get();
 
         if ($program->crowdfund) {
             $raisedAmount = $program->crowdfund->raised_amount ?? 0; // Default to 0 if raised_amount is null
@@ -166,7 +171,7 @@ class PwdController extends Controller
             $progress = ($goal > 0) ? round(($raisedAmount / $goal) * 100, 2) : 0; // Calculate progress percentage
             $program->crowdfund->progress = $progress;
         }
-        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status', 'isCompletedProgram'));
+        return view('pwd.show', compact('program', 'reviews', 'application', 'nonConflictingPrograms', 'enrollees', 'status', 'isCompletedProgram', 'slots'));
     }
 
     public function showCalendar(Request $request)
@@ -230,5 +235,32 @@ class PwdController extends Controller
             // return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
             return back()->with('error', 'An error occurred while submitting your feedback. Please try again later.');
         }
+    }
+
+    public function application(Request $request)
+    {
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'training_program_id' => 'required|exists:training_programs,id',
+        ]);
+
+        $validatedData['application_status'] = 'Pending';
+        $trainingApplication = TrainingApplication::create($validatedData);
+
+        $trainingProgram = TrainingProgram::findOrFail($validatedData['training_program_id']);
+
+        $trainerUser = User::whereHas('userInfo', function ($query) use ($trainingProgram) {
+            $query->where('user_id', $trainingProgram->agency_id);
+        })->whereHas('role', function ($query) {
+            $query->where('role_name', 'Trainer');
+        })->first();
+
+        if ($trainerUser) {
+            $trainerUser->notify(new PwdApplicationNotification($trainingApplication));
+        } else {
+            Log::error('No agency user found for training program', ['trainingProgram' => $trainingProgram->id]);
+        }
+
+        return back()->with('success', 'Application sent successfully!');
     }
 }
